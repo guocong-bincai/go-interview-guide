@@ -5,7 +5,7 @@
 **专为 5~8 年 Go 后端工程师打造 · 大厂面试核心考点全覆盖**
 
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
-[![Version](https://img.shields.io/badge/version-v1.4-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
+[![Version](https://img.shields.io/badge/version-v1.5-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
@@ -98,7 +98,7 @@
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
 | [🔴 interface 原理](./docs/01-golang/03-language-deep/01-interface.md) | iface/eface 内存布局、动态分发开销 | ✅ 已完成 |
-| 🟡 逃逸分析 | 堆 vs 栈分配、如何避免不必要逃逸 | 📝 待更新 |
+| 🟡 逃逸分析 | 堆 vs 栈分配、如何避免不必要逃逸 | ✅ 已完成 |
 | 🟡 slice 与 map | 底层结构、扩容策略、并发安全问题 | 📝 待更新 |
 | 🟢 泛型实现 | GCShape stenciling、使用边界 | 📝 待更新 |
 | 🟢 reflect 原理 | 性能代价、实际使用场景 | 📝 待更新 |
