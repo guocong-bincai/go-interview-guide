@@ -6,7 +6,7 @@
 
 ### 01-rpc · RPC 与服务治理
 - [🟡] `01-grpc.md` — gRPC 原理、Protobuf 编码、流式 RPC
-- [ ] `02-service-governance.md` — 服务治理：超时、重试、负载均衡策略
+- [🟡] `02-service-governance/02-service-governance.md` — 服务治理：超时、重试、负载均衡策略
 - [ ] `03-idl-design.md` — API 设计规范、Protobuf 版本兼容
 
 ### 02-api-gateway · API 网关
