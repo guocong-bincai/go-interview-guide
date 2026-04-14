@@ -21,5 +21,5 @@
 - [ ] `08-payment.md` — 支付系统：幂等、对账、资金安全
 
 ### 03-capacity · 容量估算
-- [ ] `01-back-of-envelope.md` — 信封估算法：QPS / 存储 / 带宽快速估算
-- [ ] `02-performance-indicators.md` — 性能指标体系：P99/P999、可用性 SLA
+- [🟡] `03-capacity/01-back-of-envelope.md` — 信封估算法：QPS / 存储 / 带宽快速估算
+- [🟡] `03-capacity/02-performance-indicators.md` — 性能指标体系：P99/P999、可用性 SLA
