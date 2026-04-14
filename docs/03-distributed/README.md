@@ -11,7 +11,7 @@
 - [ ] `04-consistency.md` — 强一致 / 最终一致 / 线性一致性、实际场景选型
 
 ### 02-transactions · 分布式事务
-- [ ] `01-2pc-3pc.md` — 2PC/3PC 原理、问题与局限
+- [🟡] `01-2pc-3pc.md` — 2PC/3PC 原理、问题与局限
 - [ ] `02-tcc.md` — TCC 模式：Try/Confirm/Cancel 实现与幂等设计
 - [ ] `03-saga.md` — Saga 模式：编排 vs 协调、补偿事务设计
 - [ ] `04-msg-eventual.md` — 消息最终一致性：本地消息表、事务消息（RocketMQ）
