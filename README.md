@@ -5,7 +5,7 @@
 **专为 5~8 年 Go 后端工程师打造 · 大厂面试核心考点全覆盖**
 
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
-[![Version](https://img.shields.io/badge/version-v1.7-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
+[![Version](https://img.shields.io/badge/version-v1.8-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
@@ -129,8 +129,8 @@
 | [🔴 索引原理与优化](./docs/02-database/01-mysql/01-index.md) | B+ 树、聚簇/二级索引、联合索引、索引失效场景、EXPLAIN | ✅ 已完成 |
 | [🔴 事务、隔离级别与 MVCC](./docs/02-database/01-mysql/02-transaction.md) | ACID、ReadView、版本链、RC vs RR、间隙锁、死锁 | ✅ 已完成 |
 | [🔴 锁机制深度](./docs/02-database/01-mysql/02-transaction.md) | 行锁/表锁/间隙锁/临键锁、死锁检测 | ✅ 已完成 |
-| 🟡 慢查询优化 | EXPLAIN 解读、SQL 改写、索引失效 | 📝 待更新 |
-| 🟡 分库分表 | ShardingSphere、路由策略、数据迁移 | 📝 待更新 |
+| 🟡 慢查询优化 | EXPLAIN 解读、SQL 改写、索引失效 | ✅ [已完成后](docs/02-database/01-mysql/04-slow-query.md) |
+| 🟡 分库分表 | ShardingSphere、路由策略、数据迁移 | ✅ [已完成后](docs/02-database/01-mysql/05-sharding.md) |
 | 🟡 主从复制 | binlog、半同步复制、延迟处理 | 📝 待更新 |
 
 </details>

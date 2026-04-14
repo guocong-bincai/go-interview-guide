@@ -5,11 +5,11 @@
 ## 文章清单
 
 ### 01-mysql · MySQL
-- [ ] `01-index.md` — 索引结构（B+ 树）、聚簇索引 vs 二级索引、索引选择策略
-- [ ] `02-transaction.md` — ACID、隔离级别、MVCC 实现原理
+- [x] `01-index.md` — 索引结构（B+ 树）、聚簇索引 vs 二级索引、索引选择策略
+- [x] `02-transaction.md` — ACID、隔离级别、MVCC 实现原理
 - [ ] `03-lock.md` — 行锁/表锁/间隙锁/临键锁、死锁检测与处理
-- [ ] `04-slow-query.md` — 慢查询优化：EXPLAIN 解读、索引失效场景
-- [ ] `05-sharding.md` — 分库分表方案、ShardingSphere、数据迁移
+- [x] `04-slow-query.md` — 慢查询优化：EXPLAIN 解读、索引失效场景
+- [x] `05-sharding.md` — 分库分表方案、ShardingSphere、数据迁移
 - [ ] `06-replication.md` — 主从复制原理、binlog、半同步复制、延迟处理
 
 ### 02-redis · Redis
