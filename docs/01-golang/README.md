@@ -8,7 +8,7 @@
 - [✅] `01-gmp.md` — GMP 调度模型：G/M/P 的角色、work stealing、hand off
 - [✅] `02-gc.md` — GC 三色标记、混合写屏障、STW 优化历程
 - [✅] `03-memory-model.md` — Go 内存模型、happens-before、内存对齐
-- [ ] `04-stack.md` — goroutine 栈增长、栈缩容、连续栈 vs 分段栈
+- [✅] `04-stack.md` — goroutine 栈增长、栈缩容、连续栈 vs 分段栈、Go 1.25/1.26 栈分配优化
 
 ### 02-concurrency · 并发编程
 - [✅] `01-channel.md` — channel 底层结构、发送/接收流程、select 实现
@@ -22,7 +22,7 @@
 - [ ] `02-reflect.md` — reflect 原理、性能代价、实际使用场景
 - [ ] `03-generics.md` — 泛型实现方式（GCShape stenciling）、使用边界
 - [✅] `04-escape.md` — 逃逸分析、堆 vs 栈分配、如何避免不必要逃逸
-- [ ] `05-slice-map.md` — slice/map 底层结构、扩容策略、并发安全问题
+- [✅] `05-slice-map.md` — slice/map 底层结构、扩容策略、Swiss Table（Go 1.24）、并发安全问题
 
 ### 04-performance · 性能调优
 - [ ] `01-pprof.md` — pprof 使用、CPU/内存/goroutine 火焰图分析
