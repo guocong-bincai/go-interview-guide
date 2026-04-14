@@ -5,16 +5,16 @@
 ## 文章清单
 
 ### 01-runtime · 运行时原理
-- [ ] `01-gmp.md` — GMP 调度模型：G/M/P 的角色、work stealing、hand off
-- [ ] `02-gc.md` — GC 三色标记、混合写屏障、STW 优化历程
+- [✅] `01-gmp.md` — GMP 调度模型：G/M/P 的角色、work stealing、hand off
+- [✅] `02-gc.md` — GC 三色标记、混合写屏障、STW 优化历程
 - [✅] `03-memory-model.md` — Go 内存模型、happens-before、内存对齐
 - [ ] `04-stack.md` — goroutine 栈增长、栈缩容、连续栈 vs 分段栈
 
 ### 02-concurrency · 并发编程
-- [ ] `01-channel.md` — channel 底层结构、发送/接收流程、select 实现
-- [ ] `02-sync.md` — Mutex/RWMutex 实现、sync.Once、sync.Pool
+- [✅] `01-channel.md` — channel 底层结构、发送/接收流程、select 实现
+- [✅] `02-sync.md` — Mutex/RWMutex 实现、sync.Once、sync.Pool
 - [✅] `03-atomic.md` — atomic 原理、CAS、无锁数据结构
-- [ ] `04-patterns.md` — 并发模式：Pipeline、Fan-out/Fan-in、errgroup
+- [✅] `04-patterns.md` — 并发模式：Pipeline、Fan-out/Fan-in、errgroup
 - [✅] `05-context.md` — context 底层、取消传播、超时控制
 
 ### 03-language-deep · 语言机制

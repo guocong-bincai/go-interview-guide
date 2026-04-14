@@ -5,7 +5,7 @@
 **专为 5~8 年 Go 后端工程师打造 · 大厂面试核心考点全覆盖**
 
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
-[![Version](https://img.shields.io/badge/version-v1.3-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
+[![Version](https://img.shields.io/badge/version-v1.4-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
@@ -87,7 +87,7 @@
 | [🔴 channel 底层原理](./docs/01-golang/02-concurrency/01-channel.md) | hchan 结构、发送/接收流程、select 实现 | ✅ 已完成 |
 | [🔴 sync 原语](./docs/01-golang/02-concurrency/02-sync.md) | Mutex/RWMutex 实现、sync.Once、sync.Pool | ✅ 已完成 |
 | [🔴 atomic 与无锁](./docs/01-golang/02-concurrency/03-atomic.md) | CAS 原理、atomic 操作、无锁数据结构 | ✅ 已完成 |
-| 🟡 并发模式 | Pipeline、Fan-out/Fan-in、errgroup | 📝 待更新 |
+| [🟡 并发模式](./docs/01-golang/02-concurrency/04-patterns.md) | Pipeline、Fan-out/Fan-in、errgroup | ✅ 已完成 |
 | [🔴 context 原理](./docs/01-golang/02-concurrency/05-context.md) | 取消传播、超时控制、底层实现 | ✅ 已完成 |
 
 </details>
@@ -140,11 +140,11 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 🔴 数据结构底层实现 | SDS、ziplist、skiplist、listpack | 📝 待更新 |
+| [🔴 数据结构底层实现](./docs/02-database/02-redis/01-data-structures.md) | SDS、ziplist、skiplist、listpack | ✅ 已完成 |
 | [🔴 持久化机制](./docs/02-database/02-redis/02-persistence.md) | RDB vs AOF、混合持久化、数据恢复 | ✅ 已完成 |
 | [🔴 缓存穿透/击穿/雪崩](./docs/02-database/02-redis/03-cache-problems.md) | 布隆过滤器、互斥锁、逻辑过期、多级缓存 | ✅ 已完成 |
 | 🟡 集群方案 | Sentinel vs Cluster、槽位分配、故障转移 | 📝 待更新 |
-| 🟡 分布式锁 | Redlock 算法、Lua 脚本原子性 | 📝 待更新 |
+| [🟡 分布式锁](./docs/02-database/02-redis/04-distributed-lock.md) | Redlock 算法、Lua 脚本原子性 | ✅ 已完成 |
 | 🟡 热 key / 大 key | 识别方法、拆分方案、本地缓存 | 📝 待更新 |
 
 </details>
@@ -180,8 +180,8 @@
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
 | [🟡 2PC / 3PC](./docs/03-distributed/02-transactions/01-2pc-3pc.md) | 原理、问题与局限 | ✅ 已完成 |
-| 🟡 TCC 模式 | Try/Confirm/Cancel、幂等设计 | 📝 待更新 |
-| 🟡 Saga 模式 | 编排 vs 协调、补偿事务设计 | 📝 待更新 |
+| [🟡 TCC 模式](./docs/03-distributed/02-transactions/02-tcc.md) | Try/Confirm/Cancel、幂等设计 | ✅ 已完成 |
+| [🟡 Saga 模式](./docs/03-distributed/02-transactions/03-saga.md) | 编排 vs 协调、补偿事务设计 | ✅ 已完成 |
 | 🟡 消息最终一致性 | 本地消息表、事务消息（RocketMQ）| 📝 待更新 |
 
 </details>
@@ -191,7 +191,7 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 🟡 Kafka 高吞吐原理 | 零拷贝、顺序写、分区 | 📝 待更新 |
+| [🟡 Kafka 高吞吐原理](./docs/03-distributed/03-mq-problems/01-kafka-principle.md) | 零拷贝、顺序写、分区 | ✅ 已完成 |
 | 🟡 Kafka 消息可靠性 | ACK 机制、ISR、幂等生产者 | 📝 待更新 |
 | 🟡 消费者组与 Rebalance | 消费者组、顺序消费 | 📝 待更新 |
 | [🟡 消息积压/丢失/重复](./docs/03-distributed/03-mq-problems/05-mq-problems.md) | 常见问题与解决方案 | ✅ 已完成 |
@@ -270,12 +270,14 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 🟡 滑动窗口 | 固定窗口 / 可变窗口模板 | 📝 待更新 |
-| 🟡 二分查找 | 左闭右开模板、变种题型 | 📝 待更新 |
-| 🟡 动态规划 | 背包、最长子序列、状态压缩 | 📝 待更新 |
-| 🟡 链表 | 反转、合并、环检测、LRU | 📝 待更新 |
-| 🟢 回溯 | 全排列、组合、子集、剪枝 | 📝 待更新 |
-| 🟢 单调栈 | 下一个更大元素、柱状图 | 📝 待更新 |
+| [🟡 滑动窗口](./docs/07-algorithms/01-sliding-window/01-sliding-window.md) | 固定窗口 / 可变窗口模板 | ✅ 已完成 |
+| [🟡 二分查找](./docs/07-algorithms/02-binary-search/02-binary-search.md) | 左闭右开模板、变种题型 | ✅ 已完成 |
+| [🟡 动态规划](./docs/07-algorithms/04-dp/04-dp.md) | 背包、最长子序列、状态压缩 | ✅ 已完成 |
+| [🟡 链表](./docs/07-algorithms/05-linked-list/05-linked-list.md) | 反转、合并、环检测、LRU | ✅ 已完成 |
+| [🟢 回溯](./docs/07-algorithms/03-backtracking/03-backtracking.md) | 全排列、组合、子集、剪枝 | ✅ 已完成 |
+| [🟢 单调栈](./docs/07-algorithms/07-monotonic-stack/07-monotonic-stack.md) | 下一个更大元素、柱状图 | ✅ 已完成 |
+| [🟢 堆](./docs/07-algorithms/08-heap/08-heap.md) | TopK、合并 K 个有序列表 | ✅ 已完成 |
+| [🟢 树](./docs/07-algorithms/06-tree/06-tree.md) | DFS/BFS、层序遍历、公共祖先 | ✅ 已完成 |
 
 ---
 
