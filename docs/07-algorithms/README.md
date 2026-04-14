@@ -16,5 +16,5 @@
 - [🟡] `08-heap/08-heap.md` — 堆/优先队列：TopK、合并 K 个有序列表
 
 ### 02-golang-impl · Go 实现技巧
-- [ ] `01-go-tips.md` — Go 刷题常用技巧：排序、字符串处理、math 库
-- [ ] `02-concurrency-problems.md` — 并发相关算法题：生产者消费者、交替打印
+- [🟡] `01-go-tips.md` — Go 刷题常用技巧：排序、字符串处理、math 库
+- [🟡] `02-concurrency-problems.md` — 并发相关算法题：生产者消费者、交替打印
