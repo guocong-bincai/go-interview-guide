@@ -5,6 +5,7 @@
 **专为 5~8 年 Go 后端工程师打造 · 大厂面试核心考点全覆盖**
 
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
+[![Version](https://img.shields.io/badge/version-v1.1-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
@@ -83,8 +84,8 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 🔴 channel 底层原理 | hchan 结构、发送/接收流程、select 实现 | 📝 待更新 |
-| 🔴 sync 原语 | Mutex/RWMutex 实现、sync.Once、sync.Pool | 📝 待更新 |
+| [🔴 channel 底层原理](./docs/01-golang/02-concurrency/01-channel.md) | hchan 结构、发送/接收流程、select 实现 | ✅ 已完成 |
+| [🔴 sync 原语](./docs/01-golang/02-concurrency/02-sync.md) | Mutex/RWMutex 实现、sync.Once、sync.Pool | ✅ 已完成 |
 | 🟡 atomic 与无锁 | CAS 原理、atomic 操作、无锁数据结构 | 📝 待更新 |
 | 🟡 并发模式 | Pipeline、Fan-out/Fan-in、errgroup | 📝 待更新 |
 | 🟡 context 原理 | 取消传播、超时控制、底层实现 | 📝 待更新 |
@@ -140,7 +141,7 @@
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
 | 🔴 数据结构底层实现 | SDS、ziplist、skiplist、listpack | 📝 待更新 |
-| 🔴 持久化机制 | RDB vs AOF、混合持久化、数据恢复 | 📝 待更新 |
+| [🔴 持久化机制](./docs/02-database/02-redis/02-persistence.md) | RDB vs AOF、混合持久化、数据恢复 | ✅ 已完成 |
 | [🔴 缓存穿透/击穿/雪崩](./docs/02-database/02-redis/03-cache-problems.md) | 布隆过滤器、互斥锁、逻辑过期、多级缓存 | ✅ 已完成 |
 | 🟡 集群方案 | Sentinel vs Cluster、槽位分配、故障转移 | 📝 待更新 |
 | 🟡 分布式锁 | Redlock 算法、Lua 脚本原子性 | 📝 待更新 |
