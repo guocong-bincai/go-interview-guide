@@ -5,7 +5,7 @@
 ## 文章清单
 
 ### 01-theory · 理论基础
-- [🟡] `01-cap-base/01-cap-base.md` — CAP 定理、BASE 理论、实际系统中的取舍
+- [✅] `01-cap-base/01-cap-base.md` — CAP 定理、BASE 理论、实际系统取舍 + PACELC 模型
 - [🟡] `02-raft/02-raft.md` — Raft 协议：Leader 选举、日志复制、成员变更
 - [🟡] `03-paxos.md` — Paxos 简述、与 Raft 的对比
 - [🟡] `04-consistency.md` — 强一致 / 最终一致 / 线性一致性、实际场景选型

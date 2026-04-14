@@ -15,7 +15,7 @@
 - [ ] `03-rate-limit.md` — 网关层限流实现、分布式限流（Redis + Lua）
 
 ### 03-observability · 可观测性
-- [ ] `01-metrics.md` — Prometheus + Grafana、RED 指标、SLO/SLA
+- [🟡] `03-observability/01-metrics.md` — Prometheus + Grafana、RED 指标、SLO/SLA、Go 运行时调优
 - [ ] `02-logging.md` — 结构化日志、ELK 方案、日志采样
 - [ ] `03-alerting.md` — 告警规则设计、告警疲劳治理
 
