@@ -5,7 +5,7 @@
 **专为 5~8 年 Go 后端工程师打造 · 大厂面试核心考点全覆盖**
 
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
-[![Version](https://img.shields.io/badge/version-v1.1-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
+[![Version](https://img.shields.io/badge/version-v1.2-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
@@ -75,7 +75,7 @@
 | [🔴 GMP 调度模型](./docs/01-golang/01-runtime/01-gmp.md) | G/M/P 角色、Work Stealing、Hand Off、sysmon 抢占 | ✅ 已完成 |
 | [🔴 GC 垃圾回收机制](./docs/01-golang/01-runtime/02-gc.md) | 三色标记、混合写屏障、STW 优化历程、GOGC 调优 | ✅ 已完成 |
 | 🟡 goroutine 栈机制 | 动态栈增长/收缩、连续栈 vs 分段栈 | 📝 待更新 |
-| 🟡 Go 内存模型 | happens-before、内存对齐、false sharing | 📝 待更新 |
+| [🟡 Go 内存模型](./docs/01-golang/03-language-deep/03-memory-model.md) | happens-before、内存对齐、false sharing | ✅ 已完成 |
 
 </details>
 
@@ -86,9 +86,9 @@
 |------|----------|------|
 | [🔴 channel 底层原理](./docs/01-golang/02-concurrency/01-channel.md) | hchan 结构、发送/接收流程、select 实现 | ✅ 已完成 |
 | [🔴 sync 原语](./docs/01-golang/02-concurrency/02-sync.md) | Mutex/RWMutex 实现、sync.Once、sync.Pool | ✅ 已完成 |
-| 🟡 atomic 与无锁 | CAS 原理、atomic 操作、无锁数据结构 | 📝 待更新 |
+| [🔴 atomic 与无锁](./docs/01-golang/02-concurrency/03-atomic.md) | CAS 原理、atomic 操作、无锁数据结构 | ✅ 已完成 |
 | 🟡 并发模式 | Pipeline、Fan-out/Fan-in、errgroup | 📝 待更新 |
-| 🟡 context 原理 | 取消传播、超时控制、底层实现 | 📝 待更新 |
+| [🔴 context 原理](./docs/01-golang/02-concurrency/05-context.md) | 取消传播、超时控制、底层实现 | ✅ 已完成 |
 
 </details>
 
@@ -97,7 +97,7 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 🔴 interface 原理 | iface/eface 内存布局、动态分发开销 | 📝 待更新 |
+| [🔴 interface 原理](./docs/01-golang/03-language-deep/01-interface.md) | iface/eface 内存布局、动态分发开销 | ✅ 已完成 |
 | 🟡 逃逸分析 | 堆 vs 栈分配、如何避免不必要逃逸 | 📝 待更新 |
 | 🟡 slice 与 map | 底层结构、扩容策略、并发安全问题 | 📝 待更新 |
 | 🟢 泛型实现 | GCShape stenciling、使用边界 | 📝 待更新 |
@@ -168,8 +168,8 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 🟡 CAP 与 BASE | CAP 定理、BASE 理论、实际系统取舍 | 📝 待更新 |
-| 🟡 Raft 协议 | Leader 选举、日志复制、成员变更 | 📝 待更新 |
+| [🟡 CAP 与 BASE](./docs/03-distributed/01-cap-base/01-cap-base.md) | CAP 定理、BASE 理论、实际系统取舍 | ✅ 已完成 |
+| [🟡 Raft 协议](./docs/03-distributed/02-raft/02-raft.md) | Leader 选举、日志复制、成员变更 | ✅ 已完成 |
 | 🟢 Paxos 简述 | 与 Raft 的对比 | 📝 待更新 |
 
 </details>
@@ -179,7 +179,7 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 🟡 2PC / 3PC | 原理、问题与局限 | 📝 待更新 |
+| [🟡 2PC / 3PC](./docs/03-distributed/02-transactions/01-2pc-3pc.md) | 原理、问题与局限 | ✅ 已完成 |
 | 🟡 TCC 模式 | Try/Confirm/Cancel、幂等设计 | 📝 待更新 |
 | 🟡 Saga 模式 | 编排 vs 协调、补偿事务设计 | 📝 待更新 |
 | 🟡 消息最终一致性 | 本地消息表、事务消息（RocketMQ）| 📝 待更新 |
@@ -194,7 +194,7 @@
 | 🟡 Kafka 高吞吐原理 | 零拷贝、顺序写、分区 | 📝 待更新 |
 | 🟡 Kafka 消息可靠性 | ACK 机制、ISR、幂等生产者 | 📝 待更新 |
 | 🟡 消费者组与 Rebalance | 消费者组、顺序消费 | 📝 待更新 |
-| 🟡 消息积压/丢失/重复 | 常见问题与解决方案 | 📝 待更新 |
+| [🟡 消息积压/丢失/重复](./docs/03-distributed/03-mq-problems/05-mq-problems.md) | 常见问题与解决方案 | ✅ 已完成 |
 
 </details>
 
@@ -204,7 +204,7 @@
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
 | 🟡 注册中心 | Consul/etcd/Nacos 原理与选型 | 📝 待更新 |
-| 🟡 熔断与限流 | Hystrix/Sentinel、令牌桶/漏桶 | 📝 待更新 |
+| [🟡 熔断与限流](./docs/04-microservices/02-circuit-breaker/02-circuit-breaker.md) | Hystrix/Sentinel、令牌桶/漏桶 | ✅ 已完成 |
 | 🟡 链路追踪 | Jaeger/Zipkin、TraceID 传播 | 📝 待更新 |
 
 </details>
@@ -218,8 +218,8 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 🟡 gRPC 原理 | Protobuf 编码、HTTP/2 多路复用、流式 RPC | 📝 待更新 |
-| 🟡 服务治理 | 超时/重试/负载均衡策略 | 📝 待更新 |
+| [🟡 gRPC 原理](./docs/04-microservices/01-grpc/01-grpc.md) | Protobuf 编码、HTTP/2 多路复用、流式 RPC | ✅ 已完成 |
+| [🟡 服务治理](./docs/04-microservices/02-service-governance/02-service-governance.md) | 超时/重试/负载均衡策略 | ✅ 已完成 |
 
 </details>
 
@@ -243,11 +243,11 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 🔴 秒杀系统设计 | 预减库存、异步下单、防超卖 | 📝 待更新 |
-| 🔴 分布式 ID 方案 | Snowflake、Leaf、UUIDv7 对比 | 📝 待更新 |
-| 🔴 限流系统设计 | 令牌桶、滑动窗口、分布式限流 | 📝 待更新 |
-| 🟡 短链系统设计 | 发号器、跳转、高可用 | 📝 待更新 |
-| 🟡 Feed 流设计 | 推模式 vs 拉模式 vs 推拉结合 | 📝 待更新 |
+| [🔴 秒杀系统设计](./docs/05-system-design/01-seckill/01-seckill.md) | 预减库存、异步下单、防超卖 | ✅ 已完成 |
+| [🔴 分布式 ID 方案](./docs/05-system-design/05-distributed-id/05-distributed-id.md) | Snowflake、Leaf、UUIDv7 对比 | ✅ 已完成 |
+| [🔴 限流系统设计](./docs/05-system-design/06-rate-limiter/06-rate-limiter.md) | 令牌桶、滑动窗口、分布式限流 | ✅ 已完成 |
+| [🟡 短链系统设计](./docs/05-system-design/02-short-url/02-short-url.md) | 发号器、跳转、高可用 | ✅ 已完成 |
+| [🟡 Feed 流设计](./docs/05-system-design/04-feed/04-feed.md) | 推模式 vs 拉模式 vs 推拉结合 | ✅ 已完成 |
 | 🟡 IM 系统设计 | 消息投递、离线消息、已读未读 | 📝 待更新 |
 
 </details>
