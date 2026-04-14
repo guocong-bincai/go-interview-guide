@@ -7,11 +7,11 @@
 ### 01-rpc · RPC 与服务治理
 - [🟡] `01-grpc.md` — gRPC 原理、Protobuf 编码、流式 RPC
 - [🟡] `02-service-governance/02-service-governance.md` — 服务治理：超时、重试、负载均衡策略
-- [ ] `03-idl-design.md` — API 设计规范、Protobuf 版本兼容
+- [✅] `03-idl-design.md` — API 设计规范、Protobuf 版本兼容
 
 ### 02-api-gateway · API 网关
 - [🟡] `01-gateway-design.md` — 网关职责：路由、鉴权、限流、灰度
-- [ ] `02-auth.md` — JWT/OAuth2/API Key、Token 刷新、权限模型
+- [✅] `02-auth.md` — JWT/OAuth2/API Key、Token 刷新、权限模型
 - [ ] `03-rate-limit.md` — 网关层限流实现、分布式限流（Redis + Lua）
 
 ### 03-observability · 可观测性

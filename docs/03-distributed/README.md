@@ -14,7 +14,7 @@
 - [🟡] `01-2pc-3pc.md` — 2PC/3PC 原理、问题与局限
 - [✅] `02-tcc.md` — TCC 模式：Try/Confirm/Cancel 实现与幂等设计
 - [✅] `03-saga.md` — Saga 模式：编排 vs 协调、补偿事务设计
-- [ ] `04-msg-eventual.md` — 消息最终一致性：本地消息表、事务消息（RocketMQ）
+- [✅] `04-msg-eventual.md` — 消息最终一致性：本地消息表、事务消息（RocketMQ）
 - [ ] `05-seata.md` — Seata AT/TCC/Saga 模式实战
 
 ### 03-mq · 消息队列
