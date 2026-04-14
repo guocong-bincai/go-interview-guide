@@ -5,7 +5,7 @@
 **专为 5~8 年 Go 后端工程师打造 · 大厂面试核心考点全覆盖**
 
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
-[![Version](https://img.shields.io/badge/version-v1.8-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
+[![Version](https://img.shields.io/badge/version-v1.9-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
@@ -110,7 +110,7 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 🔴 pprof 实战 | CPU/内存/goroutine 火焰图分析 | 📝 待更新 |
+| [🔴 pprof 实战](./docs/01-golang/04-performance/01-pprof.md) | CPU/内存/goroutine 火焰图分析 | ✅ 已完成 |
 | 🟡 内存泄漏排查 | goroutine 泄漏、全局变量、缓存失控 | 📝 待更新 |
 | 🟡 基准测试规范 | benchmark 写法、避免编译器优化干扰 | 📝 待更新 |
 | 🟢 真实调优案例 | JSON 解析、字符串拼接、sync.Pool 实战 | 📝 待更新 |
@@ -258,8 +258,8 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 🟡 TCP 三次握手 / 四次挥手 | TIME_WAIT 问题、连接状态机 | 📝 待更新 |
-| 🟡 HTTP/1.1 vs HTTP/2 vs HTTP/3 | 多路复用、头部压缩、QUIC | 📝 待更新 |
+| [🟡 TCP 三次握手 / 四次挥手](./docs/06-network/01-tcp-ip/01-tcp-handshake.md) | TIME_WAIT 问题、连接状态机 | ✅ 已完成 |
+| [🟡 HTTP/1.1 vs HTTP/2 vs HTTP/3](./docs/06-network/02-http/01-http-versions.md) | 多路复用、头部压缩、QUIC | ✅ 已完成 |
 | 🟡 HTTPS 握手流程 | TLS 握手、证书链、性能优化 | 📝 待更新 |
 
 ---
