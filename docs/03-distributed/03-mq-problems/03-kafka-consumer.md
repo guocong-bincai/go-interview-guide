@@ -1,358 +1,358 @@
-# Kafka 消费者与 Rebalance
+[🏠 首页](../../../README.md) · [📦 分布式系统](../README.md) · [💬 消息队列](../03-mq-problems/README.md)
 
-> 考察频率：★★★★☆  难度：★★★★☆
-> 关键词：消费者组、Rebalance、顺序消费、分区分配策略
+---
 
-## 消费者组（Consumer Group）
+# Kafka 消费者组与 Rebalance：分区分配策略、触发条件、Session Timeout
 
-### 核心概念
+## 面试官考察意图
+
+考察候选人对 Kafka 消费者组机制的理解深度。初级能说出"消费者组内分区均分"，高级要能讲清楚 **分区分配算法（Range vs RoundRobin vs StickyAssignor）、Rebalance 触发条件和副作用、Session Timeout 与心跳的关系、Max Poll Interval 的影响**，并能在生产中处理 Rebalance 导致的服务抖动问题。
+
+---
+
+## 核心答案（30 秒版）
+
+Kafka 消费者组机制：
+
+| 概念 | 说明 |
+|------|------|
+| **Consumer Group** | 多个消费者组成一个组，共同消费一个 Topic |
+| **分区分配** | 每个分区只被组内一个消费者消费（负载均衡）|
+| **Rebalance** | 消费者增减时，重新分配分区的过程 |
+| **副作用** | Rebalance 期间消费暂停，且可能重复消费 |
+
+**核心原则**：一个 Partition 只能被一个 Consumer 消费；一个 Consumer 可以消费多个 Partition。
+
+---
+
+## 深度展开
+
+### 1. 消费者组机制
 
 ```
-消费者组：多个 Consumer 实例组成，共同消费一个 Topic
+Topic: order-events (6 个 Partition)
 
-Topic: order-events
-  Partition 0 ──────────────────────────────────┐
-  Partition 1 ───────────────────────┐          │
-  Partition 2 ───────────┐          │          │
-                        │          │          │
-              Group A:  │          │          │
-              Consumer 1 ←──────────┘          │
-              Consumer 2 ←─────────────────────┘
+场景1：消费者组 group-A 有 3 个消费者
+┌─────────────────────────────────────────────────────┐
+│  Partition 0 ─── Consumer C1                        │
+│  Partition 1 ─── Consumer C1                        │
+│  Partition 2 ─── Consumer C2                        │
+│  Partition 3 ─── Consumer C2                        │
+│  Partition 4 ─── Consumer C3                        │
+│  Partition 5 ─── Consumer C3                        │
+└─────────────────────────────────────────────────────┘
+  → 每个 Consumer 消费 2 个 Partition（均分）
 
-原理：
-- 一个 Partition 只能被同组的同一个 Consumer 消费
-- 不同 Consumer Group 可以重复消费同一个 Partition
-- Consumer 数量 > Partition 数量时，多余的 Consumer 空闲
+场景2：消费者组 group-A 有 6 个消费者
+┌─────────────────────────────────────────────────────┐
+│  Partition 0 ─── Consumer C1                        │
+│  Partition 1 ─── Consumer C2                        │
+│  Partition 2 ─── Consumer C3                        │
+│  ...                                                │
+└─────────────────────────────────────────────────────┘
+  → 每个 Consumer 消费 1 个 Partition
+
+场景3：消费者组 group-A 有 8 个消费者
+┌─────────────────────────────────────────────────────┐
+│  Partition 0 ─── Consumer C1                        │
+│  Partition 1 ─── Consumer C2                        │
+│  ...                                                │
+│  Partition 5 ─── Consumer C6                        │
+│  Consumer C7 ─── (不消费任何 Partition)             │
+│  Consumer C8 ─── (不消费任何 Partition)             │
+└─────────────────────────────────────────────────────┘
+  → 多余消费者空闲（Partition 数 = Consumer 数上限）
 ```
 
-### Go 消费者组示例
+### 2. 分区分配策略（Partition Assignor）
+
+Kafka 提供三种分配策略：
 
 ```go
-package main
+// Go 客户端配置
+consumer := &kafka.ConfigMap{
+    "partition.assignment.strategy": "range",  // 默认
+    // "range"       → RangeAssignor（按 Topic 逐个分配）
+    // "roundrobin"  → RoundRobinAssignor（全局轮询）
+    // "sticky"      → StickyAssignor（保持已有分配，最小化移动）
+}
+```
 
-import (
-	"context"
-	"fmt"
-	"log"
-	"os"
-	"os/signal"
-	"syscall"
+#### RangeAssignor（默认）
 
-	"github.com/IBM/sarama"
-)
+按 Topic 逐个分配，**可能导致分配不均**。
 
-type ConsumerGroupHandler struct {
-	name string
+```
+Topic A 有 10 个 Partition，消费者组有 3 个消费者 C1, C2, C3
+
+分配计算：10 / 3 = 3（每人至少），余数 1
+
+C1: 分区 0,1,2,3      （3 + 1，余数给前面的）
+C2: 分区 4,5,6
+C3: 分区 7,8,9
+
+问题：如果有多个 Topic，多个 Topic 的余数都集中给 C1 → C1 负载过重
+```
+
+#### RoundRobinAssignor
+
+全局轮询，分配更均匀。
+
+```
+Topic A (3 Partition) + Topic B (3 Partition)，消费者 C1, C2, C3
+
+打平所有 Partition：P0A, P1A, P2A, P0B, P1B, P2B
+轮询分配：
+  C1: P0A, P1B
+  C2: P1A, P2B
+  C3: P2A, P0B
+```
+
+#### StickyAssignor（推荐生产使用）
+
+保持已有分配不变，**Rebalance 时最小化 Partition 移动**。
+
+```
+Rebalance 前：C1 消费 P0,P1,P2，C2 消费 P3,P4,P5
+新增 C3 后（Sticky）：
+
+C1: P0,P1  （尽可能保留）
+C2: P3,P4  （尽可能保留）
+C3: P2,P5  （新分配的，且移动最少）
+
+对比 RoundRobin：C1 可能变成 P0,P3 → 需要关闭消费位点再重启
+```
+
+### 3. Rebalance 触发条件
+
+```
+触发 Rebalance 的 5 种情况：
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. 消费者组成员加入（新增 Consumer）
+2. 消费者组成员离开（主动退出 / 宕机）
+3. 消费者组成员心跳超时（Session Timeout 过期）
+4. Topic 分区数变更（运维操作）
+5. Topic 订阅表达式匹配的新 Topic（正则订阅）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**心跳机制**：
+
+```go
+consumer := &kafka.ConfigMap{
+    "session.timeout.ms": 30000,    // Session 超时，30s 没心跳视为宕机
+    "heartbeat.interval.ms": 3000,  // 心跳间隔（必须 < session.timeout.ms 的 1/3）
+    "max.poll.interval.ms": 300000, // 最大 poll 间隔（业务处理超时上限）
+}
+```
+
+```
+时间线：
+  t=0    → Consumer poll() 消息，处理耗时 5 分钟
+  t=30s  → 心跳发送（正常）
+  t=60s  → 心跳发送（正常）
+  t=3min → poll() 返回，但处理还在进行
+  t=5min → 消费者还未再次 poll，Broker 认为心跳超时
+  t=5min → Broker 触发 Rebalance，该消费者被踢出组
+  t=5min → 其他消费者开始 Rebalance，重新分配分区
+  
+  ⚠️ 如果 max.poll.interval.ms < 处理耗时，会触发 Rebalance
+```
+
+### 4. Rebalance 生命周期（详细流程）
+
+```
+Rebalance 流程（Consumer 侧视角）：
+
+1. Consumer 加入组
+   Consumer.send JoinGroupRequest
+   │
+   2. 等待 Leader Consumer 收集所有成员
+      Group Leader = 第一个加入的 Consumer
+      │
+   3. Leader 制定分配方案
+      Leader 收到所有成员的 subscription 信息
+      根据 PartitionAssignor 计算分配
+      │
+   4. 同步分配方案
+      Leader 将分配方案写入 __consumer_offsets Topic
+      所有 Consumer 从该 Topic 读取自己的分配
+      │
+   5. 开始消费
+      每个 Consumer 各自 poll() 自己分配的 Partition
+```
+
+**JoinGroup 请求详解**：
+
+```go
+// 消费者订阅
+consumer.SubscribeTopics([]string{"order-events", "payment-events"}, nil)
+
+// Consumer Group 状态机
+// ┌──────────────┐  JoinGroup   ┌──────────────────┐
+// │  Empty       │ ──────────→ │  PreparingRebalance│
+// └──────────────┘              └──────────────────┘
+//                                   │
+//                         所有成员 JoinGroup 到来
+//                                   │
+// ┌──────────────┐  StartRebalance  ┌──────────────────┐
+// │  AwaitSync   │ ←────────────── │  PreparingRebalance│
+// └──────────────┘                 └──────────────────┘
+//       │ SyncGroup                      │
+//       │ (Leader 同步分配方案)              │
+//       ▼                                ▼
+// ┌──────────────┐              ┌──────────────────┐
+// │  Stable      │ ←────────── │  AwaitSync        │
+// │  (正常消费)  │              └──────────────────┘
+// └──────────────┘
+```
+
+### 5. Rebalance 带来的问题与解决方案
+
+#### 问题一：消费重复（最常见）
+
+```
+Rebalance 发生在 poll() 返回消息后、业务处理中：
+
+时刻1：Consumer poll() 100 条消息，返回给业务处理
+时刻2：业务处理 50 条后，Rebalance 触发
+时刻3：Broker 认为 Consumer 心跳超时，踢出组
+时刻4：Consumer 2 接管这些分区，重新消费
+时刻5：Consumer 1 处理完之前 50 条，发现 Rebalance，重新 poll
+结果：100 条消息中，50 条被 Consumer 1 处理，50 条被 Consumer 2 处理 → 重复
+```
+
+**解决方案**：
+
+```go
+// 1. 业务处理幂等（兜底方案）
+// 2. 手动提交 offset（先处理，再提交）
+consumer := &kafka.ConfigMap{
+    "enable.auto.commit": false,  // 关闭自动提交
 }
 
-func (h *ConsumerGroupHandler) Setup(sarama.ConsumerGroupSession) error {
-	fmt.Printf("[%s] Session setup\n", h.name)
-	return nil
+for msg := consumer.Poll(); msg != nil; msg = consumer.Poll() {
+    err := process(msg.Value)
+    if err != nil {
+        logError(err)
+        continue  // 不提交，继续重试
+    }
+    // 处理成功，手动提交
+    consumer.CommitOffset(msg.Topic, msg.Partition, msg.Offset+1)
 }
 
-func (h *ConsumerGroupHandler) Cleanup(sarama.ConsumerGroupSession) error {
-	fmt.Printf("[%s] Session cleanup\n", h.name)
-	return nil
-}
+// 3. 增大 max.poll.interval.ms（给业务更多处理时间）
+"max.poll.interval.ms": 600000  // 10 分钟
+```
 
-func (h *ConsumerGroupHandler) ConsumeClaim(
-	session sarama.ConsumerGroupSession,
-	claim sarama.ConsumerGroupClaim,
-) error {
-	for {
-		select {
-		case msg, ok := <-claim.Messages():
-			if !ok {
-				return nil
-			}
-			
-			fmt.Printf("[%s] Received: partition=%d offset=%d key=%s value=%s\n",
-				h.name, msg.Partition, msg.Offset, msg.Key, msg.Value)
-			
-			// 业务处理
-			processMessage(msg)
-			
-			// 标记已消费
-			session.MarkMessage(msg, "")
-			
-		case <-session.Context().Done():
-			return nil
-		}
-	}
-}
+#### 问题二：消费抖动（业务中断）
 
-func processMessage(msg *sarama.ConsumerMessage) error {
-	// 模拟处理
-	return nil
-}
+```
+Rebalance 期间：
+  - 所有 Consumer 停止消费（STW 效应）
+  - Group Leader 重新计算分配
+  - 消费中断时间 = JoinGroup + Sync 时间
+  
+  通常 100ms~2s，但高负载下可能 > 10s
+```
 
-func main() {
-	brokers := []string{"localhost:9092"}
-	groupID := "order-processor"
-	topic := "order-events"
+**优化方案**：
 
-	config := sarama.NewConfig()
-	config.Consumer.Group.Rebalance.GroupStrategies = []sarama.BalanceStrategy{
-		// 策略选择见下文
-		sarama.NewBalanceStrategyRoundRobin(), // 轮询分配
-	}
-	config.Consumer.Offsets.Initial = sarama.OffsetNewest
+```go
+// 1. 使用 StickyAssignor（减少 Partition 移动）
+"partition.assignment.strategy": "org.apache.kafka.clients.consumer.StickyAssignor"
 
-	ctx, cancel := context.WithCancel(context.Background())
-	client, err := sarama.NewConsumerGroup(brokers, groupID, config)
-	if err != nil {
-		log.Fatal(err)
-	}
+// 2. 合理设置 Session Timeout
+"session.timeout.ms": 10000      // 太短容易误判，太长发现慢消费者慢
+"heartbeat.interval.ms": 3000    // 必须是 session.timeout.ms 的 1/3
 
-	handler := &ConsumerGroupHandler{name: "consumer-1"}
+// 3. 监控 Rebalance 频率
+# JMX 监控
+kafka.consumer:type=consumer-coordinator-metrics,name=rebalance-latency-avg
 
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+// 如果 rebalance-latency 持续 > 5s，说明有消费者处理太慢
+```
 
-	go func() {
-		for {
-			if err := client.Consume(ctx, []string{topic}, handler); err != nil {
-				log.Printf("Consume error: %v", err)
-			}
-			if ctx.Err() != nil {
-				return
-			}
-		}
-	}()
+#### 问题三：消费者 "僵尸"（Zombie Consumer）
 
-	<-sigChan
-	cancel()
-	client.Close()
+```
+场景：Consumer 处理非常慢，Session Timeout 后被踢出
+      但处理仍在进行，完成后提交 offset
+      此时分区已分配给其他 Consumer → offset 错乱
+
+解决方案：引入 GenerationId（代数）
+
+每次 Rebalance 后，Broker 分配新的 generation_id
+Consumer 提交 offset 时必须携带当前的 generation_id
+如果 generation_id 不匹配，说明 Consumer 是僵尸，拒绝提交
+```
+
+```go
+// Kafka 新版本（2.4+）默认保护
+// 旧版 Consumer 需要升级
+```
+
+### 6. 消费者数量与分区数的关系
+
+```
+黄金法则：消费者数量 ≤ Topic 分区数
+
+分区数 = N
+  - 消费者 = N：每个消费者消费 1 个分区（最大并行度）
+  - 消费者 < N：部分分区空闲（浪费）
+  - 消费者 > N：多余消费者空闲（无意义）
+
+动态调整消费者：
+  扩容消费者 → Rebalance → 分区重新分配
+  缩容消费者 → Rebalance → 分区重新分配
+  
+  建议：使用 Kubernetes HPA 配合 Kafka 消费者，根据 lag 自动扩缩
+```
+
+```go
+// 监控消费 lag，根据 lag 决策扩缩容
+func monitorLag(consumer *kafka.Consumer) {
+    for {
+        lags, _ := consumer.Lag()
+        for _, lag := range lags {
+            if lag > 10000 {
+                // 触发扩容：增加消费者实例
+                scaleUp()
+            }
+            if lag < 1000 {
+                // 触发缩容：减少消费者实例
+                scaleDown()
+            }
+        }
+        time.Sleep(10 * time.Second)
+    }
 }
 ```
 
 ---
 
-## Rebalance（再均衡）
+## 高频追问
 
-### 触发条件
+**Q：Session Timeout 和 Heartbeat Interval 怎么配合？**
 
-| 触发条件 | 说明 |
-|---------|------|
-| Consumer 加入 | 新 Consumer 加入组，触发 Rebalance |
-| Consumer 离开 | Consumer 主动关闭或崩溃 |
-| Partition 数量变化 | Topic 分区数增加 |
-| Broker 故障 | 分区 Leader 迁移 |
+> Heartbeat Interval 必须小于 Session Timeout 的 1/3。比如 Session Timeout=30s，Heartbeat Interval 就设 10s（3次/30s），留足够时间让心跳触发。如果业务处理时间长，优先调大 `max.poll.interval.ms`（控制业务处理超时），而不是调大 Session Timeout。
 
-### Rebalance 过程
+**Q：消费者实例数比分区数多怎么办？**
 
-```
-消费者加入/离开
-      ↓
-Coordinator（Broker）通知所有 Consumer 停止消费
-      ↓
-Consumer 停止消费，等待分区分配
-      ↓
-Coordinator 计算新的分区分配方案
-      ↓
-Coordinator 通知所有 Consumer 新的分配方案
-      ↓
-Consumer 开始消费
-```
+> 多余的消费者实例会空闲，不消费任何分区。这通常发生在临时扩容后忘记缩容，或者分区数规划不合理时。解决方案：监控 `consumer.assigned.partitions.count`，如果实例数 > 分区数，告警。
 
-### 分区分配策略
+**Q：Rebalance 时如何保证消息不丢失？**
 
-```go
-// 三种分配策略对比
+> Kafka 本身不丢消息（消息在 Broker 磁盘），但 Rebalance 期间消费中断可能导致处理中断。关键是：1）手动提交 offset，在处理成功后提交；2）业务处理幂等，应对重复消费；3）Rebalance 时记录当前处理进度，支持断点恢复。
 
-// 1. Range（默认）
-// 每个 Consumer 连续分若干个分区，可能不均匀
-// Topic: 3 partitions → Consumer A: [0], Consumer B: [1,2]
-// 缺点：Consumer 多的组可能导致某些 Consumer 分到更多分区
+**Q：如何减少 Rebalance 对业务的影响？**
 
-// 2. RoundRobin（推荐大多数场景）
-// 将所有 Topic 的所有分区混合后轮询分配
-// 更均匀
-
-// 3. StickyAssignor
-// 保持原有分配，只迁移必要的分区（减少 Rebalance 影响）
-// Kafka 2.4+ 默认
-
-// 配置示例
-config.Consumer.Group.Rebalance.GroupStrategies = []sarama.BalanceStrategy{
-	sarama.NewBalanceStrategySticky(), // 粘性分配
-}
-```
-
-### Rebalance 问题与优化
-
-**问题：Rebalance 期间服务不可用（Stop The World）**
-
-```go
-// 优化1：增加心跳间隔，减少意外 Rebalance
-config.Consumer.Heartbeat.Interval = 10 * time.Second  // 原3s
-config.Consumer.Session.Timeout = 30 * time.Second     // 原10s
-config.Consumer.MaxWaitTime = 500 * time.Millisecond
-
-// 优化2：设置合理的 Rebalance 超时
-config.Consumer.Group.Rebalance.Timeout = 60 * time.Second
-
-// 优化3：使用 StickyAssignor 减少分区迁移
-```
+> 1. 业务处理异步化：poll() 后立即提交到 channel，异步 worker 处理，主线程继续 poll()。2. 使用 StickyAssignor 减少分区移动。3. 业务处理超时后不退出，只记录异常并继续。4. 监控 rebalance 频率，出现频繁 Rebalance 时排查根因（通常是消费者心跳超时）。
 
 ---
 
-## 顺序消费
+## 延伸阅读
 
-### Kafka 顺序消费的约束
-
-```
-顺序保证只在单个 Partition 内有序
-跨 Partition 无序
-
-要保证全局顺序：
-  方案1：Topic 只设置 1 个 Partition（但失去并行能力）
-  方案2：按消息 Key 哈希到固定 Partition（相同 Key 有序）
-```
-
-### Go 保证顺序消费示例
-
-```go
-package main
-
-import (
-	"fmt"
-
-	"github.com/IBM/sarama"
-)
-
-// 按用户 ID 保证顺序：相同 userID 的消息一定路由到同一分区
-type UserOrderProducer struct {
-	producer sarama.SyncProducer
-}
-
-func (p *UserOrderProducer) SendOrder(userID string, orderID string) error {
-	msg := &sarama.ProducerMessage{
-		Topic: "user-orders",
-		Key:   sarama.StringEncoder(userID), // Key 决定分区
-		Value: sarama.StringEncoder(orderID),
-	}
-	
-	partition, _, err := p.producer.SendMessage(msg)
-	if err != nil {
-		return err
-	}
-	
-	fmt.Printf("Order %s for user %s sent to partition %d\n", 
-		orderID, userID, partition)
-	return nil
-}
-
-// 消费者：按分区消费，保证同一用户的订单有序
-func consumeUserOrders(client sarama.ConsumerGroup, topic string) {
-	// 每个分区一个 Consumer，保证有序
-	client.Consume()
-}
-```
-
----
-
-## 消费者 offset 管理
-
-### offset 存储位置
-
-```
-旧版（__consumer_offsets Topic）：
-  ZooKeeper 管理 offset（已废弃）
-
-新版（Kafka 内部 Topic）：
-  __consumer_offsets 自动管理
-  默认 50 个分区，ReplicationFactor = 3
-```
-
-### offset 提交策略
-
-```go
-// 自动提交（默认，但可能有重复消费）
-config.Consumer.Offsets.AutoCommit.Enable = true
-config.Consumer.Offsets.AutoCommit.Interval = 5 * time.Second  // 5s 提交一次
-
-// 手动提交（精确控制，推荐）
-config.Consumer.Offsets.AutoCommit.Enable = false
-
-// 手动同步提交
-handler := &ConsumerGroupHandler{}
-client.Consume(ctx, topics, handler)
-client.CommitOffsets()
-
-// 手动异步提交（高吞吐）
-go func() {
-	for {
-		select {
-		case <-ticker.C:
-			if err := client.CommitOffsets(); err != nil {
-				log.Printf("Commit failed: %v", err)
-			}
-		}
-	}
-}()
-```
-
----
-
-## 常见问题与排查
-
-### 消费者 lag 过大
-
-```bash
-# 查看消费滞后
-kafka-consumer-groups.sh --bootstrap-server localhost:9092 \
-  --group my-group --describe
-
-# 输出示例：
-# GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG
-# my-group        order-events    0          5000            10000           5000  ← lag 过大
-
-# 原因排查：
-# 1. Consumer 消费速度慢 → Profiler 看 CPU / 检查处理逻辑
-# 2. Consumer 实例太少 → 增加 Consumer 数量（上限是 Partition 数）
-# 3. 分区分配不均 → 检查分区分配策略
-```
-
-### 重复消费的解决方案
-
-```go
-// 业务层幂等
-type OrderProcessor struct {
-	db DB
-}
-
-func (p *OrderProcessor) Process(msg *sarama.ConsumerMessage) error {
-	// 1. 提取业务 ID
-	orderID := extractOrderID(msg.Value)
-	
-	// 2. 幂等检查：Redis SETNX
-	ok, err := p.db.Setnx(ctx, "processed:"+orderID, 1, 24*time.Hour)
-	if err != nil {
-		return err
-	}
-	if !ok {
-		log.Printf("Already processed: %s", orderID)
-		return nil // 已处理过，跳过
-	}
-	
-	// 3. 业务处理
-	return p.db.CreateOrder(orderID)
-}
-```
-
----
-
-## 面试话术
-
-**Q：消费者组内 Consumer 数量和 Partition 数量应该是什么关系？**
-
-> Consumer 数量**建议等于或小于 Partition 数量**。Consumer 多于 Partition 会导致多余的 Consumer 空闲。最佳配置：Partition 数 = N × Consumer 数（每个 Consumer 处理 N 个分区）。如果消费慢，可以增加分区和 Consumer（但 Partition 数定了就不能减少，只能增加）。
-
-**Q：Rebalance 时消息会丢失吗？**
-
-> 不会丢失，但会有短暂不可用。Rebalance 期间 Consumer 停止拉取消息，Rebalance 完成后从新的 offset 继续消费。如果 Consumer 在处理消息时崩溃，消息会重新投给其他 Consumer（因为 offset 还没提交）。所以要确保**先处理消息，再提交 offset**。
-
-**Q：如何保证消息不被重复消费？**
-
-> 三个层次：1）Producer 端开启幂等生产者（Kafka 0.11+）；2）Consumer 端先处理消息，再提交 offset；3）业务层做幂等（数据库唯一索引 / Redis 去重 key）。Kafka 天然支持 At-Least-Once 语义，允许少量重复但不允许丢失。
+- [Kafka KIP-548: Consumer Group Membership](https://cwiki.apache.org/confluence/display/KAFKA/KIP-548%3A+Add+Static+Membership+to+the+Consumer+Group)
+- [Kafka Java Consumer 设计解析](https://mp.weixin.qq.com/s/XhHUA0mIU16iNrsBSX3Wew)
+- [sarama consumer example](https://github.com/Shopify/sarama/blob/main/examples/consumer_group/consumer_group.go)

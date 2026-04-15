@@ -1,381 +1,286 @@
-# Kafka 消息可靠性
-
-> 考察频率：★★★★★  难度：★★★★☆
-> 关键词：ACK、ISR、幂等生产者、事务、Exactly-Once
-
-## 消息可靠性的三个层次
-
-```
-┌─────────────────────────────────────────────────┐
-│                 消息可靠性金字塔                   │
-├─────────────────────────────────────────────────┤
-│  Exactly-Once（恰好一次）← 最强，但代价最高        │
-│  At-Least-Once（至少一次）← 最常用，可能重复      │
-│  At-Most-Once（至多一次）← 单调，但可能丢消息     │
-└─────────────────────────────────────────────────┘
-```
+[🏠 首页](../../../README.md) · [📦 分布式系统](../README.md) · [💬 消息队列](../03-mq-problems/README.md)
 
 ---
 
-## 1. Producer 可靠性配置
+# Kafka 消息可靠性：ACK 机制、ISR、幂等生产者、事务
 
-### acks 参数详解
+## 面试官考察意图
 
-| acks 值 | 含义 | 可靠性 | 吞吐量 |
-|---------|------|--------|--------|
-| `0` | Producer 不等待响应 | ⚠️ 可能丢消息 | 最高 |
-| `1` | Leader 写入后即返回 | ⚠️ Leader 挂丢消息 | 高 |
-| `all`（-1）| ISR 全部写入后返回 | ✅ 最高可靠 | 最低 |
-
-```go
-// Go Producer 配置最佳实践
-package main
-
-import (
-	"context"
-	"fmt"
-	"time"
-
-	"github.com/IBM/sarama"
-)
-
-func newReliableProducer(brokers []string) (sarama.SyncProducer, error) {
-	config := sarama.NewConfig()
-	
-	// acks = all 保证消息写入所有 ISR 才返回
-	config.Producer.RequiredAcks = sarama.WaitForAll
-	
-	// 等待 ISR 同步的超时时间
-	config.Producer.Acks = 100 * time.Millisecond
-	
-	// 开启幂等生产者（Kafka 0.11+）
-	config.Producer.Idempotent = true
-	
-	// 重试次数（网络抖动时自动重试）
-	config.Producer.Retry.Max = 5
-	
-	// 开启异步确认（性能更好）
-	config.Producer.Return.Successes = true
-	config.Producer.Return.Errors = true
-	
-	// 批量发送：积攒 batch.size 或 linger.ms 后发送
-	config.Producer.Batch.Size = 16 * 1024  // 16KB
-	config.Producer.Linger.ms = 5            // 5ms 延迟批量
-	
-	// 压缩（减少网络流量）
-	config.Producer.Compression = sarama.CompressionSnappy
-	
-	producer, err := sarama.NewSyncProducer(brokers, config)
-	if err != nil {
-		return nil, fmt.Errorf("create producer failed: %w", err)
-	}
-	
-	return producer, nil
-}
-
-// 发送消息并处理回调
-func sendWithCallback(producer sarama.SyncProducer, topic, key, value string) error {
-	msg := &sarama.ProducerMessage{
-		Topic: topic,
-		Key:   sarama.StringEncoder(key),
-		Value: sarama.StringEncoder(value),
-		Headers: []sarama.RecordHeader{
-			{Key: []byte("trace-id"), Value: []byte("req-123")},
-		},
-	}
-	
-	partition, offset, err := producer.SendMessage(msg)
-	if err != nil {
-		return fmt.Errorf("send message failed: %w", err)
-	}
-	
-	fmt.Printf("Message sent to partition %d at offset %d\n", partition, offset)
-	return nil
-}
-```
-
-### 幂等生产者（Idempotent Producer）
-
-**解决的问题**：Producer 重试时可能产生重复消息。
-
-```go
-// 幂等生产者原理
-// 开启 idempotent = true 后，Producer 会被分配一个唯一 PID
-// 每个消息带 (PID, Sequence Number)
-// Broker 根据 (PID, SN) 去重，丢弃重复消息
-
-config := sarama.NewConfig()
-config.Producer.Idempotent = true  // 开启幂等
-config.Producer.Return.Successes = true
-
-// 注意：幂等生产者只能保证单个 Producer 实例内的消息不重复
-// 跨 Producer 实例去重需要业务层做幂等
-```
+考察候选人对 Kafka 消息可靠性的理解深度。初级能说出"acks=all 配置"，高级要能讲清楚 **ISR 机制、min.insync.replicas 的边界条件、幂等生产者防止重复的原理、Kafka 事务的 exactly-once 语义**，并能结合生产故障（如 ISR 收缩、脑裂）给出分析。
 
 ---
 
-## 2. ISR 机制
+## 核心答案（30 秒版）
 
-### 什么是 ISR
+Kafka 可靠性从三个层面保障：
+
+| 层面 | 核心配置 | 作用 |
+|------|----------|------|
+| **生产者** | `acks=all` + 幂等生产者 | 确保消息写入成功且不重复 |
+| **Broker** | `min.insync.replicas=2` + 同步刷盘 | 确保消息在多个副本持久化 |
+| **消费者** | 手动提交 offset + 业务幂等 | 确保处理成功后再提交 |
+
+**exactly-once 语义**：Kafka 3.3+ 通过幂等生产者 + 事务 API 实现端到端 exactly-once，适用于金融级场景。
+
+---
+
+## 深度展开
+
+### 1. 生产者 ACK 机制
+
+```go
+// Kafka Go 客户端配置
+producer := &kafka.ProducerConfig{
+    // acks 配置决定写入成功条件
+    "acks": 1,        // Leader 写入即返回（快，可能丢）
+    // "acks": -1,    // 等所有 ISR 确认（慢，不丢）
+    // "acks": 0,     //  fire-and-forget（最快，必然丢）
+}
+```
+
+**acks=-1（等价于 all）的写入流程**：
 
 ```
-ISR = In-Sync Replicas（同步副本集合）
-
-Leader + 跟上 Leader 进度的 Follower 组成 ISR
-
-判断"跟上进度"的标准：
-  replica.lag.max.messages ≤ 配置阈值（默认 4000）
-  replica.time.lag.ms ≤ 配置阈值（默认 10s）
+Producer 发送消息
+    │
+    ├─ Leader Broker 写入本地日志
+    │
+    ├─ Follower Broker 同步日志（HW 更新）
+    │     等待条件：ISR 列表中所有副本都写入
+    │
+    └─ Producer 收到确认
 ```
 
-### acks=all 时的可靠性保证
+**HW（High Watermark）机制**：
 
 ```
-Producer 发送消息 → Leader 写入 → 等待所有 ISR 确认 → 返回 ACK
+┌─────────────────────────────────────────────┐
+│  LEO (Log End Offset) ──────────────────│  ← 最新消息
+│                                             │
+│  ...                                        │
+│                                             │
+│  HW ────────────────────────────────────│  ← 已同步水位，消费者可见上限
+│                                             │
+│  ...                                        │
+│  0 ─────────────────────────────────────│  ← 旧消息，消费者已可见
+└─────────────────────────────────────────────┘
 
-场景分析：
-  假设 replication.factor = 3, min.insync.replicas = 2
-
-  ✅ 正常情况：Leader + 1个 Follower 确认，消息可靠
-  ⚠️ 极端情况：只有 Leader 在 ISR，只剩1个节点，仍可写入
-  ❌ 崩溃情况：ISR < min.insync.replicas → 拒绝写入，返回异常
+HW = min(all ISR LEO)，确保消费者不读到未同步的脏数据
 ```
 
-### min.insync.replicas 配置建议
+### 2. ISR 机制（In-Sync Replicas）
+
+**ISR 列表**：与 Leader 保持同步的副本集合。
+
+```
+ISR 动态变化场景：
+
+正常情况：
+  Partition 0: Leader(P0) + Follower(P1) + Follower(P2)  →  ISR = [P0, P1, P2]
+
+Follower P1 宕机（落后超过 replica.lag.time.max.ms）：
+  ISR = [P0, P2]          →  容忍 1 节点故障
+
+Leader P0 宕机：
+  Controller 从 ISR 中选择新 Leader（P2）
+  选举后的 ISR = [P2]（P2 成为新 Leader）
+  
+  如果 acks=all 且 min.insync.replicas=2：
+  写入会被拒绝（因为 ISR < min.insync.replicas）
+  → 写入失败，Producer 收到 NotEnoughReplicasException
+```
+
+**关键配置**：
 
 ```properties
-# 平衡可靠性与可用性
-# 推荐：replication.factor=3, min.insync.replicas=2
-# 这样：容忍1个副本故障，仍可写入
+# 副本落后多少ms认为失联
+replica.lag.time.max.ms=30000
 
-min.insync.replicas = 2   # 写入时最少需要2个同步副本
+# 副本落后多少条消息认为失联（已废弃，优先用时间）
+replica.lag.max.messages=10000
+
+# ISR 最少副本数（核心！）
+min.insync.replicas=2
+
+# 不选脏数据为 Leader（防止数据丢失）
+unclean.leader.election.enable=false
 ```
 
----
-
-## 3. 消费者可靠性
-
-### 核心问题：消费到提交
+**生产故障案例：ISR 收缩导致写入失败**
 
 ```
-Consumer 的可靠性关键：先消费，后提交 offset
+故障场景：3 节点 Kafka，min.insync.replicas=2
+  1. 网络抖动，P1 落后超过 30s
+  2. Controller 将 P1 踢出 ISR
+  3. ISR = [P0, P2]，此时如果 P0 宕机
+  4. 新 Leader P2 成为唯一节点，ISR = [P2]
+  5. ISR(1) < min.insync.replicas(2)，写入拒绝
 
-❌ 错误顺序（At-Most-Once）：
-  提交 offset → 处理消息
-  → 如果处理失败，消息丢失
+影响：生产者重试，但超过重试次数后消息丢失
 
-✅ 正确顺序（At-Least-Once）：
-  处理消息 → 提交 offset
-  → 如果处理失败，重试消费，消息不丢
+解决方案：
+  - 监控 ISR 变化（Kafka JMX: kafka.server:type=ReplicaManager,name=IsrExpandsRate）
+  - 设置 acks=all + retries=Integer.MAX_VALUE
+  - 适当调大 replica.lag.time.max.ms
 ```
 
-### Go 消费者最佳实践
+### 3. 幂等生产者（Idempotent Producer）
+
+**解决的问题**：网络重试导致消息重复。
+
+```
+重试场景（无幂等）：
+  1. Producer 发送消息给 Broker
+  2. Broker 写入成功，但响应丢失
+  3. Producer 超时重试
+  4. Broker 收到重复消息 → 重复写入
+
+幂等生产者原理：
+  每个 Producer 有唯一的 ProducerId
+  每个 Batch 有序列号（Sequence Number）
+  Broker 只接受"连续下一个序列号"的消息
+  → 重复消息被拒绝
+```
 
 ```go
-package consumer
-
-import (
-	"context"
-	"fmt"
-	"log"
-	"sync"
-
-	"github.com/IBM/sarama"
-)
-
-// ReliableConsumer 可靠消费者
-type ReliableConsumer struct {
-	client        sarama.ConsumerGroup
-	topics        []string
-	handler       *messageHandler
-	ready         chan bool
-	ctx           context.Context
-	cancel        context.CancelFunc
+// 开启幂等生产者
+producer := &kafka.ProducerConfig{
+    "enable.idempotence": true,   // 开启幂等（默认 true，Go 客户端需手动开启）
+    "acks": "all",                // 幂等必须配合 acks=all
+    "retries": 3,
+    "max.in.flight.requests.per.connection": 5,
+    // 注意：max.in.flight ≤ 5 才能保证幂等下的顺序
 }
 
-type messageHandler struct {
-	processingFn func(msg *sarama.ConsumerMessage) error
-}
-
-func (h *messageHandler) Setup(sarama.ConsumerGroupSession) error {
-	fmt.Println("Consumer group session started")
-	return nil
-}
-
-func (h *messageHandler) Cleanup(sarama.ConsumerGroupSession) error {
-	fmt.Println("Consumer group session ended")
-	return nil
-}
-
-// ConsumeClaim 处理消息的核心方法
-func (h *messageHandler) ConsumeClaim(
-	session sarama.ConsumerGroupSession,
-	claim sarama.ConsumerGroupClaim,
-) error {
-	for {
-		select {
-		case msg, ok := <-claim.Messages():
-			if !ok {
-				return nil
-			}
-			
-			// ========== 关键：先处理，再标记 ==========
-			
-			// 1. 业务处理（幂等操作）
-			err := h.processMessage(msg)
-			if err != nil {
-				// 处理失败：记录日志，不要提交 offset（会重试）
-				log.Printf("Process failed, will retry: err=%v offset=%d", 
-					err, msg.Offset)
-				continue // 不调用 session.MarkMessage()，下次还会收到
-			}
-			
-			// 2. 处理成功，标记已消费
-			// MarkMessage 不是立即提交，只是一个 offset 标记
-			session.MarkMessage(msg, "")
-			
-			// 3. 可选：手动提交（Kafka 默认自动提交，但自动提交有延迟）
-			session.Commit()
-			
-			log.Printf("Message processed: topic=%s partition=%d offset=%d", 
-				msg.Topic, msg.Partition, msg.Offset)
-				
-		case <-session.Context().Done():
-			return nil
-		}
-	}
-}
-
-func (h *messageHandler) processMessage(msg *sarama.ConsumerMessage) error {
-	// 模拟业务处理
-	// 实际项目中这里做幂等检查（查 DB / Redis）
-	return nil
-}
-
-// 启动消费者
-func StartConsumer(brokers []string, groupID string) error {
-	config := sarama.NewConfig()
-	
-	// 关闭自动提交，改为手动提交
-	config.Consumer.Offsets.AutoCommit.Enable = false
-	config.Consumer.Offsets.Initial = sarama.OffsetNewest
-	
-	// 设置 Rebalance 策略
-	config.Consumer.Group.Rebalance.GroupStrategies = []sarama.BalanceStrategy{
-		sarama.NewBalanceStrategyRoundRobin(),
-	}
-	
-	// 心跳超时（超过这个时间没心跳，Broker 认为 Consumer 挂了）
-	config.Consumer.Heartbeat.Interval = 3 * time.Second
-	config.Consumer.Session.Timeout = 10 * time.Second
-	
-	ctx, cancel := context.WithCancel(context.Background())
-	
-	client, err := sarama.NewConsumerGroup(brokers, groupID, config)
-	if err != nil {
-		cancel()
-		return fmt.Errorf("create consumer group failed: %w", err)
-	}
-	
-	handler := &messageHandler{
-		processingFn: func(msg *sarama.ConsumerMessage) error {
-			return nil // 业务逻辑
-		},
-	}
-	
-	consumer := &ReliableConsumer{
-		client:  client,
-		topics:  []string{"my-topic"},
-		handler: handler,
-		ctx:     ctx,
-		cancel:  cancel,
-	}
-	
-	go func() {
-		for {
-			// ConsumerGroup 会自动处理 rebalance
-			if err := client.Consume(ctx, []string{"my-topic"}, handler); err != nil {
-				log.Printf("Consume error: %v", err)
-			}
-		}
-	}()
-	
-	return nil
-}
+// 幂等生产者保证了"生产者级别的 exactly-once"
+// 但不保证"消费端的 exactly-once"（事务解决）
 ```
 
----
+**幂等限制**：
 
-## 4. Exactly-Once 语义
+- 单 Producer 内有序（通过 Sequence Number 保证）
+- 跨 Producer 无序（不同 ProducerId 不能去重）
+- 最多保证 5 个 in-flight 请求（Go 客户端）
 
-### Kafka 的 Exactly-Once 实现
+### 4. Kafka 事务（Exactly-Once Semantics）
 
-Kafka 0.11+ 支持**事务**（Transaction），实现 Exactly-Once：
+**三种语义对比**：
+
+| 语义 | 定义 | 实现难度 |
+|------|------|---------|
+| **at-most-once** | 消息最多投递一次（可能丢，不重复）| 简单 |
+| **at-least-once** | 消息至少投递一次（不丢，可能重复）| 中等 |
+| **exactly-once** | 消息恰好投递一次（不丢，不重复）| 复杂 |
+
+**Kafka 事务实现**：跨分区原子写入 + 消费者精确提交。
 
 ```go
-// Kafka 事务：Producer 原子性发送 + Consumer 原子性提交 offset
-package main
+// Kafka 事务示例：写 Kafka + 写数据库 原子提交
+func produceWithTransaction(kafkaProducer *kafka.Producer, db *sql.DB) error {
+    tx, err := kafkaProducer.BeginTransaction()
+    if err != nil {
+        return err
+    }
 
-import (
-	"github.com/IBM/sarama"
-)
+    // 开启数据库事务
+    dbTx, err := db.Begin()
+    if err != nil {
+        tx.Abort()
+        return err
+    }
 
-func main() {
-	config := sarama.NewConfig()
-	
-	// 开启事务
-	config.Producer.TransactionalID = "my-transactional-id"  // 需要唯一 ID
-	config.Producer.Idempotent = true
-	config.Producer.Return.Successes = true
-	
-	producer, _ := sarama.NewProducer(config)
-	
-	// 开启事务
-	err := producer.BeginTransaction()
-	if err != nil {
-		panic(err)
-	}
-	
-	// 发送业务消息
-	producer.Input() <- &sarama.ProducerMessage{
-		Topic: "payment-events",
-		Value: sarama.StringEncoder("payment-success"),
-	}
-	
-	// 发送 offset 提交消息（特殊 Topic）
-	// 在一个事务里同时包含业务消息和 offset，原子提交
-	producer.Input() <- &sarama.ProducerMessage{
-		Topic: "__consumer_offsets",
-		Value: sarama.StringEncoder(offsetCommit),
-	}
-	
-	// 提交事务
-	if err := producer.CommitTransaction(); err != nil {
-		producer.AbortTransaction()
-	}
+    // 1. 发送 Kafka 消息（PREPARE 阶段）
+    err = tx.SendMessage(&kafka.Message{
+        Topic: "orders",
+        Key:   []byte("order-123"),
+        Value: []byte(`{"order_id":"123","amount":100}`),
+    })
+    if err != nil {
+        tx.Abort()
+        dbTx.Rollback()
+        return err
+    }
+
+    // 2. 写数据库
+    _, err = dbTx.Exec(`INSERT INTO orders ...`)
+    if err != nil {
+        tx.Abort()
+        dbTx.Rollack()
+        return err
+    }
+
+    // 3. 提交数据库事务
+    dbTx.Commit()
+
+    // 4. 提交 Kafka 事务
+    return tx.Commit()  // 原子保证：要么全成功，要么全回滚
 }
 ```
 
-### 三种 Exactly-Once 场景
+**消费端事务（Read-Commit）**：
 
-| 场景 | Kafka 支持 | 说明 |
-|------|-----------|------|
-| Producer → Kafka | ✅ 幂等生产者 / 事务 | 发送端不重复 |
-| Kafka → External System | ⚠️ 需要外部幂等 | 需要业务端配合 |
-| Kafka → Kafka | ✅ 事务 | 跨 Topic 原子写入 |
+```go
+// 消费 + 业务处理 + 提交 offset 原子化
+consumer := kafka.NewConsumer([]string{"localhost:9092"}, "my-group")
+
+// 配置事务隔离级别
+consumer.SetOffsetIsolationLevel(kafka.IsolationLevelReadCommitted)
+
+for {
+    msg := consumer.Poll()
+    if msg == nil {
+        continue
+    }
+
+    // 消费事务消息（只有已提交的事务消息才会被投递）
+    err := process(msg.Value)
+    if err != nil {
+        // 处理失败，不提交 offset，下次重新消费
+        continue
+    }
+
+    // 业务处理成功后，手动提交 offset
+    consumer.CommitOffsets(msg.Offset)
+}
+```
+
+**exactly-once 适用场景**：
+
+```
+✅ 适合：跨系统原子写入（Kafka → MySQL）、金融交易
+❌ 不适合：普通日志收集（at-least-once + 幂等足够）
+```
 
 ---
 
-## 面试话术
+## 高频追问
 
-**Q：如何保证 Kafka 消息不丢？**
+**Q：acks=all 性能很差，怎么优化？**
 
-> 三端都要做：1）**Producer 端**：acks=all + 幂等生产者 + 重试机制；2）**Broker 端**：replication.factor=3 + min.insync.replicas=2 + unclean.leader.election=false；3）**Consumer 端**：关闭自动提交，手动在业务处理完成后提交 offset。三端缺一不可。
+> acks=all 确实慢，因为要等所有 ISR 确认。优化方案：
+> 1. 批量发送：`batch.size=65536` + `linger.ms=20`（合并小消息）
+> 2. 压缩：`compression.type=snappy`（减少网络传输量）
+> 3. 异步 + 回调：发送和确认解耦，不阻塞主流程
+> 4. 选择合适的 acks：普通日志用 acks=1，核心数据用 acks=all
 
-**Q：Kafka 的高可靠和低延迟如何权衡？**
+**Q：min.insync.replicas=1 会有什么问题？**
 
-> acks=all 可靠性最高但延迟大，因为要等所有 ISR 同步。可以：1）增加 batch.size 和 linger.ms，批量发送减少 RTT；2）用异步发送 + 回调；3）选择同机房部署减少网络延迟；4）适当降低 replication.factor 到 2（代价是容忍度降低）。
+> 写入成功后 Leader 宕机，新 Leader 没有这条消息，导致数据丢失。这通常发生在网络分区场景：写入成功 → Leader 故障 → 旧 Leader 被踢出 ISR → 新 Leader 成为唯一节点（数据落后）。兜底方案：`unclean.leader.election.enable=false`。
 
-**Q：消费者重复消费怎么解决？**
+**Q：如何监控 Kafka 可靠性指标？**
 
-> 业务层面做幂等：1）数据库唯一索引（user_id + 业务主键）；2）Redis 去重（SETNX）；3）版本号乐观锁。关键是想清楚"处理失败怎么办"——At-Least-Once 允许重复，但不允许丢失。
+```bash
+# 核心 JMX 指标
+kafka.server:type=ReplicaManager,name=UnderMinIsrPartitionCount  # ISR 不足分区数
+kafka.server:type=ReplicaManager,name=OfflinePartitionsCount      # 离线分区数
+kafka.producer:type=producer-metrics,name=record-error-rate        # 生产错误率
+kafka.consumer:type=consumer-metrics,name=records-lag-max           # 最大消费延迟
+```
+
+---
+
+## 延伸阅读
+
+- [Kafka 官方文档 - Replication](https://kafka.apache.org/documentation/#replication)
+- [KIP-631: KRaft 模式替代 ZooKeeper](https://cwiki.apache.org/confluence/display/KAFKA/KIP-631%3A+The+Quorum-based+Controller)
+- [Go Kafka 客户端 sarama](https://github.com/Shopify/sarama)

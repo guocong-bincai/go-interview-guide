@@ -5,7 +5,7 @@
 **专为 5~8 年 Go 后端工程师打造 · 大厂面试核心考点全覆盖**
 
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
-[![Version](https://img.shields.io/badge/version-v1.10-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
+[![Version](https://img.shields.io/badge/version-v1.11-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
@@ -100,8 +100,8 @@
 | [🔴 interface 原理](./docs/01-golang/03-language-deep/01-interface.md) | iface/eface 内存布局、动态分发开销 | ✅ 已完成 |
 | [🟡 逃逸分析](./docs/01-golang/03-language-deep/04-escape.md) | 堆 vs 栈分配、如何避免不必要逃逸 | ✅ 已完成 |
 | [🟡 slice 与 map 原理](./docs/01-golang/03-language-deep/05-slice-map.md) | 底层结构、扩容策略、Swiss Table（Go 1.24）、并发安全问题 | ✅ 已完成 |
-| 🟢 泛型实现 | GCShape stenciling、使用边界 | 📝 待更新 |
-| 🟢 reflect 原理 | 性能代价、实际使用场景 | 📝 待更新 |
+| [🟡 泛型实现](./docs/01-golang/03-language-deep/06-generics.md) | GCShape stenciling、~T 约束、性能陷阱 | ✅ 已完成 |
+🟢 reflect 原理 | 性能代价、实际使用场景 | 📝 待更新 |
 
 </details>
 
@@ -111,9 +111,9 @@
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
 | [🔴 pprof 实战](./docs/01-golang/04-performance/01-pprof.md) | CPU/内存/goroutine 火焰图分析 | ✅ 已完成 |
-| 🟡 内存泄漏排查 | goroutine 泄漏、全局变量、缓存失控 | 📝 待更新 |
-| 🟡 基准测试规范 | benchmark 写法、避免编译器优化干扰 | 📝 待更新 |
-| 🟢 真实调优案例 | JSON 解析、字符串拼接、sync.Pool 实战 | 📝 待更新 |
+| [🟡 内存泄漏排查](./docs/01-golang/04-performance/02-memory-leak.md) | goroutine 泄漏、map 泄漏、timer 陷阱 | ✅ 已完成 |
+| [🟡 基准测试规范](./docs/01-golang/04-performance/03-benchmark.md) | b.N 用法、benchstat、避免 DCE 优化 | ✅ 已完成 |
+🟢 真实调优案例 | JSON 解析、字符串拼接、sync.Pool 实战 | 📝 待更新 |
 
 </details>
 
@@ -182,7 +182,7 @@
 | [🟡 2PC / 3PC](./docs/03-distributed/02-transactions/01-2pc-3pc.md) | 原理、问题与局限 | ✅ 已完成 |
 | [🟡 TCC 模式](./docs/03-distributed/02-transactions/02-tcc.md) | Try/Confirm/Cancel、幂等设计 | ✅ 已完成 |
 | [🟡 Saga 模式](./docs/03-distributed/02-transactions/03-saga.md) | 编排 vs 协调、补偿事务设计 | ✅ 已完成 |
-| 🟡 消息最终一致性 | 本地消息表、事务消息（RocketMQ）| 📝 待更新 |
+| [🟡 消息最终一致性](./docs/03-distributed/02-transactions/04-msg-eventual.md) | 本地消息表、RocketMQ 事务消息、Saga 补偿 | ✅ 已完成 |
 
 </details>
 
@@ -192,8 +192,8 @@
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
 | [🟡 Kafka 高吞吐原理](./docs/03-distributed/03-mq-problems/01-kafka-principle.md) | 零拷贝、顺序写、分区 | ✅ 已完成 |
-| 🟡 Kafka 消息可靠性 | ACK 机制、ISR、幂等生产者 | 📝 待更新 |
-| 🟡 消费者组与 Rebalance | 消费者组、顺序消费 | 📝 待更新 |
+| [🟡 Kafka 消息可靠性](./docs/03-distributed/03-mq-problems/02-kafka-reliability.md) | ACK 机制、ISR 收缩、幂等生产者、事务 | ✅ 已完成 |
+| [🟡 消费者组与 Rebalance](./docs/03-distributed/03-mq-problems/03-kafka-consumer.md) | 分区分配策略、Rebalance 触发条件、Session Timeout | ✅ 已完成 |
 | [🟡 消息积压/丢失/重复](./docs/03-distributed/03-mq-problems/05-mq-problems.md) | 常见问题与解决方案 | ✅ 已完成 |
 
 </details>
