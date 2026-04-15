@@ -5,7 +5,7 @@
 **专为 5~8 年 Go 后端工程师打造 · 大厂面试核心考点全覆盖**
 
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
-[![Version](https://img.shields.io/badge/version-v2.08-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
+[![Version](https://img.shields.io/badge/version-v2.09-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
@@ -74,7 +74,8 @@
 |------|----------|------|
 | [🔴 GMP 调度模型](./docs/01-golang/01-runtime/01-gmp.md) | G/M/P 角色、Work Stealing、Hand Off、sysmon 抢占 | ✅ 已完成 |
 | [🔴 GC 垃圾回收机制](./docs/01-golang/01-runtime/02-gc.md) | 三色标记、混合写屏障、STW 优化历程、GOGC 调优、Green Tea GC | ✅ 已完成 |
-| [🟡 goroutine 栈机制](./docs/01-golang/01-runtime/03-stack.md) | 动态栈增长/收缩、连续栈 vs 分段栈、Go 1.25/1.26 栈分配优化 | ✅ 已完成 |
+| [🟡 内存分配器原理](./docs/01-golang/01-runtime/03-memory-alloc.md) | mspan/mcache/mheap 三级结构、size class 分桶、分配流程、与 GC 关系 | ✅ 已完成 |
+| [🟡 goroutine 栈机制](./docs/01-golang/01-runtime/04-stack.md) | 动态栈增长/收缩、连续栈 vs 分段栈、Go 1.25/1.26 栈分配优化 | ✅ 已完成 |
 | [🟡 Go 内存模型](./docs/01-golang/03-language-deep/03-memory-model.md) | happens-before、内存对齐、false sharing | ✅ 已完成 |
 
 </details>
