@@ -5,7 +5,7 @@
 **专为 5~8 年 Go 后端工程师打造 · 大厂面试核心考点全覆盖**
 
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
-[![Version](https://img.shields.io/badge/version-v2.16-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
+[![Version](https://img.shields.io/badge/version-v2.17-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
@@ -103,6 +103,7 @@
 | [🟡 slice 与 map 原理](./docs/01-golang/03-language-deep/05-slice-map.md) | 底层结构、扩容策略、Swiss Table（Go 1.24）、并发安全问题 | ✅ 已完成 |
 | [🟡 泛型实现](./docs/01-golang/03-language-deep/06-generics.md) | GCShape stenciling、~T 约束、Go 1.24 泛型类型别名、性能陷阱 | ✅ 已完成 |
 [🟢 reflect 原理](./docs/01-golang/03-language-deep/02-reflect.md) | 性能代价、实际使用场景 | ✅ 已完成 |
+| [🟡 内置函数 new：从零值到 Go 1.26 表达式参数](./docs/01-golang/03-language-deep/08-builtin-new.md) | new vs make、逃逸分析、`new(expr)` 语法增强 | ✅ 已完成 |
 
 </details>
 
@@ -293,7 +294,7 @@
 |------|----------|------|
 | [🔴 线上问题排查：OOM](./docs/08-engineering/01-oom/01-oom.md) | heap dump 分析、内存泄漏定位 | ✅ 已完成 |
 | [🔴 线上问题排查：CPU 飙升](./docs/08-engineering/02-cpu-spike/02-cpu-spike.md) | pprof 分析、goroutine 死循环 | ✅ 已完成 |
-| [🟡 goroutine 泄漏](./docs/08-engineering/05-goroutine-leak/05-goroutine-leak.md) | 识别、定位、修复模式 | ✅ 已完成 |
+| [🟡 goroutine 泄漏](./docs/08-engineering/05-goroutine-leak/05-goroutine-leak.md) | 识别、定位、修复模式、Go 1.26 实验性 Leak Profile | ✅ 已完成 |
 | [🟡 架构演进复盘](./docs/08-engineering/02-architecture-evolution.md) | 从单体到微服务的决策过程 | ✅ [已完成后](docs/08-engineering/02-architecture-evolution.md)
 | [🟢 Code Review 规范](./docs/08-engineering/06-code-review.md) | Block vs Suggestion、Go 项目检查清单、Review 流程 | ✅ 已完成
 
