@@ -18,6 +18,6 @@
 - [✅] `05-goroutine-leak/05-goroutine-leak.md` — goroutine 泄漏：识别、定位、修复模式
 
 ### 03-leadership · 技术领导力
-- [ ] `01-code-review.md` — Code Review 规范：什么值得 block，什么只是建议
+- [✅] `06-code-review.md` — Code Review 规范：Block vs Suggestion、Go 项目检查清单、Review 流程
 - [ ] `02-tech-planning.md` — 技术规划：季度 / 年度技术 OKR 制定
 - [ ] `03-mentoring.md` — 带新人：技术传承、文档文化、知识管理

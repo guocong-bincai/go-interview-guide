@@ -5,7 +5,7 @@
 **专为 5~8 年 Go 后端工程师打造 · 大厂面试核心考点全覆盖**
 
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
-[![Version](https://img.shields.io/badge/version-v1.13-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
+[![Version](https://img.shields.io/badge/version-v1.14-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
@@ -155,7 +155,7 @@
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
 | [🟢 倒排索引原理](./docs/02-database/02-redis/01-inverted-index.md) | 分词、相关性评分、BM25 | ✅ 已完成
-| 🟢 查询优化 | mapping 设计、冷热数据分离 | 📝 待更新（ES 专题待补充）
+| 🟢 查询优化 | mapping 设计、冷热数据分离 | ✅ [已完成后](./docs/02-database/02-redis/01-inverted-index.md)
 
 </details>
 
@@ -230,7 +230,7 @@
 |------|----------|------|
 | [🟡 API 网关设计](./docs/04-microservices/02-api-gateway/01-gateway-design.md) | 路由/鉴权/限流/灰度 | ✅ [已完成后](docs/04-microservices/02-api-gateway/01-gateway-design.md)
 | [🟡 Prometheus + Grafana](./docs/04-microservices/03-observability/01-metrics.md) | RED 指标、SLO/SLA | ✅ [已完成后](docs/04-microservices/03-observability/01-metrics.md)
-| 🟢 Kubernetes 核心 | Pod 调度、HPA、滚动发布 | 📝 待更新
+| [🟢 Kubernetes 核心](./docs/04-microservices/04-kubernetes/01-kubernetes-core.md) | Pod 调度、HPA、滚动发布、灰度发布 | ✅ 已完成
 
 </details>
 
@@ -291,7 +291,7 @@
 | [🔴 线上问题排查：CPU 飙升](./docs/08-engineering/02-cpu-spike/02-cpu-spike.md) | pprof 分析、goroutine 死循环 | ✅ 已完成 |
 | [🟡 goroutine 泄漏](./docs/08-engineering/05-goroutine-leak/05-goroutine-leak.md) | 识别、定位、修复模式 | ✅ 已完成 |
 | [🟡 架构演进复盘](./docs/08-engineering/02-architecture-evolution.md) | 从单体到微服务的决策过程 | ✅ [已完成后](docs/08-engineering/02-architecture-evolution.md)
-| 🟢 Code Review 规范 | 什么值得 block，什么只是建议 | 📝 待更新 |
+| [🟢 Code Review 规范](./docs/08-engineering/06-code-review.md) | Block vs Suggestion、Go 项目检查清单、Review 流程 | ✅ 已完成
 
 ---
 
@@ -299,9 +299,9 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 简历写法 | 量化成果、STAR 法则、关键词 | 📝 待更新 |
-| 行为面试 | 冲突处理、失败经历、晋升理由 | 📝 待更新 |
-| 薪资谈判 | 锚点设置、竞争 Offer 利用 | 📝 待更新 |
+| [简历写法](./docs/09-interview-strategy/01-star-method.md) | 量化成果、STAR 法则、关键词 | ✅ 已完成 |
+| [行为面试](./docs/09-interview-strategy/02-common-questions.md) | 冲突处理、失败经历、晋升理由 | ✅ 已完成 |
+| [薪资谈判](./docs/09-interview-strategy/01-salary-negotiation.md) | 锚点设置、竞争 Offer 利用 | ✅ 已完成 |
 
 ---
 
