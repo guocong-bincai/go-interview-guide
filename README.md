@@ -5,7 +5,7 @@
 **专为 5~8 年 Go 后端工程师打造 · 大厂面试核心考点全覆盖**
 
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
-[![Version](https://img.shields.io/badge/version-v2.12-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
+[![Version](https://img.shields.io/badge/version-v2.13-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
@@ -117,6 +117,7 @@
 🟢 真实调优案例 | JSON 解析、字符串拼接、sync.Pool 实战 | ✅ [已完成后](docs/01-golang/04-performance/04-tuning-cases.md)
 | [🟢 Go 1.26 SIMD 加速](./docs/01-golang/04-performance/05-simd.md) | SIMD 原语、archsimd、性能提升 2~10x | ✅ 已完成 |
 | [🟢 Go 1.25 Flight Recorder](./docs/01-golang/04-performance/06-flight-recorder.md) | 生产 trace 捕获、环形缓冲区、事后故障还原 | ✅ 已完成 |
+| [🟢 Go 1.26 go fix 现代化工具](./docs/01-golang/04-performance/07-go-fix.md) | Modernizers、//go:fix inline、自定义 API 迁移 | ✅ 已完成 |
 
 </details>
 
