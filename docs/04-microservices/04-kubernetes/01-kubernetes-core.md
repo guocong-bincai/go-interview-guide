@@ -225,6 +225,120 @@ spec:
 | 内存 HPA 缩容失败 | requests.memory 设置过低 | 合理设置 requests，让内存使用率有参考价值 |
 | HPA 不生效 | Metrics Server 未安装 | `kubectl top pods` 确认指标可采集 |
 
+#### 2.4 Go 1.25 Container-aware GOMAXPROCS（重点）
+
+> Go 1.25 新增 · Kubernetes 生产高频踩坑点 · 面试区分度极高
+
+**面试考察意图：**
+考察候选人对 Go 运行时在容器环境中行为的深度理解。
+Go 1.25 之前，GOMAXPROCS 默认等于宿主机逻辑 CPU 核数，在 Kubernetes 中设置 CPU limit 后，Go 程序会创建过多线程导致调度开销增大、绑核失败。这是 5~8 年工程师在容器化部署时**几乎必踩的坑**，高级工程师要能讲清楚问题根因和解决路径。
+
+**核心答案（30 秒版）：**
+
+Go 1.25 之前，GOMAXPROCS 默认等于宿主机逻辑核数，与容器 CPU limit 无关。在 K8s 中设置 `resources.limits.cpu=500m` 后，Go 依然会用满宿主机的所有核，造成**过度调度和性能下降**。Go 1.25 实现了 cgroup 感知：默认 GOMAXPROCS 会自动匹配容器 CPU bandwidth limit，且支持动态更新。
+
+```bash
+# 问题现场：Go 1.23 进程，K8s 设置 2核 limit，但 GOMAXPROCS = 32（宿主机核数）
+$ kubectl exec -it order-service-xxxx -- cat /proc/1/cmdline | tr '\0' ' '
+# GOMAXPROCS=32，但容器 CPU limit 只有 2 核
+# 后果：线程在 2 核上争抢，上下文切换剧烈，延迟飙升
+
+# Go 1.25+：运行时自动读取 cgroup CPU bandwidth limit
+$ cat /sys/fs/cgroup/cpu/cpu.cfs_quota_us   # 200000 → 2核
+$ cat /sys/fs/cgroup/cpu/cpu.cfs_period_us  # 100000
+# GOMAXPROCS 自动设为 2，无需手动设置
+```
+
+**深度展开：**
+
+##### 1. 问题根因（Go 1.25 之前）
+
+Go 的 GMP 调度器中，P（Processor）的默认数量由 `gomaxprocs` 控制：
+
+```go
+// Go 1.24 及之前：gomaxprocs 默认 = runtime.NumCPU()
+// NumCPU() 返回的是宿主机逻辑核数，与容器 cgroup 限制无关
+
+// 例如：32 核宿主机，K8s 容器 limit=2 核
+// GOMAXPROCS = 32，但实际只有 2 核可用
+// → 创建 32 个 M（线程），在 2 核上争抢
+// → 线程上下文切换开销剧增，P99 延迟可差 3~5 倍
+```
+
+**生产中的典型症状：**
+
+| 场景 | 表现 |
+|------|------|
+| 高并发 API 服务 | CPU limit 内的请求延迟正常，但超出 limit 后雪崩 |
+| gRPC 流处理 | 线程数过多，绑核失败，服务不稳定 |
+| 定时任务 | CPU throttle 严重，任务执行时间不可预测 |
+
+**解决方案（Go 1.25 之前）：**
+
+```yaml
+# 方案1：手动设置 GOMAXPROCS（需人工计算，易出错）
+env:
+  - name: GOMAXPROCS
+    valueFrom:
+      downwardAPI:
+        fieldRef:
+          fieldPath: metadata.annotations['cpu-limit']
+# 但 Downward API 不直接支持 cpu.limit，需要自己计算或用 sidecar
+
+# 方案2：使用入口脚本自动感知（社区常见做法）
+# entrypoint.sh:
+# GOMAXPROCS=$(grep cgroup /proc/self/cgroup | cut -d: -f3 | xargs -I{} cat /sys/fs/cgroup/cpu/{}/cpu.cfs_quota_us 2>/dev/null | awk '{if($1>0)printf "%d", $1/100000; else print 0}')
+# [ -n "$GOMAXPROCS" ] && [ "$GOMAXPROCS" -gt 0 ] && export GOMAXPROCS
+```
+
+##### 2. Go 1.25 的解决方案
+
+Go 1.25 运行时在启动时自动读取 cgroup CPU bandwidth 信息：
+
+```
+# cgroup v1（多数 K8s 集群）
+/sys/fs/cgroup/cpu/cpu.cfs_quota_us ÷ cpu.cfs_period_us = CPU 核数
+# 例如：quota=200000, period=100000 → 2 核
+
+# cgroup v2（新版 K8s，如 K8s 1.25+）
+/sys/fs/cgroup/cpu.max:
+# 格式：max 或 "quota period"
+# 例如："200000 100000" → 2 核
+```
+
+**两大行为变化：**
+
+1. **启动时自动匹配**：GOMAXPROCS 默认 = cgroup CPU bandwidth limit
+2. **运行时动态更新**：如果 cgroup limit 变化（如 K8s HPA 动态调整），GOMAXPROCS 会自动更新
+
+```go
+// Go 1.25 新增 GODEBUG 控制
+// containermaxprocs=0：禁用容器感知（回退到宿主机核数）
+// updatemaxprocs=0：禁用运行时动态更新
+
+// 典型使用场景：
+// - 长期稳定的 CPU limit → 默认行为即可
+// - 需要动态调整的场景 → 确保 updatemaxprocs 未被禁用（默认开启）
+```
+
+##### 3. 面试高频追问
+
+**Q：手动设置 GOMAXPROCS 会覆盖 Go 1.25 的自动感知吗？**
+
+会。如果设置了 `GOMAXPROCS` 环境变量，运行时不会自动读取 cgroup 信息。需要用 `GODEBUG=containermaxprocs=0` 并手动计算才能覆盖。
+
+**Q：cgroup v1 和 cgroup v2 有区别吗？**
+
+Go 1.25 两个版本都支持。读取路径不同（cgroup v1 用 `cpu.cfs_quota_us`，cgroup v2 用 `cpu.max`），运行时自动适配。
+
+**Q：Go 1.25 的 container-aware 对已运行的 Pod 有效吗？**
+
+如果 `updatemaxprocs=1`（默认），运行时每 10 秒检查一次 cgroup limit 变化并更新 GOMAXPROCS，不需要重启 Pod。
+
+**Q：这和 Java/JVM 的 cgroup 感知有什么异同？**
+
+JVM 长期有 `-XX:+UseContainerSupport`，但 JVM 默认也是宿主机核数。Go 1.25 是首个将此作为默认行为的主流语言运行时，且支持动态更新，优于 JVM 的静态感知。
+
 ---
 
 ### 3. 滚动更新（RollingUpdate）
