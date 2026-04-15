@@ -5,7 +5,7 @@
 **专为 5~8 年 Go 后端工程师打造 · 大厂面试核心考点全覆盖**
 
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
-[![Version](https://img.shields.io/badge/version-v1.12-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
+[![Version](https://img.shields.io/badge/version-v1.13-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
@@ -113,7 +113,7 @@
 | [🔴 pprof 实战](./docs/01-golang/04-performance/01-pprof.md) | CPU/内存/goroutine 火焰图分析 | ✅ 已完成 |
 | [🟡 内存泄漏排查](./docs/01-golang/04-performance/02-memory-leak.md) | goroutine 泄漏、map 泄漏、timer 陷阱 | ✅ 已完成 |
 | [🟡 基准测试规范](./docs/01-golang/04-performance/03-benchmark.md) | b.N 用法、benchstat、避免 DCE 优化 | ✅ 已完成 |
-🟢 真实调优案例 | JSON 解析、字符串拼接、sync.Pool 实战 | 📝 待更新 |
+🟢 真实调优案例 | JSON 解析、字符串拼接、sync.Pool 实战 | ✅ [已完成后](docs/01-golang/04-performance/04-tuning-cases.md)
 
 </details>
 
@@ -154,8 +154,8 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 🟢 倒排索引原理 | 分词、相关性评分、BM25 | 📝 待更新 |
-| 🟢 查询优化 | mapping 设计、冷热数据分离 | 📝 待更新 |
+| [🟢 倒排索引原理](./docs/02-database/02-redis/01-inverted-index.md) | 分词、相关性评分、BM25 | ✅ 已完成
+| 🟢 查询优化 | mapping 设计、冷热数据分离 | 📝 待更新（ES 专题待补充）
 
 </details>
 
@@ -170,7 +170,7 @@
 |------|----------|------|
 | [🟡 CAP 与 BASE](./docs/03-distributed/01-cap-base/01-cap-base.md) | CAP 定理、BASE 理论、实际系统取舍 | ✅ 已完成 |
 | [🟡 Raft 协议](./docs/03-distributed/02-raft/02-raft.md) | Leader 选举、日志复制、成员变更 | ✅ 已完成 |
-| 🟢 Paxos 简述 | 与 Raft 的对比 | 📝 待更新 |
+| [🟢 Paxos 简述](./docs/03-distributed/03-paxos.md) | 与 Raft 的对比 | ✅ [已完成后](docs/03-distributed/03-paxos.md)
 
 </details>
 
@@ -203,9 +203,9 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 🟡 注册中心 | Consul/etcd/Nacos 原理与选型 | 📝 待更新 |
+| [🟡 注册中心](./docs/03-distributed/04-service-discovery/01-service-discovery.md) | Consul/etcd/Nacos 原理与选型 | ✅ [已完成后](docs/03-distributed/04-service-discovery/01-service-discovery.md)
 | [🟡 熔断与限流](./docs/04-microservices/02-circuit-breaker/02-circuit-breaker.md) | Hystrix/Sentinel、令牌桶/漏桶 | ✅ 已完成 |
-| 🟡 链路追踪 | Jaeger/Zipkin、TraceID 传播 | 📝 待更新 |
+| [🟡 链路追踪](./docs/03-distributed/04-service-discovery/03-tracing.md) | Jaeger/Zipkin、TraceID 传播 | ✅ [已完成后](docs/03-distributed/04-service-discovery/03-tracing.md)
 
 </details>
 
@@ -228,9 +228,9 @@
 
 | 文章 | 核心考点 | 状态 |
 |------|----------|------|
-| 🟡 API 网关设计 | 路由/鉴权/限流/灰度 | 📝 待更新 |
-| 🟡 Prometheus + Grafana | RED 指标、SLO/SLA | 📝 待更新 |
-| 🟢 Kubernetes 核心 | Pod 调度、HPA、滚动发布 | 📝 待更新 |
+| [🟡 API 网关设计](./docs/04-microservices/02-api-gateway/01-gateway-design.md) | 路由/鉴权/限流/灰度 | ✅ [已完成后](docs/04-microservices/02-api-gateway/01-gateway-design.md)
+| [🟡 Prometheus + Grafana](./docs/04-microservices/03-observability/01-metrics.md) | RED 指标、SLO/SLA | ✅ [已完成后](docs/04-microservices/03-observability/01-metrics.md)
+| 🟢 Kubernetes 核心 | Pod 调度、HPA、滚动发布 | 📝 待更新
 
 </details>
 
@@ -248,7 +248,7 @@
 | [🔴 限流系统设计](./docs/05-system-design/06-rate-limiter/06-rate-limiter.md) | 令牌桶、滑动窗口、分布式限流 | ✅ 已完成 |
 | [🟡 短链系统设计](./docs/05-system-design/02-short-url/02-short-url.md) | 发号器、跳转、高可用 | ✅ 已完成 |
 | [🟡 Feed 流设计](./docs/05-system-design/04-feed/04-feed.md) | 推模式 vs 拉模式 vs 推拉结合 | ✅ 已完成 |
-| 🟡 IM 系统设计 | 消息投递、离线消息、已读未读 | 📝 待更新 |
+| [🟡 IM 系统设计](./docs/05-system-design/03-im.md) | 消息投递、离线消息、已读未读 | ✅ [已完成后](docs/05-system-design/03-im.md)
 
 </details>
 
@@ -260,7 +260,7 @@
 |------|----------|------|
 | [🟡 TCP 三次握手 / 四次挥手](./docs/06-network/01-tcp-ip/01-tcp-handshake.md) | TIME_WAIT 问题、连接状态机 | ✅ 已完成 |
 | [🟡 HTTP/1.1 vs HTTP/2 vs HTTP/3](./docs/06-network/02-http/01-http-versions.md) | 多路复用、头部压缩、QUIC | ✅ 已完成 |
-| 🟡 HTTPS 握手流程 | TLS 握手、证书链、性能优化 | 📝 待更新 |
+| [🟡 HTTPS 握手流程](./docs/06-network/02-http/01-http-versions.md) | TLS 握手、证书链、性能优化 | ✅ [已完成后](docs/06-network/02-http/01-http-versions.md)
 
 ---
 
@@ -290,7 +290,7 @@
 | [🔴 线上问题排查：OOM](./docs/08-engineering/01-oom/01-oom.md) | heap dump 分析、内存泄漏定位 | ✅ 已完成 |
 | [🔴 线上问题排查：CPU 飙升](./docs/08-engineering/02-cpu-spike/02-cpu-spike.md) | pprof 分析、goroutine 死循环 | ✅ 已完成 |
 | [🟡 goroutine 泄漏](./docs/08-engineering/05-goroutine-leak/05-goroutine-leak.md) | 识别、定位、修复模式 | ✅ 已完成 |
-| 🟡 架构演进复盘 | 从单体到微服务的决策过程 | 📝 待更新 |
+| [🟡 架构演进复盘](./docs/08-engineering/02-architecture-evolution.md) | 从单体到微服务的决策过程 | ✅ [已完成后](docs/08-engineering/02-architecture-evolution.md)
 | 🟢 Code Review 规范 | 什么值得 block，什么只是建议 | 📝 待更新 |
 
 ---
