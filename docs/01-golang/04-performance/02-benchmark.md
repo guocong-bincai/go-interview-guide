@@ -330,3 +330,78 @@ func BenchmarkGood(b *testing.B) {
 
 **Q：如何对比两个实现的性能？**
 > 用子基准测试 `b.Run` 对比；或者用 `benchstat` 工具（`go install golang.org/x/perf/cmd/benchstat`）对比多次运行结果。
+
+---
+
+## 8. Go 1.24 新增：`testing.B.Loop` — 更精确的基准测试循环
+
+> Go 1.24 新增了 `testing.B.Loop`，彻底解决了传统 `for i := 0; i < b.N; i++` 写法在面试和工程中的多个痛点。
+
+### 8.1 旧写法的问题
+
+```go
+// ❌ Go 1.24 之前的传统写法
+func BenchmarkOld(b *testing.B) {
+    for i := 0; i < b.N; i++ {
+        // 问题 1：编译器可能将循环体内联/向量化，导致 benchmark 不准
+        // 问题 2：setup/cleanup 代码如果放循环内，需要 StopTimer
+        // 问题 3：b.N 的类型是 int，编译器优化路径多
+        SomeFunction()
+    }
+}
+```
+
+### 8.2 `b.Loop` 的优势
+
+```go
+// ✅ Go 1.24+：用 b.Loop
+func BenchmarkNew(b *testing.B) {
+    // setup 代码只在 benchmark 开始前执行一次
+    // 无论 -count 有多少次迭代，setup 只跑一次
+    setupOnce()
+
+    b.ResetTimer()
+    for b.Loop() {
+        SomeFunction()
+    }
+
+    // cleanup 代码可在 ResetTimer 之后，或用 b.Cleanup()
+}
+```
+
+**`b.Loop` 的两大核心优势：**
+
+| 优势 | 说明 |
+|------|------|
+| **setup/cleanup 只执行一次** | `for b.Loop()` 保证了无论 `-count` 设多少次，setup 代码只跑 1 次，计时更准确 |
+| **参数/返回值不被优化** | 循环变量（参数、返回值）天然保持活跃，编译器无法优化掉循环体 |
+
+### 8.3 对比示例
+
+```go
+// 场景：测量一个需要类型断言的函数的性能
+
+// ❌ 旧写法：编译器可能把 SomeFunc 结果优化掉
+func BenchmarkTypeAssert(b *testing.B) {
+    var iface interface{} = &MyStruct{}
+    for i := 0; i < b.N; i++ {
+        _ = iface.(*MyStruct) // 编译器可能认为结果无用
+    }
+}
+
+// ✅ 新写法：返回值天然被 b.Loop 保留
+func BenchmarkTypeAssertLoop(b *testing.B) {
+    var iface interface{} = &MyStruct{}
+    for b.Loop() {
+        _ = iface.(*MyStruct) // b.Loop 保证返回值被使用
+    }
+}
+```
+
+### 8.4 面试高频追问
+
+**Q：为什么 Go 1.24 要引入 `b.Loop`？**
+> 核心解决的是「**基准测试结果不稳定**」和「**setup 耗时干扰测量**」两个问题。旧写法中，如果 setup 和被测代码混在一起，需要手动 `StopTimer`，容易出错；`b.Loop` 通过保证 setup 在循环外执行、返回值不被优化，让基准测试更精确。
+
+**Q：`b.Loop` 和 `for range b.N` 哪个更好？**
+> Go 1.24+ 推荐用 `b.Loop`。对于 `for range b.N`，编译器有更多优化空间（尤其在函数参数和返回值上），结果可能偏离真实性能；`b.Loop` 是专门为基准测试设计的，行为更可预测。
