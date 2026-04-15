@@ -147,7 +147,136 @@ func sumInt64(slice []int64) int64 { ... }        // 直接展开，~5ns
 | 代码膨胀 | 少量（按 GCShape）| 无 |
 | 适用场景 | 库/数据结构 | 运行时反射 |
 
-### 4. 泛型数据结构实战
+### 4. Go 1.24 泛型类型别名
+
+Go 1.24 引入了**参数化类型别名**（Generic Type Aliases），这是 Go 泛型演进的重要里程碑，解决了此前类型别名无法携带类型参数的问题。
+
+#### 背景：Go 1.18~1.23 类型别名的局限
+
+在 Go 1.24 之前，类型别名可以引用泛型类型，但不能定义自己的类型参数：
+
+```go
+// ✅ OK：类型别名引用已有泛型类型（Go 1.18+）
+type IntList = List[int]
+
+// ❌ 错误：类型别名不能自己带类型参数（Go 1.23 及之前）
+type MyList[T any] = List[T]  // 编译错误
+```
+
+这导致在设计泛型抽象时，必须使用 `type` 定义而非 `type alias`，无法简洁地为泛型类型起别名。
+
+#### Go 1.24 参数化类型别名
+
+```go
+// ✅ Go 1.24+：类型别名可以携带类型参数
+type List[T any] = []T              // List[int] 等价于 []int
+type Pair[K, V any] = map[K]V     // Pair[string, int] 等价于 map[string]int
+type Reader[T any] = io.Reader[T]  // 别名指向另一个泛型接口
+```
+
+**与类型定义的区别**：类型别名没有独立的实现，只是现有类型的同义词；编译器在解析时会完全展开别名：
+
+```go
+type Vec[T any] = []T
+
+func Sum(v Vec[int]) int {  // 编译为 func Sum(v []int) int
+    total := 0
+    for _, x := range v {
+        total += x
+    }
+    return total
+}
+```
+
+#### 实战使用场景
+
+**1. 简化长类型签名**
+
+```go
+// 不使用别名：每次都要写完整泛型签名
+func MergeMaps[K comparable, V any](m1, m2 map[K]V) map[K]V { ... }
+
+// 使用泛型类型别名：签名简洁清晰
+type Map[K comparable, V any] = map[K]V
+func MergeMaps[K comparable, V any](m1, m2 Map[K, V]) Map[K, V] { ... }
+```
+
+**2. 封装标准库泛型类型，提供业务语义**
+
+```go
+package biz
+
+// 用户 ID 列表，语义比 []string 更清晰
+type UserIDList[T any] = []T
+
+// 交易记录映射
+type TxMap[K comparable, V any] = map[K]V
+
+// 结果包装（别名化 stdlib）
+type Result[T any] = slices.Seq[T]  // 自定义序列抽象
+```
+
+**3. 类型重导出与 API 版本管理**
+
+```go
+// v1 API
+type APIClient[v1Endpoint any] = http.Client
+
+// v2 API（内部实现改变，但接口不变）
+type APIClientV2[v1Endpoint any] = http.Client
+```
+
+#### 底层原理：别名展开而非重新实例化
+
+泛型类型别名**不生成新代码**，编译器在编译时完全展开别名。这与 `type List[T any] struct { items []T }` 有本质区别：
+
+| | 类型别名 `type X[T]=Y[T]` | 类型定义 `type X[T] struct{...}` |
+|--|---|---|
+| 生成新类型 | ❌ 否 | ✅ 是 |
+| 可添加方法 | ❌ 否 | ✅ 是 |
+| 实现接口独立 | ❌ 随底层类型 | ✅ 可独立实现 |
+| 编译产物 | 展开为原类型 | 独立类型定义 |
+
+**示例**：
+
+```go
+type Alias[T any] = []T
+type Def[T any] struct { items []T }
+
+var a Alias[int]  // 编译为 var a []int
+var d Def[int]    // 编译为 var d struct { items []int }
+```
+
+#### 与 Go 1.26 自引用约束的关系
+
+Go 1.24 参数化类型别名与 Go 1.26 自引用泛型约束**相互补足**，共同支持更复杂的泛型抽象设计：
+
+```go
+// Go 1.24 + 1.26 组合：带类型的自引用节点别名
+type Node[T any, N Node[T, N]] interface {
+    Value() T
+    Next() N
+}
+
+// 泛型类型别名包装复杂约束
+type BinaryNode[T any] = Node[T, BinaryNode[T]]  // 自引用树节点别名
+```
+
+#### 高频追问
+
+**Q：泛型类型别名和泛型类型定义有什么区别？**
+
+> 类型别名是已有类型的同义词，编译时完全展开，不生成新类型，无法添加方法。类型定义创建新类型，可以添加方法，可独立实现接口。类型别名主要用于简化书写和提供语义封装。
+
+**Q：什么时候用类型别名而不是类型定义？**
+
+> 需要简洁引用现有泛型类型、提供业务语义包装、或者重导出标准库类型时用别名。需要添加方法、实现独立接口、或改变底层表示时用类型定义。
+
+**Q：类型别名会影响泛型的 GCShape 实例化吗？**
+
+> 不会。类型别名在编译时完全展开为底层类型，编译器看到的是展开后的类型，所以 GCShape 实例化与是否使用别名无关。别名只是源代码层面的语法糖。
+
+### 5. 泛型数据结构实战
 
 #### Stack（栈）
 
@@ -223,7 +352,7 @@ func (m *SyncMap[K, V]) Store(key K, value V) {
 }
 ```
 
-### 5. 泛型的使用边界与性能陷阱
+### 6. 泛型的使用边界与性能陷阱
 
 #### 泛型不适用的场景
 
@@ -274,7 +403,7 @@ data2, _ := json.Marshal(r2)
 // 生成: {"Code":0,"Data":0}  // 无装箱，因为 int 是基本类型
 ```
 
-### 6. Go 1.21+ 泛型增强
+### 7. Go 1.21+ 泛型增强
 
 **Go 1.21 新增标准库泛型容器**：
 
