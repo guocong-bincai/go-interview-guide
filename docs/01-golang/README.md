@@ -20,9 +20,12 @@
 ### 03-language-deep · 语言机制
 - [✅] `01-interface.md` — interface 内存布局、iface/eface、动态分发开销
 - [✅] `02-reflect.md` — reflect 原理、性能代价、实际使用场景
-- [✅] `03-generics.md` — 泛型实现方式（GCShape stenciling）、使用边界
+- [✅] `03-generics.md` — 泛型用法（类型参数、类型约束、泛型结构体）
+- [✅] `03-memory-model.md` — Go 内存模型、happens-before、内存对齐
 - [✅] `04-escape.md` — 逃逸分析、堆 vs 栈分配、如何避免不必要逃逸
 - [✅] `05-slice-map.md` — slice/map 底层结构、扩容策略、Swiss Table（Go 1.24）、并发安全问题
+- [✅] `06-generics.md` — 泛型实现原理（GCShape Stenciling）、性能对比、实战边界
+- [✅] `07-loop-iterators.md` — Go 1.22 循环变量语义变更、range-over-int、Go 1.23 range-over-func 迭代器、Timer 变更
 
 ### 04-performance · 性能调优
 - [✅] `01-pprof.md` — pprof 使用、CPU/内存/goroutine 火焰图分析
