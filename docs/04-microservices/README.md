@@ -20,6 +20,6 @@
 - [🟡] `03-alerting.md` — 告警规则设计、告警疲劳治理
 
 ### 04-deployment · 部署与发布
-- [ ] `01-docker.md` — 容器化：多阶段构建、镜像优化、资源限制
+- [🟡] `01-docker.md` — 容器化：多阶段构建、镜像优化、资源限制
 - [✅] `04-kubernetes/01-kubernetes-core.md` — K8s 核心概念、Pod 调度、HPA、滚动发布、灰度发布
-- [ ] `03-cicd.md` — CI/CD 流水线、蓝绿部署、金丝雀发布
+- [🟡] `03-cicd.md` — CI/CD 流水线、蓝绿部署、金丝雀发布

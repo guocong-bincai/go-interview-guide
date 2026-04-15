@@ -8,7 +8,7 @@
 ### 01-project-design · 项目设计与复盘
 - [✅] `01-tech-selection.md` — 技术选型方法论：如何在面试中讲清楚为什么选 X
 - [✅] `02-architecture-evolution.md` — 架构演进：从单体到微服务的决策过程
-- [ ] `03-project-review.md` — 项目复盘模板：背景 / 方案 / 结果 / 反思
+- [🟡] `03-project-review.md` — 项目复盘模板：背景 / 方案 / 结果 / 反思
 
 ### 02-troubleshooting · 线上问题排查
 - [✅] `01-oom/01-oom.md` — OOM 排查：heap dump 分析、内存泄漏定位
@@ -19,5 +19,5 @@
 
 ### 03-leadership · 技术领导力
 - [✅] `06-code-review.md` — Code Review 规范：Block vs Suggestion、Go 项目检查清单、Review 流程
-- [ ] `02-tech-planning.md` — 技术规划：季度 / 年度技术 OKR 制定
-- [ ] `03-mentoring.md` — 带新人：技术传承、文档文化、知识管理
+- [🟡] `02-tech-planning.md` — 技术规划：季度 / 年度技术 OKR 制定
+- [🟡] `03-mentoring.md` — 带新人：技术传承、文档文化、知识管理

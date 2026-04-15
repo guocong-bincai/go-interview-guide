@@ -18,7 +18,7 @@
 - [🟡] `05-distributed-id/05-distributed-id.md` — 分布式 ID：Snowflake、Leaf、UUIDv7 对比
 - [🟡] `06-rate-limiter/06-rate-limiter.md` — 限流系统：令牌桶、滑动窗口、分布式限流
 - [🟡] `07-search.md` — 搜索系统：分词、倒排索引、搜索建议
-- [ ] `08-payment.md` — 支付系统：幂等、对账、资金安全
+- [🟡] `08-payment.md` — 支付系统：幂等、对账、资金安全
 
 ### 03-capacity · 容量估算
 - [🟡] `03-capacity/01-back-of-envelope.md` — 信封估算法：QPS / 存储 / 带宽快速估算

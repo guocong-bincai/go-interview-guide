@@ -22,4 +22,4 @@
 
 ### 03-elasticsearch · Elasticsearch（可选）
 - [✅] `01-inverted-index.md` — 倒排索引原理、分词、相关性评分
-- [ ] `02-query-optimization.md` — 查询优化、mapping 设计、冷热数据分离
+- [🟡] `02-query-optimization.md` — MySQL 查询优化：EXPLAIN、慢查询、索引失效场景
