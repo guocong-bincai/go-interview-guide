@@ -15,7 +15,7 @@
 - [✅] `02-tcc.md` — TCC 模式：Try/Confirm/Cancel 实现与幂等设计
 - [✅] `03-saga.md` — Saga 模式：编排 vs 协调、补偿事务设计
 - [✅] `04-msg-eventual.md` — 消息最终一致性：本地消息表、事务消息（RocketMQ）
-- [ ] `05-seata.md` — Seata AT/TCC/Saga 模式实战
+- [🟡] `05-seata.md` — Seata AT/TCC/Saga 模式实战
 
 ### 03-mq · 消息队列
 - [✅] `01-kafka-principle.md` — Kafka 高吞吐原理：零拷贝、顺序写、分区

@@ -16,8 +16,8 @@
 
 ### 03-observability · 可观测性
 - [🟡] `03-observability/01-metrics.md` — Prometheus + Grafana、RED 指标、SLO/SLA、Go 运行时调优
-- [ ] `02-logging.md` — 结构化日志、ELK 方案、日志采样
-- [ ] `03-alerting.md` — 告警规则设计、告警疲劳治理
+- [🟡] `02-logging.md` — 结构化日志、ELK 方案、日志采样
+- [🟡] `03-alerting.md` — 告警规则设计、告警疲劳治理
 
 ### 04-deployment · 部署与发布
 - [ ] `01-docker.md` — 容器化：多阶段构建、镜像优化、资源限制
