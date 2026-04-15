@@ -6,8 +6,8 @@
 ## 文章清单
 
 ### 01-project-design · 项目设计与复盘
-- [ ] `01-tech-selection.md` — 技术选型方法论：如何在面试中讲清楚为什么选 X
-- [ ] `02-architecture-evolution.md` — 架构演进：从单体到微服务的决策过程
+- [✅] `01-tech-selection.md` — 技术选型方法论：如何在面试中讲清楚为什么选 X
+- [✅] `02-architecture-evolution.md` — 架构演进：从单体到微服务的决策过程
 - [ ] `03-project-review.md` — 项目复盘模板：背景 / 方案 / 结果 / 反思
 
 ### 02-troubleshooting · 线上问题排查

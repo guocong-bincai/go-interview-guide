@@ -12,7 +12,7 @@
 ### 02-api-gateway · API 网关
 - [🟡] `01-gateway-design.md` — 网关职责：路由、鉴权、限流、灰度
 - [✅] `02-auth.md` — JWT/OAuth2/API Key、Token 刷新、权限模型
-- [ ] `03-rate-limit.md` — 网关层限流实现、分布式限流（Redis + Lua）
+- [✅] `03-rate-limit.md` — 网关层限流实现、分布式限流（Redis + Lua）
 
 ### 03-observability · 可观测性
 - [🟡] `03-observability/01-metrics.md` — Prometheus + Grafana、RED 指标、SLO/SLA、Go 运行时调优

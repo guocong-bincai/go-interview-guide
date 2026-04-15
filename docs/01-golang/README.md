@@ -19,13 +19,13 @@
 
 ### 03-language-deep · 语言机制
 - [✅] `01-interface.md` — interface 内存布局、iface/eface、动态分发开销
-- [ ] `02-reflect.md` — reflect 原理、性能代价、实际使用场景
-- [ ] `03-generics.md` — 泛型实现方式（GCShape stenciling）、使用边界
+- [✅] `02-reflect.md` — reflect 原理、性能代价、实际使用场景
+- [✅] `03-generics.md` — 泛型实现方式（GCShape stenciling）、使用边界
 - [✅] `04-escape.md` — 逃逸分析、堆 vs 栈分配、如何避免不必要逃逸
 - [✅] `05-slice-map.md` — slice/map 底层结构、扩容策略、Swiss Table（Go 1.24）、并发安全问题
 
 ### 04-performance · 性能调优
-- [ ] `01-pprof.md` — pprof 使用、CPU/内存/goroutine 火焰图分析
-- [ ] `02-benchmark.md` — 基准测试规范、避免编译器优化干扰
-- [ ] `03-memory-leak.md` — 内存泄漏排查：goroutine 泄漏、全局变量、缓存失控
-- [ ] `04-tuning-cases.md` — 真实调优案例：JSON 解析、字符串拼接、sync.Pool 实战
+- [✅] `01-pprof.md` — pprof 使用、CPU/内存/goroutine 火焰图分析
+- [✅] `02-benchmark.md` — 基准测试规范、避免编译器优化干扰
+- [✅] `03-memory-leak.md` — 内存泄漏排查：goroutine 泄漏、全局变量、缓存失控
+- [✅] `04-tuning-cases.md` — 真实调优案例：JSON 解析、字符串拼接、sync.Pool 实战
