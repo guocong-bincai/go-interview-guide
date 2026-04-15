@@ -6,8 +6,8 @@
 
 ### 01-tcp-ip · TCP/IP
 - [✅] `01-tcp-handshake.md` — 三次握手 / 四次挥手、TIME_WAIT 问题、滑动窗口
-- [ ] `02-tcp-flow.md` — 流量控制、拥塞控制（慢启动/CUBIC）
-- [ ] `03-tcp-sticky.md` — 粘包/拆包：原因与解决方案
+- [🟡] `02-tcp-flow.md` — 流量控制、拥塞控制（慢启动/CUBIC）
+- [🟡] `03-tcp-sticky.md` — 粘包/拆包：原因与解决方案
 - [ ] `04-tcp-keepalive.md` — TCP Keepalive vs 应用层心跳
 
 ### 02-http · HTTP / HTTPS
