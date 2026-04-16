@@ -5,7 +5,7 @@
 **专为 5~8 年 Go 后端工程师打造 · 大厂面试核心考点全覆盖**
 
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
-[![Version](https://img.shields.io/badge/version-v2.19-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
+[![Version](https://img.shields.io/badge/version-v2.20-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
@@ -200,6 +200,7 @@
 | [🟡 Kafka 高吞吐原理](./docs/03-distributed/03-mq-problems/01-kafka-principle.md) | 零拷贝、顺序写、分区 | ✅ 已完成 |
 | [🟡 Kafka 消息可靠性](./docs/03-distributed/03-mq-problems/02-kafka-reliability.md) | ACK 机制、ISR 收缩、幂等生产者、事务 | ✅ 已完成 |
 | [🟡 消费者组与 Rebalance](./docs/03-distributed/03-mq-problems/03-kafka-consumer.md) | 分区分配策略、Rebalance 触发条件、Session Timeout | ✅ 已完成 |
+| [🟡 RabbitMQ 深度剖析](./docs/03-distributed/03-mq-problems/06-rabbitmq.md) | Exchange路由、镜像队列、延迟消息、Go实战 | ✅ 已完成 |
 | [🟡 消息积压/丢失/重复](./docs/03-distributed/03-mq-problems/05-mq-problems.md) | 常见问题与解决方案 | ✅ 已完成 |
 
 </details>
