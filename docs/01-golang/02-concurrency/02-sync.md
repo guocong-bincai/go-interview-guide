@@ -179,6 +179,89 @@ func (o *Once) Do(f func()) {
 // 第一次 Load() 检查避免了已执行后仍要竞争锁
 ```
 
+#### Go 1.21 新增：`OnceFunc / OnceValue / OnceValues`
+
+Go 1.21 在 `sync.Once` 基础上新增了三个便捷工厂函数，解决了 `Once.Do()` 无法传参和获取返回值的问题：
+
+```go
+// OnceFunc：返回可多次调用、只执行一次的函数
+func OnceFunc(f func()) func() {
+    once := new(Once)
+    return func() {
+        once.Do(f)
+    }
+}
+
+// OnceValue：返回可多次调用、只执行一次并缓存返回值的函数
+func OnceValue[T any](f func() T) func() T {
+    once := new(Once)
+    var value T
+    var onceVal atomic.Value
+    onceVal.Store(&value)
+    return func() T {
+        if once.done.Load() == 0 {
+            once.Do(func() {
+                onceVal.Store(f())
+            })
+        }
+        return *onceVal.Load().(*T)
+    }
+}
+
+// OnceValues：返回可多次调用、只执行一次并缓存多个返回值的函数
+func OnceValues[T1, T2 any](f func() (T1, T2)) func() (T1, T2) {
+    once := new(Once)
+    var onceVals atomic.Value
+    return func() (T1, T2) {
+        if once.done.Load() == 0 {
+            once.Do(func() {
+                onceVals.Store(f())
+            })
+        }
+        v := onceVals.Load().([2]any)
+        return v[0].(T1), v[1].(T2)
+    }
+}
+```
+
+**使用示例：**
+
+```go
+// 传统写法（繁琐，需要封装）
+var doInit func()
+once := sync.Once{}
+doInit = func() { initConfig(); doInit = nil }
+
+// Go 1.21+ 简洁写法
+getConfig := sync.OnceFunc(initConfig)
+getConfig() // 第一次执行 initConfig，之后直接返回
+
+// 获取返回值
+getDB := sync.OnceValue(func() *sql.DB {
+    return connectDB()
+})
+db := getDB() // 返回缓存的数据库连接
+
+// 获取多返回值
+getUser := sync.OnceValues(func() (string, error) {
+    return fetchUser()
+})
+name, err := getUser() // 第一次调用 fetchUser，之后返回缓存值
+```
+
+**面试追问：**
+
+> Q：`sync.Once` vs `OnceFunc`，选哪个？
+
+| 场景 | 推荐 |
+|------|------|
+| 不需要返回值，只需要执行一次副作用 | `sync.Once.Do()` |
+| 需要缓存单次执行结果（泛型）| `sync.OnceValue` |
+| 需要缓存多返回值 | `sync.OnceValues` |
+| 不想自己管理 Once 实例 | `sync.OnceFunc` |
+
+`OnceFunc/OnceValue/OnceValues` 本质是对 `sync.Once` 的封装，线程安全与 `Once.Do()` 一致。
+
 ### 4. sync.Pool：对象复用池
 
 ```go
@@ -288,6 +371,111 @@ go func() {
 
 // 正确：每次使用完必须 Put()
 ```
+
+---
+
+### 5. sync.Map：并发安全 Map（Go 1.21 新增方法）
+
+`sync.Map` 是专为**读多写少**场景优化的并发安全 Map，核心思想是 `read` 和 `dirty` 双字典设计，实现无锁读、有锁写。
+
+```go
+type Map struct {
+    read atomic.Value // readOnly（只读快照）
+    dirty map[any]any // 实际数据（有锁）
+    misses int        // read 未命中计数
+}
+
+type readOnly struct {
+    m       map[any]entry
+    amended bool // dirty 与 read 是否一致（true=有额外 key）
+}
+```
+
+**Load / Store / Delete（基础操作）：**
+
+```go
+m := sync.Map{}
+
+// 读取（无锁，极快）
+v, ok := m.Load("key")
+
+// 写入（有锁）
+m.Store("key", "value")
+
+// 删除（有锁）
+m.Delete("key")
+```
+
+#### Go 1.21 新增方法（高频考点）
+
+Go 1.21 为 `sync.Map` 新增了 6 个方法，解决了旧 API 功能不足的问题：
+
+```go
+// Clear：原子清空所有数据（Go 1.21+）
+m.Clear() // 等价于遍历删除，但更高效
+
+// CompareAndSwap：CAS 替换，仅当 key 存在且值匹配时才替换（Go 1.21+）
+ok := m.CompareAndSwap("key", "old", "new")
+
+// CompareAndDelete：CAS 删除，仅当 key 存在且值匹配时才删除（Go 1.21+）
+ok := m.CompareAndDelete("key", "old")
+
+// LoadAndDelete：原子读取并删除，返回旧值（Go 1.21+）
+old, loaded := m.LoadAndDelete("key")
+
+// Swap：原子交换，返回旧值（Go 1.21+）
+old, loaded := m.Swap("key", "new")
+
+// LoadOrStore：读取或插入（Go 1.21+ 更完善）
+actual, loaded := m.LoadOrStore("key", "default")
+```
+
+**使用场景对比：**
+
+| 方法 | 场景 | 示例 |
+|------|------|------|
+| `Load` | 纯读 | 缓存查找 |
+| `Store` | 写 | 动态更新配置 |
+| `LoadOrStore` | 先读后写 | 懒加载缓存 |
+| `Swap` | 覆盖写入，需要旧值 | 计数器重置 |
+| `CompareAndSwap` | 乐观锁更新 | 并发安全的计数器 |
+| `CompareAndDelete` | 条件删除 | 删除特定版本数据 |
+| `LoadAndDelete` | 读取并移除 | 消费后删除 |
+| `Clear` | 重置 | 全量刷新 |
+
+**生产级使用示例：**
+
+```go
+// 场景：配置中心，动态更新，热加载
+type ConfigMap struct {
+    sync.Map
+}
+
+func (c *ConfigMap) Update(k, v string) {
+    c.Store(k, v)
+}
+
+func (c *ConfigMap) Get(k string) string {
+    if v, ok := c.Load(k); ok {
+        return v.(string)
+    }
+    return ""
+}
+
+// CompareAndSwap 实现乐观锁更新
+func (c *ConfigMap) CompareUpdate(k, old, new string) bool {
+    return c.CompareAndSwap(k, old, new)
+}
+```
+
+**性能对比（高频追问）：**
+
+| 场景 | sync.Map | RWMutex + map |
+|------|----------|---------------|
+| 纯读（>99%）| ✅ 无锁，极快 | ❌ 每次需加读锁 |
+| 读多写少 | ✅ 优化路径 | ⚠️ 可接受 |
+| 写多/复合操作 | ❌ 仍需锁，比普通 map 慢 | ✅ 完全可控 |
+| 需要遍历 | ❌ Range 无保证一致性 | ✅ 一致性可保证 |
 
 ---
 
