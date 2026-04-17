@@ -132,6 +132,17 @@
 | 01-golang/01-runtime | Go 调度器源码走读（runtime/proc.go） | P0 | ⏳ 待认领 |
 | 02-database/01-mysql | EXPLAIN 输出字段逐一解读 + 实战案例 | P0 | ⏳ 待认领 |
 | 03-distributed/04-service-mesh | Service Mesh（Istio/Envoy）原理 | P1 | ⏳ 待认领 |
+| 01-golang/05-stdlib | net/http 深度解析 | P1 | ⏳ 待认领 |
+| 01-golang/05-stdlib | sync.Map 与并发安全 Map | P1 | ⏳ 待认领 |
+| 01-golang/05-stdlib | 错误处理最佳实践 | P1 | ⏳ 待认领 |
+| 03-distributed/05-coordination | etcd 原理与实战 | P1 | ⏳ 待认领 |
+| 03-distributed/05-coordination | 配置中心选型与实践 | P2 | ⏳ 待认领 |
+| 02-database/04-tidb | TiDB 架构与适用场景 | P2 | ⏳ 待认领 |
+| 06-network/03-security | Web 安全：常见攻击与防御 | P1 | ⏳ 待认领 |
+| 07-algorithms/09-graph | 图论高频题（DFS/BFS/并查集） | P2 | ⏳ 待认领 |
+| 10-real-problems/05 | 数据迁移与重构问题 | P1 | ⏳ 待认领 |
+| 10-real-problems/06 | 并发编程实战问题 | P0 | ⏳ 待认领 |
+| 10-real-problems/07 | 面试高频场景题（开放性） | P0 | ⏳ 待认领 |
 | ~~08-engineering/02-troubleshooting~~ | ~~goroutine 泄漏排查 SOP~~ | ~~P0~~ | ✅ 已完成 |
 
 ---
@@ -204,6 +215,17 @@
 
 </details>
 
+<details>
+<summary><b>05-stdlib · 标准库与工程实践</b>（点击展开）⚠️ 待补充</summary>
+
+| 文章 | 核心考点 |
+|------|----------|
+| 🟡 [net/http 深度解析](./docs/01-golang/05-stdlib/01-net-http.md) | Server 底层结构、Transport 连接池、优雅关闭、中间件链 |
+| 🟡 [sync.Map 与并发安全 Map](./docs/01-golang/05-stdlib/02-sync-map.md) | 双 map 设计、读写流程、与 RWMutex+map 性能对比 |
+| 🟡 [错误处理最佳实践](./docs/01-golang/05-stdlib/03-errors.md) | errors.Is/As/Unwrap、%w 包装、panic/recover 边界 |
+
+</details>
+
 ---
 
 ### 🗄️ 02 · 数据库 🔴 P0
@@ -243,6 +265,15 @@
 |------|----------|
 | 🟢 [倒排索引原理](./docs/02-database/03-elasticsearch/01-inverted-index.md) | 分词、相关性评分、BM25 |
 | 🟢 [查询优化](./docs/02-database/03-elasticsearch/02-query-optimization.md) | mapping 设计、冷热数据分离 |
+
+</details>
+
+<details>
+<summary><b>04-tidb · TiDB</b>（点击展开）⚠️ 待补充</summary>
+
+| 文章 | 核心考点 |
+|------|----------|
+| 🟢 [TiDB 架构与适用场景](./docs/02-database/04-tidb/01-tidb-architecture.md) | TiDB/TiKV/PD 三层架构、HTAP、分布式事务 Percolator、与 MySQL 分库分表对比 |
 
 </details>
 
@@ -296,6 +327,16 @@
 |------|----------|
 | 🟡 [注册中心](./docs/03-distributed/04-service-mesh/01-service-discovery.md) | Consul/etcd/Nacos 原理与选型 |
 | 🟡 [链路追踪](./docs/03-distributed/04-service-mesh/03-tracing.md) | Jaeger/Zipkin、TraceID 传播、采样策略 |
+
+</details>
+
+<details>
+<summary><b>05-coordination · 协调服务</b>（点击展开）⚠️ 待补充</summary>
+
+| 文章 | 核心考点 |
+|------|----------|
+| 🟡 [etcd 原理与实战](./docs/03-distributed/05-coordination/01-etcd.md) | Raft + boltdb + MVCC、Watch 机制、分布式锁、Leader 选举 |
+| 🟢 [配置中心选型与实践](./docs/03-distributed/05-coordination/02-config-center.md) | Apollo vs Nacos vs etcd、热更新原理、配置灰度、Go 接入 |
 
 </details>
 
@@ -418,6 +459,15 @@
 
 </details>
 
+<details>
+<summary><b>03-security · Web 安全</b>（点击展开）⚠️ 待补充</summary>
+
+| 文章 | 核心考点 |
+|------|----------|
+| 🟡 [常见攻击与防御](./docs/06-network/03-security/01-common-attacks.md) | SQL 注入、XSS、CSRF、SSRF、JWT 安全、敏感数据处理 |
+
+</details>
+
 ---
 
 ### 📐 07 · 高频算法 🟡 P2
@@ -449,6 +499,7 @@
 | 🟡 [树 DFS/BFS](./docs/07-algorithms/06-tree/06-tree.md) | 层序遍历、公共祖先、路径问题 |
 | 🟡 [单调栈](./docs/07-algorithms/07-monotonic-stack/07-monotonic-stack.md) | 下一个更大元素、柱状图 |
 | 🟡 [堆 / TopK](./docs/07-algorithms/08-heap/08-heap.md) | 优先队列、TopK、合并 K 个有序列表 |
+| 🟢 [图论高频题](./docs/07-algorithms/09-graph/01-graph.md) | DFS/BFS 模板、拓扑排序、并查集（岛屿数量/课程表） |
 
 </details>
 
@@ -544,6 +595,9 @@
 | 文章 | 包含问题 |
 |------|----------|
 | 🔴 [可用性与稳定性问题](./docs/10-real-problems/04-availability-problems.md) | 缓存雪崩（随机TTL/多级缓存/预热）、缓存击穿（互斥锁/逻辑过期）、依赖服务宕机（熔断器状态机/降级策略）、服务雪崩（超时隔离/goroutine信号量）、流量热点（一致性哈希/热点路由） |
+| 🔴 [数据迁移与重构问题](./docs/10-real-problems/05-migration-problems.md) | 不停服数据库迁移（双写+灰度）、单体拆微服务（绞杀者模式）、MySQL 迁移分库分表 |
+| 🔴 [并发编程实战问题](./docs/10-real-problems/06-concurrency-problems.md) | goroutine 池设计、并发安全本地缓存（分片锁/TTL）、优雅关闭（WaitGroup+信号）、errgroup/semaphore/pipeline |
+| 🔴 [面试高频场景题](./docs/10-real-problems/07-interview-scenarios.md) | 高可用设计框架、技术债处理、重新设计系统、P0 故障处理 SOP、QPS 从千到万的扩容路径 |
 
 </details>
 
