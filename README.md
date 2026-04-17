@@ -48,6 +48,75 @@
 
 ---
 
+## 🚨 贡献规范（新增内容必读）
+
+> 这部分写给所有参与补充内容的同学。**不符合规范的 PR 会被打回。**
+
+### 内容定位
+
+这个仓库的目标用户是 **5~8 年工作经验的 Go 工程师，准备大厂跳槽或晋升答辩**。
+写每篇文章前先问自己：**"这道题，面试官凭什么追着问？"**
+
+### 内容质量要求
+
+**必须做到：**
+- 讲清楚底层原理，不只是罗列功能点（"是什么" 远不够，要讲 "为什么这样设计"）
+- 结合生产经验：写过哪些踩坑、线上出过什么问题、怎么排查的
+- 给出可量化的数据：QPS、延迟 P99、内存占用、优化前后对比
+- Go 代码示例必须可直接运行，写生产级代码，不写玩具代码
+- 覆盖追问：面试官问完第一个问题会追什么，提前写进去
+
+**禁止出现：**
+
+| 禁止内容 | 原因 |
+|---------|------|
+| Go 基础语法讲解（变量/for循环/函数声明） | 目标用户早就会了，写了是降低档次 |
+| 未发布的 Go 版本特性（如 Go 1.26+、Go 2.x 草案） | 面试考不到，写了是误导 |
+| 纯算法题答案（没有 Go 实现细节和复杂度分析） | 去 LeetCode，别往这里堆 |
+| 复制粘贴官方文档 | 没有价值，面试官比你更熟悉文档 |
+| 没有代码示例的纯文字理论 | 不可信，不好记，面试时说不清楚 |
+| 与 Go 后端完全无关的内容（前端、移动端、数据科学） | 定位不符 |
+
+### 文章结构模板
+
+**每篇文章必须遵循以下五段式结构：**
+
+```markdown
+## 面试官考察意图
+这道题想考什么，考到什么深度，高级工程师的回答和初级工程师的回答有什么差距。
+
+## 核心答案（30 秒版）
+开门见山的简短回答，适合面试时的第一句话。可以是一张对比表格或几行结论。
+
+## 深度展开
+原理 → 实现细节（源码/汇编层面） → 生产经验/踩坑案例 → 与竞品的横向对比
+
+## 高频追问
+面试官的下一个问题，逐一给出参考答案。
+
+## 延伸阅读
+官方文档链接、论文、知名博客（链接必须能打开）。
+```
+
+### 文件存放规则
+
+- 文件放到正确的目录，不要直接放在模块根目录下（有子目录就放子目录）
+- 文件名格式：`NN-kebab-case.md`，编号从 01 开始，不能与现有文件编号冲突
+- 图片放在同级 `assets/` 目录，引用用相对路径
+
+### 优先补充的内容（P0 空缺）
+
+以下是当前仍需补充的高优先级内容，按需认领：
+
+| 模块 | 缺少的文章 | 优先级 |
+|------|----------|--------|
+| 01-golang/01-runtime | Go 调度器源码走读（runtime/proc.go） | P0 |
+| 02-database/01-mysql | EXPLAIN 输出字段逐一解读 + 实战案例 | P0 |
+| 03-distributed/04-service-mesh | Service Mesh（Istio/Envoy）原理 | P1 |
+| 08-engineering/02-troubleshooting | goroutine 泄漏排查 SOP | P0 |
+
+---
+
 ## 🗺️ 知识地图
 
 ### ⭐ 优先级说明
@@ -97,11 +166,10 @@
 | 🔴 [interface 原理](./docs/01-golang/03-language-deep/01-interface.md) | iface/eface 内存布局、动态分发、nil 陷阱 |
 | 🟡 [reflect 原理](./docs/01-golang/03-language-deep/02-reflect.md) | 性能代价、实际使用场景 |
 | 🟡 [泛型实现](./docs/01-golang/03-language-deep/03-generics.md) | GCShape stenciling、使用边界 |
-| 🟡 [内存模型](./docs/01-golang/03-language-deep/03-memory-model.md) | happens-before、内存对齐、false sharing |
 | 🟡 [逃逸分析](./docs/01-golang/03-language-deep/04-escape.md) | 堆 vs 栈分配、如何避免不必要逃逸 |
 | 🟡 [slice 与 map](./docs/01-golang/03-language-deep/05-slice-map.md) | 底层结构、扩容策略、并发安全问题 |
+| 🟡 [内存模型](./docs/01-golang/03-language-deep/06-memory-model.md) | happens-before、内存对齐、false sharing |
 | 🟢 [循环与迭代器新特性](./docs/01-golang/03-language-deep/07-loop-iterators.md) | Go 1.22 循环变量语义变更、range-over-func |
-| 🟢 [内置函数 new/make](./docs/01-golang/03-language-deep/08-builtin-new.md) | new vs make 本质区别 |
 
 </details>
 
@@ -270,10 +338,11 @@
 
 | 文章 | 核心考点 |
 |------|----------|
-| 🟡 [CQRS 模式](./docs/05-system-design/01-cqrs.md) | 读写分离、Event Sourcing 结合 |
-| 🟡 [事件驱动架构](./docs/05-system-design/02-event-driven.md) | Outbox Pattern、事件溯源 |
-| 🟡 [Saga 落地](./docs/05-system-design/03-saga-pattern.md) | Saga 在业务中的落地 |
-| 🟢 [DDD 战略设计](./docs/05-system-design/04-ddd.md) | 领域、限界上下文、聚合根 |
+| 🟡 [CQRS 模式](./docs/05-system-design/01-patterns/01-cqrs.md) | 读写分离、Event Sourcing 结合 |
+| 🟡 [事件驱动架构](./docs/05-system-design/01-patterns/02-event-driven.md) | Outbox Pattern、事件溯源 |
+| 🟢 [DDD 战略设计](./docs/05-system-design/01-patterns/03-ddd.md) | 领域、限界上下文、聚合根 |
+| 🟡 [Saga 落地](./docs/05-system-design/02-scenarios/01-saga.md) | 编排型 vs 协调型、补偿事务设计 |
+| 🟡 [IM 系统](./docs/05-system-design/02-scenarios/02-im.md) | 消息投递、离线消息、已读未读 |
 
 </details>
 
@@ -284,7 +353,6 @@
 |------|----------|
 | 🔴 [秒杀系统](./docs/05-system-design/01-seckill/01-seckill.md) | 预减库存、异步下单、防超卖、流量漏斗 |
 | 🔴 [短链系统](./docs/05-system-design/02-short-url/02-short-url.md) | 发号器、跳转、高可用 |
-| 🟡 [IM 系统](./docs/05-system-design/03-im.md) | 消息投递、离线消息、已读未读 |
 | 🟡 [Feed 流](./docs/05-system-design/04-feed/04-feed.md) | 推模式 vs 拉模式 vs 推拉结合 |
 | 🔴 [分布式 ID](./docs/05-system-design/05-distributed-id/05-distributed-id.md) | Snowflake、Leaf、UUIDv7 对比 |
 | 🔴 [限流系统](./docs/05-system-design/06-rate-limiter/06-rate-limiter.md) | 令牌桶、滑动窗口、分布式限流 |
@@ -376,8 +444,8 @@
 |------|----------|
 | 🔴 [OOM 排查](./docs/08-engineering/01-oom/01-oom.md) | heap dump 分析、内存泄漏定位 |
 | 🔴 [CPU 飙升排查](./docs/08-engineering/02-cpu-spike/02-cpu-spike.md) | pprof 分析、goroutine 死循环定位 |
-| 🔴 [死锁排查](./docs/08-engineering/03-deadlock.md) | 数据库死锁、Go 并发死锁 |
-| 🟡 [高延迟排查](./docs/08-engineering/04-high-latency.md) | 链路追踪、GC 停顿、连接池 |
+| 🔴 [死锁排查](./docs/08-engineering/02-troubleshooting/03-deadlock.md) | 数据库死锁、Go 并发死锁、pprof 定位 |
+| 🟡 [高延迟排查](./docs/08-engineering/02-troubleshooting/04-high-latency.md) | 链路追踪、GC 停顿、连接池 |
 | 🟡 [goroutine 泄漏](./docs/08-engineering/05-goroutine-leak/05-goroutine-leak.md) | 识别、定位、修复模式 |
 
 </details>
@@ -387,8 +455,8 @@
 
 | 文章 | 核心考点 |
 |------|----------|
-| 🟡 [技术选型方法论](./docs/08-engineering/01-tech-selection.md) | 如何在面试中讲清楚为什么选 X |
-| 🟡 [架构演进复盘](./docs/08-engineering/02-architecture-evolution.md) | 从单体到微服务的决策过程 |
+| 🟡 [技术选型方法论](./docs/08-engineering/01-project-design/01-tech-selection.md) | 如何在面试中讲清楚为什么选 X |
+| 🟡 [架构演进复盘](./docs/08-engineering/01-project-design/02-architecture-evolution.md) | 从单体到微服务的决策过程 |
 | 🟡 [项目复盘模板](./docs/08-engineering/03-project-review/03-project-review.md) | 背景 / 方案 / 结果 / 反思 |
 
 </details>
@@ -400,7 +468,7 @@
 |------|----------|
 | 🟡 [技术规划](./docs/08-engineering/02-tech-planning/02-tech-planning.md) | 季度/年度技术 OKR 制定 |
 | 🟢 [带新人](./docs/08-engineering/03-mentoring/03-mentoring.md) | 技术传承、文档文化 |
-| 🟢 [Code Review 规范](./docs/08-engineering/06-code-review.md) | 什么值得 block，什么只是建议 |
+| 🟢 [Code Review 规范](./docs/08-engineering/03-leadership/01-code-review.md) | 什么值得 block，什么只是建议 |
 
 </details>
 
@@ -441,10 +509,12 @@
 
 欢迎 PR 补充内容！提交前请确认：
 
+- [ ] 放到正确的子目录，文件名格式 `NN-kebab-case.md`
 - [ ] 遵循统一的五段式内容结构
 - [ ] 结合生产经验，避免纯理论堆砌
 - [ ] 关键结论有数据或源码支撑
 - [ ] 代码块注明语言类型，Go 代码可直接运行
+- [ ] 不包含未发布 Go 版本的特性
 
 **[提 Issue](https://github.com/guocong-bincai/go-interview-guide/issues)** · **[提 PR](https://github.com/guocong-bincai/go-interview-guide/pulls)**
 
