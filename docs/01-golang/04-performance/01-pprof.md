@@ -468,6 +468,27 @@ echo "Profile 采集完成！"
 echo "分析命令：go tool pprof -http=:9090 $OUTDIR/cpu.prof"
 ```
 
+### 5. Go 1.26 新变化：pprof Web UI 默认火焰图
+
+> Go 1.26（2026-02）将 pprof Web UI 的默认视图从**有向图（Graph）**改为**火焰图（Flame Graph）**，并移除了旧版 `go tool doc` / `go tool pprof doc` 命令（合并至 `go doc`）。
+
+**变化对比：**
+
+| 版本 | `go tool pprof -http=:9090` 默认视图 |
+|------|-------------------------------------|
+| Go 1.25 及之前 | 有向图（Graph），需手动切换到火焰图 |
+| Go 1.26 及之后 | **火焰图（Flame Graph）** 默认展示 |
+
+```bash
+# Go 1.26 及之后：直接生成火焰图，无需额外操作
+go tool pprof -http=:9090 cpu.prof
+# 浏览器自动打开火焰图
+
+# 切换到旧版有向图：View → Graph（或访问 /ui/graph）
+```
+
+**面试提示：** 如果面试官问到「pprof 火焰图怎么生成」，Go 1.26 之后的答案是「直接 `go tool pprof -http=:9090 profile_file`，默认就是火焰图」；Go 1.25 及之前需要加 `-火焰图` 参数。
+
 ---
 
 ## ❓ 高频追问
