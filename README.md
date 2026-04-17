@@ -8,7 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-100+-orange?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-125-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.25-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -108,12 +109,12 @@
 
 以下是当前仍需补充的高优先级内容，按需认领：
 
-| 模块 | 缺少的文章 | 优先级 |
-|------|----------|--------|
-| 01-golang/01-runtime | Go 调度器源码走读（runtime/proc.go） | P0 |
-| 02-database/01-mysql | EXPLAIN 输出字段逐一解读 + 实战案例 | P0 |
-| 03-distributed/04-service-mesh | Service Mesh（Istio/Envoy）原理 | P1 |
-| 08-engineering/02-troubleshooting | goroutine 泄漏排查 SOP | P0 |
+| 模块 | 缺少的文章 | 优先级 | 状态 |
+|------|----------|--------|------|
+| 01-golang/01-runtime | Go 调度器源码走读（runtime/proc.go） | P0 | ⏳ 待认领 |
+| 02-database/01-mysql | EXPLAIN 输出字段逐一解读 + 实战案例 | P0 | ⏳ 待认领 |
+| 03-distributed/04-service-mesh | Service Mesh（Istio/Envoy）原理 | P1 | ⏳ 待认领 |
+| ~~08-engineering/02-troubleshooting~~ | ~~goroutine 泄漏排查 SOP~~ | ~~P0~~ | ✅ 已完成 |
 
 ---
 
@@ -445,6 +446,7 @@
 | 🔴 [OOM 排查](./docs/08-engineering/01-oom/01-oom.md) | heap dump 分析、内存泄漏定位 |
 | 🔴 [CPU 飙升排查](./docs/08-engineering/02-cpu-spike/02-cpu-spike.md) | pprof 分析、goroutine 死循环定位 |
 | 🔴 [死锁排查](./docs/08-engineering/02-troubleshooting/03-deadlock.md) | 数据库死锁、Go 并发死锁、pprof 定位 |
+| 🔴 [goroutine 泄漏排查 SOP](./docs/08-engineering/02-troubleshooting/06-goroutine-leak-sop.md) | 泄漏告警→profile采集→定位根因→修复验证完整闭环 |
 | 🟡 [高延迟排查](./docs/08-engineering/02-troubleshooting/04-high-latency.md) | 链路追踪、GC 停顿、连接池 |
 | 🟡 [goroutine 泄漏](./docs/08-engineering/05-goroutine-leak/05-goroutine-leak.md) | 识别、定位、修复模式 |
 
