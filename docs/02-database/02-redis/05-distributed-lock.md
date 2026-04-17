@@ -1,50 +1,59 @@
-# Redis 分布式锁详解
+# Redis 分布式锁
 
-> 面试频率：★★★★★  考察角度：单节点锁、Redlock、Go 实现、15 个坑
+> 考察频率：★★★★★  难度：★★★★☆
+> 关键词：SETNX、Redlock、原子性、过期时间、可重入、异步哨兵
 
----
+## 为什么需要分布式锁
 
-## 1. 为什么需要分布式锁？
-
-多进程/多机器环境下，进程A和进程B可能同时修改同一份数据：
-
-```
-机器1: 订单服务 → 检查库存 → 库存=10 → 扣减1 → 库存=9
-机器2: 订单服务 → 检查库存 → 库存=10 → 扣减1 → 库存=9  ← 重复扣减！
-```
-
-数据库的行锁只能锁本地进程，分布式场景必须用**分布式锁**。
-
----
-
-## 2. 单节点 Redis 分布式锁
-
-### 2.1 基本实现：SET NX EX
+单机锁（Mutex）在多进程/多机器环境下完全失效：
 
 ```go
-func AcquireLockRedis(client *redis.Client, key string, ttl time.Duration) (string, error) {
-    // 生成唯一 ID，用于安全释放
-    lockValue := uuid.New().String()
+// 单机锁：多进程/多机器下失效
+var mu sync.Mutex
+mu.Lock()  // 只在单机进程内有效
+// 机器 A 和机器 B 上的 goroutine 都会进入临界区！
+```
 
-    // SET key value NX EX ttl 原子操作
-    ok, err := client.SetNX(ctx, key, lockValue, ttl).Result()
-    if err != nil {
-        return "", err
+分布式锁需要满足三个基本特性：
+1. **互斥**：任意时刻只有一个客户端能持有锁
+2. **不死锁**：即使某客户端崩溃，锁也要能自动释放（TTL）
+3. **可重入**：同一客户端可重复获取锁
+
+---
+
+## 基础实现：SETNX + EXPIRE
+
+### 第一版：先 SET 后 EXPIRE
+
+```go
+func lockV1(lockKey string, expire time.Duration) bool {
+    // 问题：SET 和 EXPIRE 之间可能崩溃，导致死锁！
+    result, _ := redis.SetNX(lockKey, "locked", 0).Result()
+    if result {
+        redis.Expire(lockKey, expire)
     }
-    if !ok {
-        return "", errors.New("lock already held")
-    }
-    return lockValue, nil
+    return result
+}
+```
+
+### 第二版：SETNX + 设置过期时间（原子）
+
+```go
+func lockV2(lockKey, requestID string, expire time.Duration) bool {
+    // Lua 脚本保证 SET + 过期时间原子执行
+    script := `
+        if redis.call("SET", KEYS[1], ARGV[1], "EX", ARGV[2], "NX") then
+            return 1
+        else
+            return 0
+        end
+    `
+    result, _ := redis.Eval(script, []string{lockKey}, requestID, int(expire.Seconds())).Result()
+    return result == 1
 }
 
-func ReleaseLockRedis(client *redis.Client, key, lockValue string) error {
-    // ❌ 错误写法：先 GET 再 DEL，非原子
-    // current := client.Get(key).Val()
-    // if current == lockValue {
-    //     client.Del(key)
-    // }
-
-    // ✅ Lua 脚本保证原子性
+func unlockV2(lockKey, requestID string) error {
+    // 释放锁：只能释放自己持有的锁
     script := `
         if redis.call("GET", KEYS[1]) == ARGV[1] then
             return redis.call("DEL", KEYS[1])
@@ -52,253 +61,320 @@ func ReleaseLockRedis(client *redis.Client, key, lockValue string) error {
             return 0
         end
     `
-    result, err := client.Eval(ctx, script, []string{key}, lockValue).Int()
+    _, err := redis.Eval(script, []string{lockKey}, requestID).Result()
+    return err
+}
+```
+
+---
+
+## 完整分布式锁：Go + Redisson 风格
+
+### 锁结构设计
+
+```go
+type RedisLock struct {
+    client    *redis.Client
+    key       string
+    value     string        // 唯一标识（UUID + 线程ID），用于可重入和释放
+    expire    time.Duration
+    leaseTime time.Duration // Redisson 的最大持有时间（续期）
+}
+
+// 生成唯一锁持有者ID
+func generateLockValue() string {
+    return fmt.Sprintf("%s-%d-%d",
+        uuid.New().String(),
+        os.Getpid(),
+        goin.Maxroutineid(),
+    )
+}
+```
+
+### 获取锁（可重试 + 阻塞/非阻塞）
+
+```go
+func (l *RedisLock) TryLock(ctx context.Context, retry int, retryInterval time.Duration) (bool, error) {
+    for i := 0; i <= retry; i++ {
+        ok, err := l.tryAcquire(ctx)
+        if err != nil {
+            return false, err
+        }
+        if ok {
+            return true, nil
+        }
+
+        if i < retry {
+            select {
+            case <-ctx.Done():
+                return false, ctx.Err()
+            case <-time.After(retryInterval):
+                // 继续重试
+            }
+        }
+    }
+    return false, nil
+}
+
+func (l *RedisLock) tryAcquire(ctx context.Context) (bool, error) {
+    // SET key value NX PX milliseconds
+    result, err := l.client.SetNX(ctx, l.key, l.value, l.expire).Result()
     if err != nil {
-        return err
+        return false, fmt.Errorf("redis setnx failed: %w", err)
+    }
+    return result, nil
+}
+```
+
+### 释放锁（原子性检查 + 删除）
+
+```go
+func (l *RedisLock) Unlock(ctx context.Context) error {
+    // 必须检查 value 是否是自己的（Lua 脚本保证原子性）
+    script := `
+        if redis.call("GET", KEYS[1]) == ARGV[1] then
+            return redis.call("DEL", KEYS[1])
+        else
+            return 0
+        end
+    `
+    result, err := l.client.Eval(ctx, script, []string{l.key}, l.value).Result()
+    if err != nil {
+        return fmt.Errorf("redis unlock failed: %w", err)
     }
     if result == 0 {
-        return errors.New("lock not held or expired")
+        return fmt.Errorf("锁已过期或被其他客户端持有: key=%s", l.key)
     }
-    return nil
-}
-```
-
-### 2.2 看门狗（Watchdog）自动续期
-
-单靠 EXPIRE 有问题：**持锁进程执行时间 > TTL**，锁自动释放后被其他进程获取，但原进程还在执行 → **数据不一致**。
-
-**解决方案：看门狗自动续期**
-
-```go
-type DistributedLock struct {
-    client  *redis.Client
-    key     string
-    value   string
-    ttl     time.Duration
-    stopCh  chan struct{}
-    renewCh chan struct{}
-}
-
-// AcquireLockWithWatchdog 获取锁并启动看门狗自动续期
-func AcquireLockWithWatchdog(ctx context.Context, client *redis.Client, key string, ttl time.Duration) (*DistributedLock, error) {
-    lockValue := uuid.New().String()
-
-    ok, err := client.SetNX(ctx, key, lockValue, ttl).Result()
-    if err != nil {
-        return nil, err
-    }
-    if !ok {
-        return nil, errors.New("lock acquisition failed")
-    }
-
-    dl := &DistributedLock{
-        client:  client,
-        key:     key,
-        value:   lockValue,
-        ttl:     ttl,
-        stopCh:  make(chan struct{}),
-        renewCh: make(chan struct{}, 1),
-    }
-
-    // 看门狗 goroutine：自动续期 ttl/3
-    go dl.watchdog()
-
-    return dl, nil
-}
-
-func (dl *DistributedLock) watchdog() {
-    ticker := time.NewTicker(dl.ttl / 3)
-    defer ticker.Stop()
-
-    for {
-        select {
-        case <-ticker.C:
-            // 续期：如果锁还被自己持有
-            script := `
-                if redis.call("GET", KEYS[1]) == ARGV[1] then
-                    return redis.call("PEXPIRE", KEYS[1], ARGV[2])
-                else
-                    return 0
-                end
-            `
-            dl.client.Eval(context.Background(), script, []string{dl.key}, dl.value, dl.ttl.Milliseconds())
-        case <-dl.stopCh:
-            return
-        }
-    }
-}
-
-func (dl *DistributedLock) Unlock() error {
-    close(dl.stopCh)
-    script := `
-        if redis.call("GET", KEYS[1]) == ARGV[1] then
-            return redis.call("DEL", KEYS[1])
-        else
-            return 0
-        end
-    `
-    dl.client.Eval(context.Background(), script, []string{dl.key}, dl.value)
     return nil
 }
 ```
 
 ---
 
-## 3. Redlock（红锁）算法
+## Watch Dog 自动续期（防止锁提前释放）
 
-单节点 Redis 锁存在**单点故障**风险。Redlock 通过多数节点共识解决：
+### 问题
 
-### 3.1 算法原理
+如果任务执行时间超过锁的 TTL，锁会自动过期，导致其他客户端获取锁。
 
-```
-获取锁：
-1. 获取当前时间 T1
-2. 依次向 N 个 Redis 节点获取锁（SET key value NX EX ttl）
-3. 计算耗时：T2 - T1
-4. 成功条件：成功节点数 >= N/2 + 1 且 耗时 < TTL
-5. 有效期 = TTL - 耗时
-
-释放锁：
-向所有节点发送 DEL 命令（不管是否成功获取）
-```
-
-### 3.2 Go 实现 Redlock
+### 解决方案：Watch Dog 机制
 
 ```go
-type RedLock struct {
-    clients []*redis.Client
-    n       int // 总节点数
-}
-
-func NewRedLock(addrs []string) (*RedLock, error) {
-    clients := make([]*redis.Client, len(addrs))
-    for i, addr := range addrs {
-        clients[i] = redis.NewClient(&redis.Options{Addr: addr})
-    }
-    return &RedLock{clients: clients, n: len(addrs)}, nil
-}
-
-func (rl *RedLock) Lock(ctx context.Context, key string, ttl time.Duration) (string, error) {
-    lockValue := uuid.New().String()
-    successCount := 0
-    var successClients []*redis.Client
-
-    // 并发向所有节点获取锁
-    var wg sync.WaitGroup
-    for _, client := range rl.clients {
-        wg.Add(1)
-        go func(c *redis.Client) {
-            defer wg.Done()
-            ok, _ := c.SetNX(ctx, key, lockValue, ttl).Result()
-            if ok {
-                atomic.AddInt32((*int32)(unsafe.Pointer(&successCount)), 1)
-                successClients = append(successClients, c)
+// Redisson 的续期机制：锁持有期间，后台线程自动续期
+func (l *RedisLock) startWatchDog() {
+    ticker := time.NewTicker(l.leaseTime / 3) // 每 1/3 TTL 续期一次
+    go func() {
+        for {
+            select {
+            case <-ticker.C:
+                // 续期脚本：只有锁仍被自己持有时才续期
+                script := `
+                    if redis.call("GET", KEYS[1]) == ARGV[1] then
+                        return redis.call("PEXPIRE", KEYS[1], ARGV[2])
+                    else
+                        return 0
+                    end
+                `
+                result, _ := l.client.Eval(context.Background(),
+                    script, []string{l.key}, l.value, int(l.leaseTime.Milliseconds())).Result()
+                if result == 0 {
+                    return // 锁已释放，停止续期
+                }
             }
-        }(client)
-    }
-    wg.Wait()
-
-    quorum := rl.n/2 + 1
-    if successCount < quorum {
-        // 获取锁失败，释放已获取的锁
-        for _, c := range successClients {
-            c.Del(ctx, key)
         }
-        return "", errors.New("failed to acquire redlock")
-    }
-
-    return lockValue, nil
+    }()
 }
 ```
 
-### 3.3 Redlock 的争议
-
-> **Martin Kleppmann（分布式系统大牛）对 Redlock 的批评：**
-> - 5 个 Redis 节点时钟漂移可能导致锁失效
-> - Redlock 不是**线性一致性**的，无法作为分布式系统的唯一时钟源
-> - 如果要严格分布式锁，建议用 **ZooKeeper / etcd** 的一致性算法
-
-**实际工程选择**：
-
-| 场景 | 推荐方案 |
-|------|----------|
-| 简单场景：单机 Redis + 高可用 | SET NX EX + 看门狗 |
-| 严格分布式锁（数据一致性要求高） | etcd / Consul（Raft 共识） |
-| 允许短暂不一致（幂等控制） | Redis 单节点锁足够 |
+**TTL 设置策略**：
+- `expire`（TTL）：锁最大持有时间，任务超时后自动释放
+- `leaseTime`（Watch Dog 续期间隔）：默认 TTL / 3
+- 如果不需要 Watch Dog（任务时间固定），设置 `leaseTime = expire` 即可
 
 ---
 
-## 4. 分布式锁的 15 个坑
+## Redlock 算法（多节点分布式锁）
 
-### 4.1 锁过期了任务还没执行完
+### 单机 Redis 锁的问题
 
-→ **用看门狗续期**（上面已讲）
+如果 Redis Master 宕机，而锁还没同步到 Slave，可能导致锁丢失。
 
-### 4.2 释放了别人的锁
+### Redlock 思路
 
-→ **用唯一 ID 标识锁持有者，DEL 前先检查**（Lua 脚本）
-
-### 4.3 主从切换导致锁丢失
-
-```text
-Client A 获取 Redis Master 锁
-Master 宕机，Slave 晋升为 Master（数据未同步）
-Client B 从新 Master 获取同一把锁成功
-→ 两客户端同时持有同一把锁！
-```
-
-→ **用 Redlock** 或选择 etcd / ZK
-
-### 4.4 误把可重入锁当不可重入锁用
-
-可重入锁实现：
+在 **N 个独立 Redis 节点** 上获取锁，超过 N/2+1 节点成功才算获取成功。
 
 ```go
+// Redlock: 在 N 个节点上获取锁
+func (r *RedLock) Lock(ctx context.Context, resource, value string, ttl time.Duration) error {
+    N := len(r.nodes)
+    quorum := N/2 + 1
+    start := time.Now()
+    timeout := time.Duration(N) * time.Second // 总超时
+
+    var lockedNodes []string
+
+    for _, node := range r.nodes {
+        if time.Since(start) > timeout {
+            break
+        }
+
+        ok, err := tryLock(node, resource, value, ttl)
+        if ok {
+            lockedNodes = append(lockedNodes, node.addr)
+        }
+    }
+
+    if len(lockedNodes) < quorum {
+        // 获取失败，释放已获取的锁
+        for _, node := range lockedNodes {
+            tryUnlock(node, resource, value)
+        }
+        return fmt.Errorf("无法获取超过半数锁：%d/%d", len(lockedNodes), quorum)
+    }
+
+    // 校验 TTL 是否足够（防止网络延迟导致有效时间减少）
+    elapsed := time.Since(start)
+    if elapsed > ttl/2 {
+        // TTL 剩余不足，可以选择重试
+        ttl = ttl - elapsed
+    }
+    return nil
+}
+```
+
+### Redlock 的争议
+
+| 争议方 | 观点 |
+|--------|------|
+| **Martin Kleppmann** | Redlock 存在争议，不推荐使用，建议用 Zookeeper 或 etcd |
+| **Redis 作者 Antirez** | Redlock 在特定网络条件下是安全的，适用于对可靠性要求不极端的场景 |
+
+**现实选型建议**：
+- 电商秒杀、库存扣减：单节点 Redis + Watch Dog 足够
+- 金融交易、对可靠性极高：使用 etcd/Consul 的分布式锁
+- Redlock：争议较大，生产中使用需谨慎评估
+
+---
+
+## 生产常见问题与解决方案
+
+### 1. 锁过期，任务未执行完
+
+**问题**：任务 A 获取锁，30s TTL，但任务需要 60s，30s 后锁被释放，任务 B 获取锁，AB 同时执行。
+
+**解决方案**：
+- Watch Dog 自动续期（Redisson 方式）
+- 任务时间预估 + 设置足够长的 TTL（保守策略）
+- 任务拆分为多个子任务，每个子任务独立加锁
+
+### 2. 可重入锁实现
+
+```go
+// 可重入锁：用 ThreadLocal 记录持有次数
 type ReentrantLock struct {
-    client *redis.Client
-    key    string
-    ctx    context.Context
+    client    *redis.Client
+    key       string
+    value     string
+    threads   map[int64]*Counter // pid → count
+    mu        sync.Mutex
 }
 
-func (l *ReentrantLock) Lock() error {
-    // 通过 ThreadLocal 或 Context 传递锁计数
-    if l.isHolding() {
-        l.incrHoldCount()
+type Counter struct {
+    count int
+}
+
+func (l *ReentrantLock) Lock(ctx context.Context) error {
+    pid := goin.Goid()
+
+    l.mu.Lock()
+    if c, ok := l.threads[pid]; ok {
+        c.count++
+        l.mu.Unlock()
+        return nil // 可重入，直接返回
+    }
+    l.mu.Unlock()
+
+    // 第一次获取
+    ok, _ := l.client.SetNX(ctx, l.key, l.value, l.expire).Result()
+    if !ok {
+        return fmt.Errorf("获取锁失败")
+    }
+
+    l.mu.Lock()
+    l.threads[pid] = &Counter{count: 1}
+    l.mu.Unlock()
+    return nil
+}
+
+func (l *ReentrantLock) Unlock(ctx context.Context) error {
+    pid := goin.Goid()
+
+    l.mu.Lock()
+    c := l.threads[pid]
+    if c == nil {
+        l.mu.Unlock()
         return nil
     }
-
-    ok, _ := l.client.SetNX(l.ctx, l.key, "1", 30*time.Second).Result()
-    if !ok {
-        return errors.New("lock not available")
+    c.count--
+    if c.count > 0 {
+        l.mu.Unlock()
+        return nil // 还有重入次数，不释放
     }
-    l.setHolding(1)
-    return nil
+    delete(l.threads, pid)
+    l.mu.Unlock()
+
+    // 只有完全释放时才 DEL
+    return l.unlockActual(ctx)
 }
 ```
 
-### 4.5 锁的 key 设计不规范
+### 3. 集群/Sentinel 模式下的分布式锁
 
+```go
+// Redis Sentinel 模式下的锁
+type SentinelLock struct {
+    addrs []string // Sentinel 地址列表
+}
+
+func (l *SentinelLock) Lock(ctx context.Context, key, value string, ttl time.Duration) error {
+    // 遍历所有 Sentinel 节点
+    for _, addr := range l.addrs {
+        client := redis.NewClient(&redis.Options{Addr: addr})
+
+        // 向 master 节点获取锁
+        ok, err := client.SetNX(ctx, key, value, ttl).Result()
+        if ok {
+            return nil // 获取成功
+        }
+    }
+    return fmt.Errorf("无法在 Sentinel 集群中获取锁")
+}
 ```
-❌  lock:order:12345        ← 冲突风险高
-✅  lock:order:12345:uuid   ← 加唯一标识
-```
-
-### 4.6 并发量大时大量请求失败
-
-→ 考虑**退火策略**（随机延迟重试）+ **消息队列**代替锁
 
 ---
 
-## 5. 面试高频追问
+## 分布式锁 vs 本地锁对比
 
-**Q：分布式锁和数据库行锁的区别？**
-> 分布式锁是跨进程的锁，用于多机部署场景；数据库行锁是进程内的锁，用于单机数据库场景。分布式锁可以用 Redis/etcd/ZK 实现。
+| 维度 | 本地锁（sync.Mutex） | 分布式锁（Redis） |
+|------|---------------------|----------------|
+| 作用域 | 单进程内 | 多进程/多机器 |
+| 性能 | 无网络开销，极快 | 有网络延迟 |
+| 可靠性 | 进程崩溃时自动释放 | 需要 TTL + Watch Dog |
+| 功能 | 基础互斥 | 可重入、公平锁、读写锁 |
+| 实现 | Go runtime 保证 | 需要自己处理网络异常 |
 
-**Q：为什么用 SETNX 而不是先 GET 再 SET？**
-> GET + SET 不是原子操作，可能出现并发问题（两个进程同时 GET 到空值，都 SET 成功）。SETNX 是 Redis 原子命令，保证只有一个进程能成功获取锁。
+---
 
-**Q：Redlock 真的安全吗？**
-> 有争议。Martin Kleppmann 指出了时钟漂移问题。工程实践中，如果对锁的严格性要求极高，建议用 etcd/Consul；如果允许短暂的不一致，单节点 + 看门狗足够。
+## 面试高频追问
 
-**Q：如何实现一个可重入的分布式锁？**
-> 在 Redis 中用 Hash 结构存储 `{owner: uuid, counter: n}`，每次 Lock 时 counter+1，每次 Unlock 时 counter-1，归零时删除 key。
+**Q1: SETNX 和 SET NX PX 有什么区别？**
+→ `SETNX` 是单独的 key 不存在才设置命令（SET if Not eXists），没有设置过期时间的能力。如果获取锁后进程崩溃，无法自动释放。`SET key value NX PX ms` 原子地完成两件事：加锁 + 设置过期时间，是分布式锁的标准写法。
+
+**Q2: 锁自动过期后，任务还在执行怎么办？**
+→ 两种方案：① Watch Dog 机制（Redisson 实现），后台线程自动续期；② 任务执行前评估最坏耗时，TTL 设置为「预估时间 × 1.5」或更长。如果任务无法预估时间，用 Watch Dog。
+
+**Q3: Redlock 和单节点 Redis 锁哪个更推荐？**
+→ 大多数场景用单节点 Redis + Watch Dog 足够，Redlock 实际使用较少（有争议），且运维复杂度高。如果对可靠性要求极高，用 etcd/Consul 的分布式锁，它们基于 Raft 协议天然保证强一致性。
+
+**Q4: 分布式锁的性能优化？**
+→ ① 使用连接池而非每次新建连接；② 合理设置 TTL，避免锁长时间占用；③ 使用 Lua 脚本减少网络往返；④ 对一致性要求不高的场景，可以用分段锁（Redis 的多 key）替代全局锁。
