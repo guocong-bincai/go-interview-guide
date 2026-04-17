@@ -5,7 +5,7 @@
 **专为 5~8 年 Go 后端工程师打造 · 大厂面试核心考点全覆盖**
 
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
-[![Version](https://img.shields.io/badge/version-v2.23-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
+[![Version](https://img.shields.io/badge/version-v2.24-blue?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/releases)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
@@ -120,6 +120,7 @@
 | [🟢 Go 1.25 Flight Recorder](./docs/01-golang/04-performance/06-flight-recorder.md) | 生产 trace 捕获、环形缓冲区、事后故障还原 | ✅ 已完成 |
 | [🟢 Go 1.26 go fix 现代化工具](./docs/01-golang/04-performance/07-go-fix.md) | Modernizers、//go:fix inline、自定义 API 迁移 | ✅ 已完成 |
 | [🟢 Go 1.26 CGO 性能优化与堆基址随机化](./docs/01-golang/04-performance/08-cgo-security.md) | cgo overhead 降低 30%、堆基址随机化安全、cgo 批量调用最佳实践 | ✅ 已完成 |
+| [🟢 Go 1.26 HPKE 混合公钥加密](./docs/01-golang/04-performance/11-hpke.md) | HPKE/RFC 9180、ML-KEM 后量子封装、crypto/hpke 实战 | ✅ 已完成 |
 
 </details>
 
@@ -268,6 +269,7 @@
 | [🟡 TCP 三次握手 / 四次挥手](./docs/06-network/01-tcp-ip/01-tcp-handshake.md) | TIME_WAIT 问题、连接状态机 | ✅ 已完成 |
 | [🟡 HTTP/1.1 vs HTTP/2 vs HTTP/3](./docs/06-network/02-http/01-http-versions.md) | 多路复用、头部压缩、QUIC | ✅ 已完成 |
 | [🟡 HTTPS 握手流程](./docs/06-network/02-http/01-http-versions.md) | TLS 握手、证书链、性能优化 | ✅ [已完成后](docs/06-network/02-http/01-http-versions.md)
+| [🟢 Go 1.27 HTTP/2 优先级调度](./docs/06-network/11-http2-priority.md) | RFC 9218 优先级信号、Server 端调度优化、DisableClientPriority | ✅ 已完成 |
 
 ---
 
