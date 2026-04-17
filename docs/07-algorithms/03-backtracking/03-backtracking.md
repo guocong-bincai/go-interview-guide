@@ -344,3 +344,88 @@ func generateParenthesis(n int) []string {
 | 组合 | `start` 索引 | 不选 start 前面的（天然有序）|
 | N皇后 | `cols/diags` 标记 | 三个集合检查冲突 |
 | 括号生成 | `left/right` 计数 | `right < left` 不合法 |
+
+---
+
+## Python 实现汇总
+
+### 全排列
+
+```python
+def permute(nums: list[int]) -> list[list[int]]:
+    result, path, used = [], [], [False] * len(nums)
+
+    def backtrack():
+        if len(path) == len(nums):
+            result.append(path[:])
+            return
+        for i in range(len(nums)):
+            if used[i]:
+                continue
+            used[i] = True
+            path.append(nums[i])
+            backtrack()
+            path.pop()
+            used[i] = False
+
+    backtrack()
+    return result
+```
+
+### 子集
+
+```python
+def subsets(nums: list[int]) -> list[list[int]]:
+    result, path = [], []
+
+    def backtrack(start: int):
+        result.append(path[:])    # 每次进入都是一个合法子集
+        for i in range(start, len(nums)):
+            path.append(nums[i])
+            backtrack(i + 1)
+            path.pop()
+
+    backtrack(0)
+    return result
+```
+
+### 组合求和（元素可重复用）
+
+```python
+def combinationSum(candidates: list[int], target: int) -> list[list[int]]:
+    result, path = [], []
+
+    def backtrack(start: int, remain: int):
+        if remain == 0:
+            result.append(path[:])
+            return
+        for i in range(start, len(candidates)):
+            if candidates[i] > remain:
+                break
+            path.append(candidates[i])
+            backtrack(i, remain - candidates[i])  # i 不是 i+1，可重复选
+            path.pop()
+
+    candidates.sort()
+    backtrack(0, target)
+    return result
+```
+
+### 括号生成
+
+```python
+def generateParenthesis(n: int) -> list[str]:
+    result = []
+
+    def backtrack(s: str, left: int, right: int):
+        if len(s) == 2 * n:
+            result.append(s)
+            return
+        if left < n:
+            backtrack(s + '(', left + 1, right)
+        if right < left:     # 右括号数 < 左括号数才能加右括号
+            backtrack(s + ')', left, right + 1)
+
+    backtrack('', 0, 0)
+    return result
+```

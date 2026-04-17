@@ -252,3 +252,100 @@ func checkInclusion(s1 string, s2 string) bool {
 **何时用单调队列**：需要 O(1) 获取窗口最值时，用单调递减队列（max）或单调递增队列（min）。
 
 **何时用普通窗口**：只需要统计字符/计数时，用 freq map + 收缩条件判断。
+
+---
+
+## Python 实现汇总
+
+### Python 模板
+
+```python
+def sliding_window(s: str) -> int:
+    from collections import defaultdict
+    freq = defaultdict(int)
+    left = result = 0
+
+    for right in range(len(s)):
+        freq[s[right]] += 1          # 扩张
+        while condition_violated():  # 收缩
+            freq[s[left]] -= 1
+            left += 1
+        result = max(result, right - left + 1)  # 更新答案
+    return result
+```
+
+### LeetCode 3 - 无重复字符的最长子串
+
+```python
+def lengthOfLongestSubstring(s: str) -> int:
+    from collections import defaultdict
+    freq = defaultdict(int)
+    left = result = 0
+    for right in range(len(s)):
+        freq[s[right]] += 1
+        while freq[s[right]] > 1:   # 有重复，收缩
+            freq[s[left]] -= 1
+            left += 1
+        result = max(result, right - left + 1)
+    return result
+```
+
+### LeetCode 209 - 长度最小的子数组
+
+```python
+def minSubArrayLen(target: int, nums: list[int]) -> int:
+    left = cur_sum = 0
+    result = float('inf')
+    for right in range(len(nums)):
+        cur_sum += nums[right]
+        while cur_sum >= target:
+            result = min(result, right - left + 1)
+            cur_sum -= nums[left]
+            left += 1
+    return 0 if result == float('inf') else result
+```
+
+### LeetCode 239 - 滑动窗口最大值
+
+```python
+from collections import deque
+
+def maxSlidingWindow(nums: list[int], k: int) -> list[int]:
+    q = deque()  # 存下标，单调递减
+    result = []
+    for right in range(len(nums)):
+        # 移除队列中所有 <= 当前值的下标
+        while q and nums[q[-1]] <= nums[right]:
+            q.pop()
+        q.append(right)
+        # 移除超出窗口范围的队头
+        if q[0] <= right - k:
+            q.popleft()
+        # 窗口满了才记录
+        if right >= k - 1:
+            result.append(nums[q[0]])
+    return result
+```
+
+### LeetCode 567 - 字符串的排列
+
+```python
+def checkInclusion(s1: str, s2: str) -> bool:
+    from collections import Counter
+    if len(s1) > len(s2):
+        return False
+    need = Counter(s1)
+    window = Counter(s2[:len(s1)])
+    if window == need:
+        return True
+    for i in range(len(s1), len(s2)):
+        # 滑动：加入右端，移除左端
+        window[s2[i]] += 1
+        left_char = s2[i - len(s1)]
+        window[left_char] -= 1
+        if window[left_char] == 0:
+            del window[left_char]
+        if window == need:
+            return True
+    return False
+```

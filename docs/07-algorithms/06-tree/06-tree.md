@@ -447,3 +447,100 @@ func dfs(node *TreeNode) [2]int {
 | 验证 BST | 中序遍历升序 | O(n) |
 | 重建二叉树 | 前+中序递归 | O(n) |
 | 展开链表 | 后序遍历（右键左） | O(n) |
+
+---
+
+## Python 实现汇总
+
+```python
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+```
+
+### 二叉树最大深度
+
+```python
+def maxDepth(root: TreeNode) -> int:
+    if not root:
+        return 0
+    return 1 + max(maxDepth(root.left), maxDepth(root.right))
+```
+
+### 层序遍历（BFS）
+
+```python
+from collections import deque
+
+def levelOrder(root: TreeNode) -> list[list[int]]:
+    if not root:
+        return []
+    result, q = [], deque([root])
+    while q:
+        level = []
+        for _ in range(len(q)):
+            node = q.popleft()
+            level.append(node.val)
+            if node.left:  q.append(node.left)
+            if node.right: q.append(node.right)
+        result.append(level)
+    return result
+```
+
+### 最近公共祖先（LCA）
+
+```python
+def lowestCommonAncestor(root: TreeNode, p: TreeNode, q: TreeNode) -> TreeNode:
+    if not root or root == p or root == q:
+        return root
+    left  = lowestCommonAncestor(root.left,  p, q)
+    right = lowestCommonAncestor(root.right, p, q)
+    if left and right:   # p、q 分别在左右子树
+        return root
+    return left or right # 都在同一侧
+```
+
+### 验证二叉搜索树
+
+```python
+def isValidBST(root: TreeNode) -> bool:
+    def check(node, lo, hi):
+        if not node:
+            return True
+        if not (lo < node.val < hi):
+            return False
+        return check(node.left, lo, node.val) and check(node.right, node.val, hi)
+    return check(root, float('-inf'), float('inf'))
+```
+
+### 二叉树的直径
+
+```python
+def diameterOfBinaryTree(root: TreeNode) -> int:
+    res = 0
+    def depth(node):
+        nonlocal res
+        if not node:
+            return 0
+        l, r = depth(node.left), depth(node.right)
+        res = max(res, l + r)   # 经过当前节点的路径长度
+        return 1 + max(l, r)
+    depth(root)
+    return res
+```
+
+### 从前序与中序遍历构造二叉树
+
+```python
+def buildTree(preorder: list[int], inorder: list[int]) -> TreeNode:
+    if not preorder:
+        return None
+    root_val = preorder[0]
+    mid = inorder.index(root_val)
+    root = TreeNode(root_val)
+    root.left  = buildTree(preorder[1:mid+1], inorder[:mid])
+    root.right = buildTree(preorder[mid+1:],  inorder[mid+1:])
+    return root
+```

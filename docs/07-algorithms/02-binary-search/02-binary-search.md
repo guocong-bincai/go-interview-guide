@@ -293,3 +293,78 @@ func binarySearchAnswer(left, right int, check func(int) bool) int {
 | 找右边界 | `left = mid + 1`，返回 left-1 |
 | 二分答案 | 单调性 + 范围可界 → 直接二分 |
 | 旋转数组 | 先判断哪半边有序，再判断 target 位置 |
+
+---
+
+## Python 实现汇总
+
+### 标准二分模板
+
+```python
+def binary_search(nums: list[int], target: int) -> int:
+    left, right = 0, len(nums) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if nums[mid] == target:
+            return mid
+        elif nums[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1
+```
+
+### 找左边界
+
+```python
+def find_left(nums: list[int], target: int) -> int:
+    left, right = 0, len(nums)   # 右开区间
+    while left < right:
+        mid = (left + right) // 2
+        if nums[mid] < target:
+            left = mid + 1
+        else:
+            right = mid          # 找到也继续往左缩
+    return left if left < len(nums) and nums[left] == target else -1
+```
+
+### 搜索旋转排序数组
+
+```python
+def search_rotated(nums: list[int], target: int) -> int:
+    left, right = 0, len(nums) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if nums[mid] == target:
+            return mid
+        if nums[left] <= nums[mid]:           # 左半段有序
+            if nums[left] <= target < nums[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        else:                                  # 右半段有序
+            if nums[mid] < target <= nums[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
+    return -1
+```
+
+### 二分答案通用框架
+
+```python
+import math
+
+def min_eating_speed(piles: list[int], h: int) -> int:
+    def can_finish(speed: int) -> bool:
+        return sum(math.ceil(p / speed) for p in piles) <= h
+
+    left, right = 1, max(piles)
+    while left < right:
+        mid = (left + right) // 2
+        if can_finish(mid):
+            right = mid     # 满足条件，继续往左找更小的
+        else:
+            left = mid + 1
+    return left
+```

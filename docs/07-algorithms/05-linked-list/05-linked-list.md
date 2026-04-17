@@ -351,3 +351,99 @@ func getIntersectionNode(headA, headB *ListNode) *ListNode {
 3. **边界**：head 本身、只有一个节点
 4. **画图**：链表题一定要画图理解指针移动
 5. **循环不变**：每次操作前理解"当前状态"
+
+---
+
+## Python 实现汇总
+
+> Python 没有指针概念，用对象引用操作，逻辑相同。
+
+```python
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+```
+
+### 反转链表
+
+```python
+def reverseList(head: ListNode) -> ListNode:
+    prev, cur = None, head
+    while cur:
+        nxt = cur.next
+        cur.next = prev
+        prev = cur
+        cur = nxt
+    return prev
+```
+
+### 环形链表检测
+
+```python
+def hasCycle(head: ListNode) -> bool:
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            return True
+    return False
+```
+
+### 合并两个有序链表
+
+```python
+def mergeTwoLists(l1: ListNode, l2: ListNode) -> ListNode:
+    dummy = ListNode(0)
+    cur = dummy
+    while l1 and l2:
+        if l1.val <= l2.val:
+            cur.next = l1
+            l1 = l1.next
+        else:
+            cur.next = l2
+            l2 = l2.next
+        cur = cur.next
+    cur.next = l1 or l2
+    return dummy.next
+```
+
+### 删除倒数第 N 个节点
+
+```python
+def removeNthFromEnd(head: ListNode, n: int) -> ListNode:
+    dummy = ListNode(0, head)
+    fast = slow = dummy
+    for _ in range(n + 1):
+        fast = fast.next
+    while fast:
+        slow = slow.next
+        fast = fast.next
+    slow.next = slow.next.next
+    return dummy.next
+```
+
+### LRU 缓存
+
+```python
+from collections import OrderedDict
+
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.cap = capacity
+        self.cache = OrderedDict()  # 有序字典，记录使用顺序
+
+    def get(self, key: int) -> int:
+        if key not in self.cache:
+            return -1
+        self.cache.move_to_end(key)  # 标记为最近使用
+        return self.cache[key]
+
+    def put(self, key: int, value: int) -> None:
+        if key in self.cache:
+            self.cache.move_to_end(key)
+        self.cache[key] = value
+        if len(self.cache) > self.cap:
+            self.cache.popitem(last=False)  # 移除最久未使用
+```
