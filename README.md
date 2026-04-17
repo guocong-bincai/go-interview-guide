@@ -506,6 +506,49 @@
 
 ---
 
+### 🔥 10 · 项目实战问题 🔴 P0
+
+> **面试官最爱问的环节**："你在项目里遇到过什么难题？怎么解决的？"
+> 这个模块专门收录生产环境中的高频问题，每个场景都给出**完整的排查思路 + 解决代码 + 面试话术**。
+
+<details>
+<summary><b>业务层高频问题</b>（点击展开）</summary>
+
+| 文章 | 包含问题 |
+|------|----------|
+| 🔴 [业务层高频问题](./docs/10-real-problems/01-business-problems.md) | 超卖问题（Redis Lua/乐观锁）、重复下单/支付（幂等Token/唯一索引）、订单状态不一致（事务消息/对账）、大促流量突增（限流/预热/降级/异步）、数据库慢查询、第三方接口超时（熔断/重试） |
+
+</details>
+
+<details>
+<summary><b>性能问题排查</b>（点击展开）</summary>
+
+| 文章 | 包含问题 |
+|------|----------|
+| 🔴 [性能问题排查与优化](./docs/10-real-problems/02-performance-problems.md) | 接口 P99 突然升高（pprof/GC/链路追踪排查 SOP）、服务内存持续增长（goroutine泄漏/全局缓存）、CPU 突然打满（正则预编译/JSON优化/strings.Builder）、流量突增连接池打满、Redis 变慢（bigkey/hotkey/slowlog） |
+
+</details>
+
+<details>
+<summary><b>数据一致性问题</b>（点击展开）</summary>
+
+| 文章 | 包含问题 |
+|------|----------|
+| 🔴 [数据一致性问题](./docs/10-real-problems/03-data-consistency.md) | 缓存与DB不一致（Cache-Aside/延迟双删/binlog监听）、分布式事务部分失败（TCC实现/本地消息表）、MQ消息丢失/重复消费（ACK/幂等消费）、主从延迟读到旧数据、并发写数据覆盖（乐观锁/CAS） |
+
+</details>
+
+<details>
+<summary><b>可用性与稳定性问题</b>（点击展开）</summary>
+
+| 文章 | 包含问题 |
+|------|----------|
+| 🔴 [可用性与稳定性问题](./docs/10-real-problems/04-availability-problems.md) | 缓存雪崩（随机TTL/多级缓存/预热）、缓存击穿（互斥锁/逻辑过期）、依赖服务宕机（熔断器状态机/降级策略）、服务雪崩（超时隔离/goroutine信号量）、流量热点（一致性哈希/热点路由） |
+
+</details>
+
+---
+
 ### 💼 09 · 面试策略
 
 <details>
