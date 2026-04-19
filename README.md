@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-136-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.28-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.29-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -272,7 +272,7 @@
 </details>
 
 <details>
-<summary><b>04-tidb · TiDB</b>（点击展开）⚠️ 待补充</summary>
+<summary><b>04-tidb · TiDB</b>（点击展开）</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
@@ -335,7 +335,7 @@
 </details>
 
 <details>
-<summary><b>05-coordination · 协调服务</b>（点击展开）⚠️ 待补充</summary>
+<summary><b>05-coordination · 协调服务</b>（点击展开）</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
