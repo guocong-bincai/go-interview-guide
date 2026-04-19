@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-131-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.26-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.27-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -135,9 +135,9 @@
 | 01-golang/05-stdlib | net/http 深度解析 | P1 | ✅ 已完成（2026-04）|
 | 01-golang/05-stdlib | sync.Map 与并发安全 Map | P1 | ✅ 已完成（2026-04）|
 | 01-golang/05-stdlib | 错误处理最佳实践 | P1 | ✅ 已完成（2026-04）|
-| 03-distributed/05-coordination | etcd 原理与实战 | P1 | ⏳ 待认领 |
-| 03-distributed/05-coordination | 配置中心选型与实践 | P2 | ⏳ 待认领 |
-| 02-database/04-tidb | TiDB 架构与适用场景 | P2 | ⏳ 待认领 |
+| 03-distributed/05-coordination | etcd 原理与实战 | P1 | ✅ 已完成（v2.27）|
+| 03-distributed/05-coordination | 配置中心选型与实践 | P2 | ✅ 已完成（v2.27）|
+| 02-database/04-tidb | TiDB 架构与适用场景 | P2 | ✅ 已完成（v2.27）|
 | 06-network/03-security | Web 安全：常见攻击与防御 | P1 | ✅ 已完成（2026-04）|
 | 07-algorithms/09-graph | 图论高频题（DFS/BFS/并查集） | P2 | ⏳ 待认领 |
 | 10-real-problems/05 | 数据迁移与重构问题 | P1 | ✅ 已完成（2026-04）|
