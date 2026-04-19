@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-136-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.29-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.30-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -131,7 +131,7 @@
 |------|----------|--------|------|
 | 01-golang/01-runtime | Go 调度器源码走读（runtime/proc.go） | P0 | ✅ 已完成（2026-04）|
 | 02-database/01-mysql | EXPLAIN 输出字段逐一解读 + 实战案例 | P0 | ✅ 已完成（2026-04）|
-| 01-golang/03-language-deep | Go 1.24 泛型类型别名（Generic Type Aliases）| P1 | ✅ 已完成（v2.29）|
+| 01-golang/03-language-deep | Go 1.24 泛型类型别名（Generic Type Aliases）| P1 | ✅ 已完成（v2.30）|
 | 03-distributed/04-service-mesh | Service Mesh（Istio/Envoy）原理 | P1 | ✅ 已完成（v2.28）|
 | 01-golang/05-stdlib | net/http 深度解析 | P1 | ✅ 已完成（2026-04）|
 | 01-golang/05-stdlib | sync.Map 与并发安全 Map | P1 | ✅ 已完成（2026-04）|
