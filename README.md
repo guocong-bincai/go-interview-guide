@@ -129,8 +129,8 @@
 
 | 模块 | 缺少的文章 | 优先级 | 状态 |
 |------|----------|--------|------|
-| 01-golang/01-runtime | Go 调度器源码走读（runtime/proc.go） | P0 | ⏳ 待认领 |
-| 02-database/01-mysql | EXPLAIN 输出字段逐一解读 + 实战案例 | P0 | ⏳ 待认领 |
+| 01-golang/01-runtime | Go 调度器源码走读（runtime/proc.go） | P0 | ✅ 已完成（2026-04）|
+| 02-database/01-mysql | EXPLAIN 输出字段逐一解读 + 实战案例 | P0 | ✅ 已完成（2026-04）|
 | 03-distributed/04-service-mesh | Service Mesh（Istio/Envoy）原理 | P1 | ⏳ 待认领 |
 | 01-golang/05-stdlib | net/http 深度解析 | P1 | ✅ 已完成（2026-04）|
 | 01-golang/05-stdlib | sync.Map 与并发安全 Map | P1 | ✅ 已完成（2026-04）|
@@ -170,6 +170,7 @@
 |------|----------|
 | 🔴 [GMP 调度模型](./docs/01-golang/01-runtime/01-gmp.md) | G/M/P 角色、Work Stealing、Hand Off、sysmon 抢占 |
 | 🔴 [GC 垃圾回收机制](./docs/01-golang/01-runtime/02-gc.md) | 三色标记、混合写屏障、STW 优化历程、GOGC 调优 |
+| 🔴 [Go 调度器源码走读](./docs/01-golang/01-runtime/05-scheduler-source-code.md) | schedule/findRunnable/execute 源码解读、g0 栈、Hand Off 细节、sysmon、netpoller |
 | 🟡 [内存分配器](./docs/01-golang/01-runtime/03-memory-alloc.md) | tcmalloc、mspan、mcache/mcentral/mheap |
 | 🟡 [goroutine 栈机制](./docs/01-golang/01-runtime/04-stack.md) | 动态栈增长/收缩、连续栈 vs 分段栈 |
 
@@ -239,6 +240,7 @@
 | 🔴 [事务、隔离级别与 MVCC](./docs/02-database/01-mysql/02-transaction.md) | ACID、ReadView、版本链、RC vs RR、间隙锁、死锁 |
 | 🔴 [锁机制深度](./docs/02-database/01-mysql/03-lock.md) | 行锁/表锁/间隙锁/临键锁、死锁检测与避免 |
 | 🟡 [慢查询优化](./docs/02-database/01-mysql/04-slow-query.md) | EXPLAIN 解读、SQL 改写、深分页优化 |
+| 🔴 [EXPLAIN 输出字段逐一解读](./docs/02-database/01-mysql/07-explain.md) | 12 字段详解、Using filesort/temporary 优化、实战案例、EXPLAIN ANALYZE |
 | 🟡 [分库分表](./docs/02-database/01-mysql/05-sharding.md) | ShardingSphere、路由策略、数据迁移 |
 | 🟡 [主从复制](./docs/02-database/01-mysql/06-replication.md) | binlog、半同步复制、主从延迟处理 |
 
