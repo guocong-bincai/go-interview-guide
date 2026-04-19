@@ -276,7 +276,158 @@ func (c *Container) Get[T any]() T {
 
 ---
 
-## 5. 面试高频追问
+## 5. Go 1.24 新增：泛型类型别名（Generic Type Aliases）
+
+> Go 1.24 完全支持参数化类型别名，这是 Go 泛型能力的重大补强。
+
+### 5.1 什么是泛型类型别名
+
+**类型别名**（Type Alias）允许为现有类型起一个新名字：
+
+```go
+// 普通类型别名
+type IntSlice = []int
+type MyError = error
+```
+
+**泛型类型别名**（Go 1.24+）允许类型别名携带类型参数：
+
+```go
+// ✅ Go 1.24+：带类型参数的别名
+type Vector[T any] = []T
+type Map[K comparable, V any] = map[K]V
+type Pair[K, V any] struct {
+    Key   K
+    Value V
+}
+```
+
+这意味着你可以为**泛型类型**定义别名，让复杂泛型类型的使用更简洁。
+
+### 5.2 核心用法
+
+```go
+// 为标准库的泛型容器定义更简洁的别名
+type IntSet[T comparable] = set.Set[T]  // 假设 set.Set 是某泛型 set 实现
+
+// 为常用的泛型 pair 定义别名
+type KV = Pair[string, int]  // 特例化别名，不需要类型参数
+
+// 在泛型代码中引用别名
+func AllKeys[K, V any](m Map[K, V]) []K {
+    keys := make([]K, 0, len(m))
+    for k := range m {
+        keys = append(keys, k)
+    }
+    return keys
+}
+```
+
+**与普通类型别名的区别**：
+
+```go
+// 普通类型别名：类型相同，完全等价
+type A = int
+var x A = 1
+var y int = x // ✅ 可以赋值
+
+// 泛型类型别名：本身不是新类型，是既有泛型类型的同义词
+type IntVec = Vector[int]
+var v1 Vector[int] = nil
+var v2 IntVec = v1 // ✅ 可以赋值，因为是同一个类型
+```
+
+### 5.3 泛型类型别名 vs 泛型定义类型
+
+| 维度 | `type Vector[T any] = []T`（别名）| `type Vector[T any] struct { items []T }`（新类型）|
+|------|------|------|
+| 是否创建新类型 | ❌ 否，是原类型的同义词 | ✅ 是，创建了新类型 |
+| 能否定义方法 | ❌ 不能，方法属于原类型 | ✅ 可以为新类型定义方法 |
+| 与原类型是否可互换 | ✅ 完全可互换 | ❌ 是独立类型 |
+| 适用场景 | 为复杂泛型提供简洁名称 | 需要自定义行为/方法 |
+
+```go
+// 场景1：提供简洁别名 → 用泛型类型别名
+type TwoInts = Pair[int, int]        // ✅ 简洁
+type IntPair = Pair[int, int]        // ✅ 语义化别名
+
+// 场景2：需要自定义行为 → 定义新类型
+type Stack[T any] struct {
+    items []T
+}
+func (s *Stack[T]) Push(item T) {   // ✅ 可以定义方法
+    s.items = append(s.items, item)
+}
+```
+
+### 5.4 高级用法：泛型约束别名
+
+```go
+// 泛型别名 + 类型约束
+type NumberVec[N int | int64 | float64] = []N
+
+// 使用约束别名
+func Sum[N NumberVec[N]](vec N) N {
+    var total N
+    for _, v := range vec {
+        total += v
+    }
+    return total
+}
+
+// 还可以为接口定义泛型别名
+type Serializer[T any] = interface {
+    Serialize() []byte
+    Deserialize([]byte) (T, error)
+}
+```
+
+### 5.5 生产使用场景
+
+**场景1：统一的数据结构命名**
+
+```go
+// 企业内部定义统一的泛型类型别名
+package companytypes
+
+type UserID = string
+type OrderID = string
+type JSON = map[string]any
+type StringList = []string
+type IDList[T ~uint64] = []T  // 约束底层类型
+
+// 业务代码中引用
+func GetUsers(ids []UserID) []User { ... }
+```
+
+**场景2：减少泛型嵌套**
+
+```go
+// 之前：嵌套泛型难以阅读
+func Process(m map[string][]Pair[int, error]) { ... }
+
+// Go 1.24+：用泛型别名简化
+type IntResult = Result[int]
+type ResultList = []IntResult
+type StringResultMap = map[string]ResultList
+
+func Process(m StringResultMap) { ... }
+```
+
+### 5.6 面试高频追问
+
+**Q：Go 1.24 泛型类型别名和普通泛型类型有什么区别？**
+> 泛型类型别名不创建新类型，只是为已有的泛型类型提供一个更简洁的名字；泛型类型定义（`type Vec[T any] struct {...}`）会创建一个全新的类型，可以为其定义方法。类型别名与原类型完全可互换，定义类型则不行。
+
+**Q：泛型类型别名可以用来绕过 Go 的类型嵌套限制吗？**
+> 可以，但有边界。`type DeepList[T any] = [][]T` 这样定义嵌套切片是合法的；不过别名本身不能定义方法（方法属于原类型）。如果需要自定义行为，还是得用 `type` 定义新类型。
+
+**Q：Go 1.24 之前能否模拟泛型类型别名？**
+> 勉强可以，通过 `type X = Y` 只能定义非泛型别名，无法携带类型参数。所以泛型类型别名是 Go 1.24 的重要语言能力补强，解决了「想给复杂泛型起个短名字」的实际痛点。
+
+---
+
+## 6. 面试高频追问
 
 **Q：Go 泛型的实现原理是什么？**
 > GCShape Stenciling。将类型按内存布局分组（Shape），同组共享一份编译后的机器码；只有不同 Shape 才实例化多份代码。避免了早期 Type Parameters Copy 方案的代码膨胀问题。
