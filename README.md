@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-131-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.27-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-136-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.28-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -131,7 +131,7 @@
 |------|----------|--------|------|
 | 01-golang/01-runtime | Go 调度器源码走读（runtime/proc.go） | P0 | ✅ 已完成（2026-04）|
 | 02-database/01-mysql | EXPLAIN 输出字段逐一解读 + 实战案例 | P0 | ✅ 已完成（2026-04）|
-| 03-distributed/04-service-mesh | Service Mesh（Istio/Envoy）原理 | P1 | ⏳ 待认领 |
+| 03-distributed/04-service-mesh | Service Mesh（Istio/Envoy）原理 | P1 | ✅ 已完成（v2.28）|
 | 01-golang/05-stdlib | net/http 深度解析 | P1 | ✅ 已完成（2026-04）|
 | 01-golang/05-stdlib | sync.Map 与并发安全 Map | P1 | ✅ 已完成（2026-04）|
 | 01-golang/05-stdlib | 错误处理最佳实践 | P1 | ✅ 已完成（2026-04）|
@@ -139,7 +139,7 @@
 | 03-distributed/05-coordination | 配置中心选型与实践 | P2 | ✅ 已完成（v2.27）|
 | 02-database/04-tidb | TiDB 架构与适用场景 | P2 | ✅ 已完成（v2.27）|
 | 06-network/03-security | Web 安全：常见攻击与防御 | P1 | ✅ 已完成（2026-04）|
-| 07-algorithms/09-graph | 图论高频题（DFS/BFS/并查集） | P2 | ⏳ 待认领 |
+| 07-algorithms/09-graph | 图论高频题（DFS/BFS/并查集） | P2 | ✅ 已完成（v2.28）|
 | 10-real-problems/05 | 数据迁移与重构问题 | P1 | ✅ 已完成（2026-04）|
 | 10-real-problems/06 | 并发编程实战问题 | P0 | ✅ 已完成（2026-04）|
 | 10-real-problems/07 | 面试高频场景题（开放性） | P0 | ✅ 已完成（2026-04）|
@@ -328,6 +328,7 @@
 | 文章 | 核心考点 |
 |------|----------|
 | 🟡 [注册中心](./docs/03-distributed/04-service-mesh/01-service-discovery.md) | Consul/etcd/Nacos 原理与选型 |
+| 🟡 [Service Mesh 原理](./docs/03-distributed/04-service-mesh/02-service-mesh.md) | Istio/Envoy、Sidecar 注入、流量管理、mTLS、熔断 |
 | 🟡 [链路追踪](./docs/03-distributed/04-service-mesh/03-tracing.md) | Jaeger/Zipkin、TraceID 传播、采样策略 |
 
 </details>
