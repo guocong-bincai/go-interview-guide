@@ -427,7 +427,76 @@ func Process(m StringResultMap) { ... }
 
 ---
 
-## 6. 面试高频追问
+## 6. Go 1.26 新增：自引用泛型约束（Self-Referential Type Constraints）
+
+> Go 1.26 解除了泛型类型参数列表中禁止自引用的限制，允许约束引用自身被定义的类型。这使得**递归类型约束**成为可能。
+
+### 6.1 问题背景
+
+Go 1.26 之前，在泛型类型约束中引用自身会导致编译错误：
+
+```go
+// Go 1.25 及之前：编译错误 - "Adder" 在声明前未定义
+type Adder[A Adder[A]] interface {
+    Add(A) A
+}
+```
+
+### 6.2 Go 1.26 解决方案
+
+```go
+// Go 1.26：允许自引用
+type Adder[A Adder[A]] interface {
+    Add(A) A
+}
+
+func SumAll[A Adder[A]](x, y A) A {
+    return x.Add(y)
+}
+```
+
+### 6.3 典型使用场景：递归数据结构
+
+```go
+// 可复用的链表节点约束
+type Node[T any, N Node[T, N]] interface {
+    GetValue() T
+    GetNext() N
+}
+
+// 自引用树节点
+type TreeNode[T any, N TreeNode[T, N]] interface {
+    Val() T
+    Left() N
+    Right() N
+}
+
+// 计算二叉树深度
+func Depth[T any, N TreeNode[T, N]](n N) int {
+    if n == nil {
+        return 0
+    }
+    return 1 + max(Depth(n.Left()), Depth(n.Right()))
+}
+```
+
+### 6.4 为什么这个特性重要
+
+| 价值 | 说明 |
+|------|------|
+| **消除重复约束代码** | 此前需要在每个泛型方法上写 `interface { Method() Self }`，现在可以在类型定义层面约束 |
+| **更精确的类型推断** | 编译器能通过自引用约束推导出更准确的类型参数 |
+| **设计自验证 API** | 在接口层面强制要求实现类型具备自引用能力 |
+
+### 6.5 局限性
+
+- 不支持在约束中定义带 receiver 的方法（Go 没有 F-bound polymorphism）
+- 过于复杂的自引用链可能导致编译器性能下降
+- 目前主要用于**同构递归结构**（每个节点类型一致），异构结构仍需额外设计
+
+---
+
+## 7. 面试高频追问
 
 **Q：Go 泛型的实现原理是什么？**
 > GCShape Stenciling。将类型按内存布局分组（Shape），同组共享一份编译后的机器码；只有不同 Shape 才实例化多份代码。避免了早期 Type Parameters Copy 方案的代码膨胀问题。

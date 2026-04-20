@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-136-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.30-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.31-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -131,7 +131,7 @@
 |------|----------|--------|------|
 | 01-golang/01-runtime | Go 调度器源码走读（runtime/proc.go） | P0 | ✅ 已完成（2026-04）|
 | 02-database/01-mysql | EXPLAIN 输出字段逐一解读 + 实战案例 | P0 | ✅ 已完成（2026-04）|
-| 01-golang/03-language-deep | Go 1.24 泛型类型别名（Generic Type Aliases）| P1 | ✅ 已完成（v2.30）|
+| 01-golang/03-language-deep | Go 1.26 `new(expr)` 内置函数增强 + 自引用泛型约束 | P1 | ✅ 已完成（v2.31）|
 | 03-distributed/04-service-mesh | Service Mesh（Istio/Envoy）原理 | P1 | ✅ 已完成（v2.28）|
 | 01-golang/05-stdlib | net/http 深度解析 | P1 | ✅ 已完成（2026-04）|
 | 01-golang/05-stdlib | sync.Map 与并发安全 Map | P1 | ✅ 已完成（2026-04）|
@@ -197,7 +197,7 @@
 |------|----------|
 | 🔴 [interface 原理](./docs/01-golang/03-language-deep/01-interface.md) | iface/eface 内存布局、动态分发、nil 陷阱 |
 | 🟡 [reflect 原理](./docs/01-golang/03-language-deep/02-reflect.md) | 性能代价、实际使用场景 |
-| 🟡 [泛型实现](./docs/01-golang/03-language-deep/03-generics.md) | GCShape stenciling、使用边界、Go 1.24 泛型类型别名 |
+| 🟡 [泛型实现](./docs/01-golang/03-language-deep/03-generics.md) | GCShape stenciling、泛型类型别名（Go 1.24）、自引用约束（Go 1.26） |
 | 🟡 [逃逸分析](./docs/01-golang/03-language-deep/04-escape.md) | 堆 vs 栈分配、如何避免不必要逃逸 |
 | 🟡 [slice 与 map](./docs/01-golang/03-language-deep/05-slice-map.md) | 底层结构、扩容策略、并发安全问题 |
 | 🟡 [内存模型](./docs/01-golang/03-language-deep/06-memory-model.md) | happens-before、内存对齐、false sharing |
