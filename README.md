@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-139-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.34-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-141-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.35-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -204,6 +204,7 @@
 | 🟡 [slice 与 map](./docs/01-golang/03-language-deep/05-slice-map.md) | 底层结构、扩容策略、并发安全问题 |
 | 🟡 [内存模型](./docs/01-golang/03-language-deep/06-memory-model.md) | happens-before、内存对齐、false sharing |
 | 🟢 [循环与迭代器新特性](./docs/01-golang/03-language-deep/07-loop-iterators.md) | Go 1.22 循环变量语义变更、range-over-func |
+| 🟡 [Go 1.26 栈分配优化](./docs/01-golang/03-language-deep/09-go1.26-stack-alloc.md) | append 推测性栈缓冲、move2heap 逃逸切片优化 |
 
 </details>
 
@@ -217,6 +218,7 @@
 | 🟡 [基准测试规范](./docs/01-golang/04-performance/03-benchmark.md) | benchmark 写法、避免编译器优化干扰 |
 | 🟡 [真实调优案例](./docs/01-golang/04-performance/04-tuning-cases.md) | JSON 解析、字符串拼接、sync.Pool 实战 |
 | 🟡 [并发测试利器：testing/synctest](./docs/01-golang/04-performance/05-synctest.md) | synctest bubble/Wait 机制、fake time、flaky 测试根治 |
+| 🟡 [go fix 与 //go:fix inline](./docs/01-golang/04-performance/06-go-fix-inline.md) | 源码级内联、API 迁移、废弃函数自动替换 |
 
 </details>
 
