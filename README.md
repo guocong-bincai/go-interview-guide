@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-138-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.33-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-139-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.34-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -129,6 +129,7 @@
 
 | 模块 | 缺少的文章 | 优先级 | 状态 |
 |------|----------|--------|------|
+| 01-golang/04-performance | testing/synctest 并发测试（bubble/Wait/fake time）| P1 | ✅ 已完成（v2.34）|
 | 01-golang/01-runtime | Go 1.26 运行时新特性（Green Tea GC / Leak Profile / Heap 随机化）| P1 | ✅ 已完成（v2.32）|
 | 02-database/01-mysql | EXPLAIN 输出字段逐一解读 + 实战案例 | P0 | ✅ 已完成（2026-04）|
 | 01-golang/03-language-deep | Go 1.26 `new(expr)` 内置函数增强 + 自引用泛型约束 | P1 | ✅ 已完成（v2.31）|
@@ -215,6 +216,7 @@
 | 🟡 [内存泄漏排查](./docs/01-golang/04-performance/02-memory-leak.md) | goroutine 泄漏、全局变量、缓存失控 |
 | 🟡 [基准测试规范](./docs/01-golang/04-performance/03-benchmark.md) | benchmark 写法、避免编译器优化干扰 |
 | 🟡 [真实调优案例](./docs/01-golang/04-performance/04-tuning-cases.md) | JSON 解析、字符串拼接、sync.Pool 实战 |
+| 🟡 [并发测试利器：testing/synctest](./docs/01-golang/04-performance/05-synctest.md) | synctest bubble/Wait 机制、fake time、flaky 测试根治 |
 
 </details>
 

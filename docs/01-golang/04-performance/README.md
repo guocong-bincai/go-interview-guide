@@ -8,3 +8,4 @@
 - [✅] `02-memory-leak.md` — 内存泄漏排查：heap dump 分析、全局变量、缓存失控
 - [✅] `03-benchmark.md` — 基准测试规范：benchmark 写法、避免编译器优化干扰
 - [✅] `04-tuning-cases.md` — 真实调优案例：JSON 解析、字符串拼接、sync.Pool 实战
+- [✅] `05-synctest.md` — 并发测试利器：testing/synctest bubble/Wait/fake time 机制
