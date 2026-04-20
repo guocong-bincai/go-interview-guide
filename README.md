@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-136-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.31-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-137-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.32-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -90,7 +90,7 @@
 
 | 禁止内容 | 原因 |
 |---------|------|
-| 未发布的 Go 版本特性（如 Go 1.26+） | 面试考不到，写了是误导 |
+| 未发布的 Go 版本特性（如 Go 1.27+） | 面试考不到，写了是误导 |
 | 算法题只贴代码、没有思路讲解 | 对读者没有帮助 |
 | 复制粘贴官方文档 | 没有附加价值 |
 | 没有代码示例的纯文字理论 | 不可信，面试时说不清楚 |
@@ -129,7 +129,7 @@
 
 | 模块 | 缺少的文章 | 优先级 | 状态 |
 |------|----------|--------|------|
-| 01-golang/01-runtime | Go 调度器源码走读（runtime/proc.go） | P0 | ✅ 已完成（2026-04）|
+| 01-golang/01-runtime | Go 1.26 运行时新特性（Green Tea GC / Leak Profile / Heap 随机化）| P1 | ✅ 已完成（v2.32）|
 | 02-database/01-mysql | EXPLAIN 输出字段逐一解读 + 实战案例 | P0 | ✅ 已完成（2026-04）|
 | 01-golang/03-language-deep | Go 1.26 `new(expr)` 内置函数增强 + 自引用泛型约束 | P1 | ✅ 已完成（v2.31）|
 | 03-distributed/04-service-mesh | Service Mesh（Istio/Envoy）原理 | P1 | ✅ 已完成（v2.28）|
@@ -170,10 +170,11 @@
 | 文章 | 核心考点 |
 |------|----------|
 | 🔴 [GMP 调度模型](./docs/01-golang/01-runtime/01-gmp.md) | G/M/P 角色、Work Stealing、Hand Off、sysmon 抢占 |
-| 🔴 [GC 垃圾回收机制](./docs/01-golang/01-runtime/02-gc.md) | 三色标记、混合写屏障、STW 优化历程、GOGC 调优 |
+| 🔴 [GC 垃圾回收机制](./docs/01-golang/01-runtime/02-gc.md) | 三色标记、混合写屏障、STW 优化历程、Green Tea GC（Go 1.26）|
 | 🔴 [Go 调度器源码走读](./docs/01-golang/01-runtime/05-scheduler-source-code.md) | schedule/findRunnable/execute 源码解读、g0 栈、Hand Off 细节、sysmon、netpoller |
 | 🟡 [内存分配器](./docs/01-golang/01-runtime/03-memory-alloc.md) | tcmalloc、mspan、mcache/mcentral/mheap |
 | 🟡 [goroutine 栈机制](./docs/01-golang/01-runtime/04-stack.md) | 动态栈增长/收缩、连续栈 vs 分段栈 |
+| 🟡 [Go 1.26 运行时新特性](./docs/01-golang/01-runtime/06-go1.26-runtime.md) | Green Tea GC（SIMD 加速）、goroutine leak profile 检测原理、Heap Base Randomization 安全加固 |
 
 </details>
 
