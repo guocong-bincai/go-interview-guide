@@ -9,6 +9,7 @@
 - [✅] `02-gc.md` — GC 三色标记、混合写屏障、STW 优化历程
 - [✅] `03-memory-model.md` — Go 内存模型、happens-before、内存对齐
 - [✅] `04-stack.md` — goroutine 栈增长、栈缩容、连续栈 vs 分段栈、Go 1.25/1.26 栈分配优化
+- [✅] `08-go1.25-gomaxprocs.md` — Go 1.25 Container-aware GOMAXPROCS：cgroup 自动感知、动态更新、GKE/K8s 性能影响
 
 ### 02-concurrency · 并发编程
 - [✅] `01-channel.md` — channel 底层结构、发送/接收流程、select 实现
