@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-141-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.35-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-142-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.36-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -176,6 +176,7 @@
 | 🟡 [内存分配器](./docs/01-golang/01-runtime/03-memory-alloc.md) | tcmalloc、mspan、mcache/mcentral/mheap |
 | 🟡 [goroutine 栈机制](./docs/01-golang/01-runtime/04-stack.md) | 动态栈增长/收缩、连续栈 vs 分段栈 |
 | 🟡 [Go 1.26 运行时新特性](./docs/01-golang/01-runtime/06-go1.26-runtime.md) | Green Tea GC（SIMD 加速）、goroutine leak profile 检测原理、Heap Base Randomization 安全加固 |
+| 🟡 [Go 1.25 trace.FlightRecorder](./docs/01-golang/01-runtime/07-flight-recorder.md) | 环形缓冲 trace、生产常驻、按需导出、与传统 trace 的取舍 |
 
 </details>
 
