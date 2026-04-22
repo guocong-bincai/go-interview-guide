@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-143-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.38-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.39-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -426,7 +426,7 @@
 | 🔴 [秒杀系统](./docs/05-system-design/01-seckill/01-seckill.md) | 预减库存、异步下单、防超卖、流量漏斗 |
 | 🔴 [短链系统](./docs/05-system-design/02-short-url/02-short-url.md) | 发号器、跳转、高可用 |
 | 🟡 [Feed 流](./docs/05-system-design/04-feed/04-feed.md) | 推模式 vs 拉模式 vs 推拉结合 |
-| 🔴 [分布式 ID](./docs/05-system-design/05-distributed-id/05-distributed-id.md) | Snowflake、Leaf、UUIDv7 对比 |
+| 🔴 [分布式 ID](./docs/05-system-design/05-distributed-id/05-distributed-id.md) | Snowflake、Leaf、UUIDv7 对比 | P0 | ✅ 已完成（v2.39）|
 | 🔴 [限流系统](./docs/05-system-design/06-rate-limiter/06-rate-limiter.md) | 令牌桶、滑动窗口、分布式限流 |
 | 🟡 [搜索系统](./docs/05-system-design/07-search/07-search.md) | 倒排索引、分词、搜索建议 |
 | 🟡 [支付系统](./docs/05-system-design/08-payment/08-payment.md) | 幂等、对账、资金安全 |
