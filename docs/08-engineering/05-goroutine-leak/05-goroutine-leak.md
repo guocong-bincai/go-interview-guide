@@ -365,7 +365,7 @@ import _ "net/http/pprof" // 注册 pprof handler
 curl 'http://localhost:6060/debug/pprof/goroutineleak?debug=1' | grep -A30 "goroutine leak"
 ```
 
-**计划：** Go 1.27 计划默认启用此 profile，届时无需设置 `GOEXPERIMENT`。
+**已于 Go 1.27 默认启用此 profile，届时无需设置 `GOEXPERIMENT`。**
 
 ### 5.6 高频追问
 
@@ -375,4 +375,4 @@ curl 'http://localhost:6060/debug/pprof/goroutineleak?debug=1' | grep -A30 "goro
 
 **Q：为什么需要 GOEXPERIMENT？**
 
-API（profile 类型名、pprof 端点）可能在 Go 1.27 正式版中调整。当前是收集生产反馈的实验阶段。
+API（profile 类型名、pprof 端点）在 Go 1.27 已稳定。当前为正式生产可用状态。
