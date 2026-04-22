@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-143-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.39-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-144-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.40-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -147,6 +147,7 @@
 | 10-real-problems/07 | 面试高频场景题（开放性） | P0 | ✅ 已完成（2026-04）|
 | ~~08-engineering/02-troubleshooting~~ | ~~goroutine 泄漏排查 SOP~~ | ~~P0~~ | ✅ 已完成 |
 | 01-golang/01-runtime | Go 1.25 Container-aware GOMAXPROCS（cgroup 感知/动态更新/K8s 性能）| P1 | ✅ 已完成（v2.38）|
+| 01-golang/03-language-deep | Go 1.24 Swiss Tables 全新的 Map 实现（SIMD/Swiss Tables/性能提升）| P1 | ✅ 已完成（v2.40）|
 
 ---
 
@@ -208,6 +209,7 @@
 | 🟡 [内存模型](./docs/01-golang/03-language-deep/06-memory-model.md) | happens-before、内存对齐、false sharing |
 | 🟢 [循环与迭代器新特性](./docs/01-golang/03-language-deep/07-loop-iterators.md) | Go 1.22 循环变量语义变更、range-over-func |
 | 🟡 [Go 1.26 栈分配优化](./docs/01-golang/03-language-deep/09-go1.26-stack-alloc.md) | append 推测性栈缓冲、move2heap 逃逸切片优化 |
+| 🟡 [Go 1.24 Swiss Tables](./docs/01-golang/03-language-deep/10-go1.24-swiss-tables.md) | Swiss Tables 原理、SIMD 批量探测、Map 性能提升 |
 
 </details>
 
