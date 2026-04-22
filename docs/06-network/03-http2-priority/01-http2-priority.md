@@ -299,5 +299,5 @@ tlsConfig.http2.DisableClientPriority = true
 
 - [RFC 9218 - HTTP/2 Priority Mechanism](https://datatracker.ietf.org/doc/html/rfc9218)
 - [Chrome 放弃 HTTP/2 优先级的说明](https://docs.google.com/document/d/1bWTj7o1g0rjtS7bS4L5rZ5R5q4U5L5rZ5R5q4U5L5rZ)
-- [Go x/net/http2 DisableClientPriority PR](https://go.dev/issue/00000)（Go 1.27 相关 issue）
+- [Go net/http HTTP/2 DisableClientPriority](https://go.dev/pkg/net/http#Server.DisableClientPriority)
 - [HTTP/3 Priority 机制](https://www.rfc-editor.org/rfc/rfc9218.html)

@@ -201,7 +201,7 @@ GOEXPERIMENT=synctest go test -run TestXXX ./...
 
 **Q4：synctest 和 Go 1.26 的关系？Go 1.27 会稳定它吗？**
 
-> synctest 在 Go 1.24 作为实验引入，Go 1.25/1.26 持续改进。根据 Go 发布计划，synctest 可能在 Go 1.27 或 1.28 升为非实验性。面试中提到这个时间线可以体现对 Go 演进路线图的关注。
+> synctest 在 Go 1.24 作为实验引入，Go 1.25/1.26 持续改进。Go 1.27 中 synctest 仍为实验性（`GOEXPERIMENT=synctest` 启用），尚未升为非实验性。根据 Go 发布计划，预计在 Go 1.28 或更晚版本稳定。面试中提到这个时间线可以体现对 Go 演进路线图的关注。
 
 **Q5：如何测试一个「什么都不做」的并发行为？**
 
