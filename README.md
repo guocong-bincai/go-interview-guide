@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-144-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.43-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.44-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -236,6 +236,7 @@
 | 🟡 [sync.Map 与并发安全 Map](./docs/01-golang/05-stdlib/02-sync-map.md) | 双 map 设计、读写流程、与 RWMutex+map 性能对比 |
 | 🟡 [错误处理最佳实践](./docs/01-golang/05-stdlib/03-errors.md) | errors.Is/As/Unwrap、%w 包装、panic/recover 边界 |
 | 🟡 [log/slog 结构化日志](./docs/01-golang/05-stdlib/04-slog.md) | TextHandler/JSONHandler、自定义 Handler、Logger.With、与 zap/logrus 对比 |
+| 🟡 [go:embed 静态资源内嵌](./docs/01-golang/05-stdlib/05-embed.md) | 编译时嵌入、embed.FS、glob 模式、与构建约束配合、生产坑点 |
 
 </details>
 
