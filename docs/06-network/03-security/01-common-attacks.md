@@ -268,7 +268,67 @@ for _, block := range privateBlocks {
 
 ---
 
-### 3.5 JWT 安全
+### 3.5 路径穿越与 os.Root 防护
+
+#### 攻击原理
+
+路径穿越（Path Traversal）攻击：攻击者通过 `../` 穿越到预期目录之外，或利用符号链接（symlink）替换目录结构实现 TOCTOU（Time-of-check/time-of-use）攻击。
+
+```go
+// ❌ 危险：用户输入直接拼接到路径
+userFile := r.FormValue("file")  // 例如: "../../etc/passwd"
+fullPath := filepath.Join("/safe/dir", userFile)
+f, _ := os.Open(fullPath) // 实际打开了 /etc/passwd
+
+// ❌ 另一种：符号链接 TOCTOU
+// 程序先验证路径安全（无 ../），再打开文件
+// 但验证和使用之间攻击者替换了符号链接
+```
+
+#### Go 1.24 os.Root 防护
+
+Go 1.24 引入了 `os.Root` API，专门解决路径穿越问题：
+
+```go
+import "os"
+
+// ✅ os.Root：打开一个遍历安全的根目录
+root, err := os.OpenRoot("/var/app/uploads")
+if err != nil {
+    log.Fatal(err)
+}
+defer root.Close()
+
+// Open 方法拒绝任何会逃逸出 root 的操作（../ 或 symlink 穿越）
+f, err := root.Open("subdir/" + userFilename)  // 安全
+// root.Open("../../etc/passwd") → 报错
+// root.Open("symlink_to_escape") → 报错（symlink 指向 root 外）
+
+// ✅ 配合 filepath.IsLocal 双重防护
+clean := filepath.Clean(userInput)
+if !filepath.IsLocal(clean) {
+    http.Error(w, "invalid path", 400)
+    return
+}
+```
+
+**os.Root 核心特性：**
+- 相对路径解析，禁用 `..` 穿越
+- 拒绝跟随任何会逃逸 root 的符号链接
+- 适合多用户文件服务、归档解压、静态文件服务等场景
+
+#### 防御策略对比
+
+| 方法 | 优点 | 缺点 |
+|------|------|------|
+| `filepath.Clean` | 简单 | 无法阻止 symlink 穿越 |
+| `filepath.EvalSymlinks` | 解析符号链接 | 有 TOCTOU 窗口期 |
+| **os.Root（Go 1.24+）** | 遍历安全、无 TOCTOU | 需要 Go 1.24+ |
+| 第三方库（google/safeopen）| 成熟 | 引入外部依赖 |
+
+---
+
+### 3.6 JWT 安全
 
 #### JWT 存储位置
 

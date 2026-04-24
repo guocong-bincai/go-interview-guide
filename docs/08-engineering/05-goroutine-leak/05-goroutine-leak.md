@@ -317,22 +317,23 @@ func processWorkItems(ws []workItem) ([]workResult, error) {
 
 **编译/运行时刻启用：**
 
-```bash
-# 方式1：设置 GOEXPERIMENT
-GOEXPERIMENT=goroutineleakprofile go run .
+**Go 1.27+（默认启用，无需额外配置）：**
 
-# 方式2：采集 profile
+```bash
+# 无需 GOEXPERIMENT，Go 1.27 起默认启用
+# 直接通过 pprof 端点采集
 curl -o goroutineleak.prof 'http://localhost:6060/debug/pprof/goroutineleak?debug=1'
 
-# 方式3：通过 net/http/pprof
-# 启用后自动注册 /debug/pprof/goroutineleak 端点
-```
-
-**代码中启用：**
-
-```go
+# 代码中启用：
 import _ "net/http/pprof" // 注册 pprof handler
 // 访问：http://host:port/debug/pprof/goroutineleak?debug=1
+```
+
+**Go 1.26（需手动开启）：**
+
+```bash
+# Go 1.26 需要 GOEXPERIMENT 才能启用
+GOEXPERIMENT=goroutineleakprofile go run .
 ```
 
 ### 5.3 检测原理（面试可讲）
@@ -373,6 +374,6 @@ curl 'http://localhost:6060/debug/pprof/goroutineleak?debug=1' | grep -A30 "goro
 
 仅在主动采集 profile 时有少量开销（记录阻塞点）。不启用则零开销。
 
-**Q：为什么需要 GOEXPERIMENT？**
+**Q：Go 1.27 后还需要 GOEXPERIMENT 吗？**
 
-API（profile 类型名、pprof 端点）在 Go 1.27 已稳定。当前为正式生产可用状态。
+不需要。Go 1.27 起 goroutine leak profile 默认启用，`GOEXPERIMENT=goroutineleakprofile` 不再需要设置。API（profile 类型名、pprof 端点）在 Go 1.27 已稳定，当前为正式生产可用状态。
