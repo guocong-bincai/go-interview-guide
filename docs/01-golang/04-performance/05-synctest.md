@@ -116,6 +116,43 @@ synctest.Test(t, func(t *testing.T) {
 })
 ```
 
+#### 2.4 Go 1.27 新增：`synctest.Sleep` 简化 timer 测试
+
+Go 1.27 为 `testing/synctest` 新增了 `synctest.Sleep` 辅助函数，将 `time.Sleep` 和 `synctest.Wait` 合二为一——**既能推进虚拟时间，又能在所有 goroutine 稳定时返回**，省去手动调用 `Wait()` 的样板代码。
+
+```go
+// Go 1.27 新增签名（简化版）
+// func Sleep(d time.Duration)
+// 相当于: time.Sleep(d); synctest.Wait()
+
+synctest.Test(t, func(t *testing.T) {
+    result := ""
+    go func() {
+        time.Sleep(500 * time.Millisecond)
+        result = "done"
+    }()
+
+    // Go 1.27: 用 synctest.Sleep 一步搞定
+    // 内部自动等待 goroutine 稳定后推进时间
+    synctest.Sleep(1 * time.Second)
+
+    if result != "done" {
+        t.Fatal("callback not called")
+    }
+})
+```
+
+**与手动调用 `time.Sleep + synctest.Wait` 的对比**：
+
+| 写法 | 代码量 | 行为 |
+|------|--------|------|
+| `time.Sleep(d); synctest.Wait()` | 两行 | 时间推进后显式等待稳定 |
+| `synctest.Sleep(d)`（Go 1.27） | 一行 | 一步到位，语义更清晰 |
+
+**适用场景**：`synctest.Sleep` 适用于**不需要在 Sleep 期间检查中间状态**的测试——即「等待 d 时间后，验证最终状态」。如果需要在 Sleep 前后分别断言，使用 `time.Sleep + Wait` 分开调用更灵活。
+
+**注意事项**：`synctest.Sleep` 是 Go 1.27 新增 API，在 Go 1.27 之前使用会报 `undefined: synctest.Sleep` 编译错误。CI 中需确保 Go 版本 >= 1.27。
+
 ### 3. context.AfterFunc 测试完整示例
 
 `context.AfterFunc` 是测试 synctest 的经典场景——它在一个新 goroutine 中延迟执行回调：
@@ -157,7 +194,9 @@ func TestAfterFunc_Synctest(t *testing.T) {
 | `time.Sleep` | 真实时间硬等 | 慢 | Flaky | ❌ 不推荐 |
 | `channel + select + timeout` | 事件驱动 | 快 | 相对可靠 | 简单场景 |
 | `sync/WaitGroup` | 计数同步 | 快 | 可靠（但测不了「不发生」）| 等待已知次数 |
-| **`testing/synctest`** | Bubble + 虚拟时间 | **最快** | **最可靠** | 并发行为验证、负面测试 |
+| `time.Sleep + synctest.Wait` | 虚拟时间手动档 | 快 | 可靠 | 需要中间状态检查 |
+| **`testing/synctest.Sleep`**（Go 1.27） | 虚拟时间自动档 | **最快** | **最可靠** | 最终状态验证 |
+| **`testing/synctest`**（全功能） | Bubble + 虚拟时间 | **最快** | **最可靠** | 并发行为验证、负面测试 |
 | `go test -race` | 数据竞争检测 | 慢 | 可靠 | 找数据竞争 bug |
 
 ### 5. 生产使用注意事项
@@ -199,9 +238,9 @@ GOEXPERIMENT=synctest go test -run TestXXX ./...
 
 > 对于包含 timer 的测试，理论上提升数百倍。真实场景（如测试一个依赖超时逻辑的服务）从 100ms+ 级别降到微秒级别。具体倍数取决于测试中 Sleep 的总时长。
 
-**Q4：synctest 和 Go 1.26 的关系？Go 1.27 会稳定它吗？**
+**Q4：synctest 和 Go 1.27 的关系？会稳定它吗？**
 
-> synctest 在 Go 1.24 作为实验引入，Go 1.25/1.26 持续改进。Go 1.27 中 synctest 仍为实验性（`GOEXPERIMENT=synctest` 启用），尚未升为非实验性。根据 Go 发布计划，预计在 Go 1.28 或更晚版本稳定。面试中提到这个时间线可以体现对 Go 演进路线图的关注。
+> synctest 在 Go 1.24 作为实验引入，Go 1.25/1.26 持续改进。Go 1.27 新增了 `synctest.Sleep` 辅助函数，进一步完善 API，但仍为实验性（`GOEXPERIMENT=synctest` 启用）。根据 Go 发布计划，预计在 Go 1.28 或更晚版本稳定。面试中提到这个时间线和 `Sleep` 新增细节可以体现对 Go 演进路线图的关注。
 
 **Q5：如何测试一个「什么都不做」的并发行为？**
 

@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-144-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.45-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.46-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -129,7 +129,7 @@
 
 | 模块 | 缺少的文章 | 优先级 | 状态 |
 |------|----------|--------|------|
-| 01-golang/04-performance | testing/synctest 并发测试（bubble/Wait/fake time）| P1 | ✅ 已完成（v2.34）|
+| 01-golang/04-performance | testing/synctest 并发测试（bubble/Wait/fake time）| P1 | ✅ 已完成（v2.34），v2.46 补充 Go 1.27 synctest.Sleep |
 | 01-golang/01-runtime | Go 1.26 运行时新特性（Green Tea GC / Leak Profile / Heap 随机化）| P1 | ✅ 已完成（v2.32）|
 | 02-database/01-mysql | EXPLAIN 输出字段逐一解读 + 实战案例 | P0 | ✅ 已完成（2026-04）|
 | 01-golang/03-language-deep | Go 1.26 `new(expr)` 内置函数增强 + 自引用泛型约束 | P1 | ✅ 已完成（v2.31）|
