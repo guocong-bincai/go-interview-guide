@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-144-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.47-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.48-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -148,6 +148,7 @@
 | ~~08-engineering/02-troubleshooting~~ | ~~goroutine 泄漏排查 SOP~~ | ~~P0~~ | ✅ 已完成 |
 | 01-golang/01-runtime | Go 1.25 Container-aware GOMAXPROCS（cgroup 感知/动态更新/K8s 性能）| P1 | ✅ 已完成（v2.38）|
 | 01-golang/03-language-deep | Go 1.24 Swiss Tables 全新的 Map 实现（SIMD/Swiss Tables/性能提升）| P1 | ✅ 已完成（v2.40）|
+| 01-golang/05-stdlib | Go 1.27 新增：uuid 标准库（v4/v7）/maphash.Hasher 接口/pprof labels traceback | P1 | ✅ 已完成（v2.48）|
 
 ---
 
