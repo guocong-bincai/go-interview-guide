@@ -82,6 +82,136 @@ if errors.As(err, &perr) {
 }
 ```
 
+#### errors.AsType — 泛型版本的 errors.As（Go 1.26）
+
+Go 1.26 为 `errors` 包引入了泛型版本 `AsType[E error](err error) (E, bool)`，省去声明目标变量的繁琐：
+
+```go
+// ❌ 旧方式：需要先声明目标变量
+var pathErr *fs.PathError
+if errors.As(err, &pathErr) {
+    fmt.Println("path:", pathErr.Path)
+}
+
+// ✅ Go 1.26 新方式：泛型直接返回
+if pathErr, ok := errors.AsType[*fs.PathError](err); ok {
+    fmt.Println("path:", pathErr.Path)
+}
+```
+
+源码实现简洁明了：
+
+```go
+func AsType[E error](err error) (E, bool) {
+    var target E
+    ok := As(err, &target)
+    return target, ok
+}
+```
+
+**为什么需要 AsType？**
+- 减少一行变量声明，代码更简洁
+- 类型参数 `E` 直接约束为 `error` 类型，编译期检查
+- 特别适合在链式调用或条件表达式中直接使用
+
+```go
+// 生产级用法示例
+func handleError(err error) {
+    if perr, ok := errors.AsType[*fs.PathError](err); ok {
+        log.Printf("文件操作失败 path=%s: %v", perr.Path, perr.Err)
+    }
+    if netErr, ok := errors.AsType[*net.AddrError](err); ok {
+        log.Printf("网络地址错误 addr=%s: %v", netErr.Addr, netErr.Err)
+    }
+}
+```
+
+#### errors.Join — 合并多个错误（Go 1.20）
+
+`errors.Join` 将多个错误合并为一个错误链，支持 `errors.Is` 和 `errors.As` 遍历所有子错误：
+
+```go
+// 合并多个错误
+err := errors.Join(err1, err2, err3)
+fmt.Println(err) // 输出：err1\nerr2\nerr3
+
+// 遍历子错误
+for _, e := range err.Unwrap() {
+    fmt.Println("- ", e)
+}
+
+// errors.Is 判断任意一个子错误即可
+if errors.Is(err, ErrNotFound) {
+    log.Println("至少有一个子错误是 ErrNotFound")
+}
+```
+
+**Join 的生产使用场景：**
+
+1. **批量操作部分失败**：比如写一批数据，部分失败时不丢弃成功的信息
+
+```go
+func batchWrite(records []Record) error {
+    var errs []error
+    for _, r := range records {
+        if err := writeOne(r); err != nil {
+            errs = append(errs, fmt.Errorf("write %s: %w", r.ID, err))
+        }
+    }
+    if len(errs) > 0 {
+        return errors.Join(errs...)
+    }
+    return nil
+}
+// 调用方可以用 errors.Is 逐个判断每个子错误
+```
+
+2. **HTTP 中间件错误收集**：多个中间件的错误统一返回
+
+```go
+var errs []error
+for _, m := range middlewares {
+    if err := m.Process(ctx, req); err != nil {
+        errs = append(errs, err)
+    }
+}
+if len(errs) > 0 {
+    return errors.Join(errs...)
+}
+```
+
+**Join vs 多层 %w 包装的区别：**
+
+| 特性 | Join | 多层 %w 包装 |
+|------|------|---------------|
+| 子错误关系 | 并列（多个独立错误）| 链状（层层嵌套） |
+| Unwrap 返回 | `[]error` | `error` |
+| 适用场景 | 批量操作的多个失败 | 逐层添加上下文 |
+| errors.Is 行为 | 匹配任意子错误 | 匹配整条链 |
+
+#### errors.ErrUnsupported — 预定义的不支持操作错误（Go 1.22）
+
+Go 1.22 引入了 `errors.ErrUnsupported`，表示请求的操作不支持：
+
+```go
+// 比如文件系统不支持硬链接
+func createHardLink(src, dst string) error {
+    if err := os.Link(src, dst); err != nil {
+        return fmt.Errorf("硬链接操作: %w", err)
+    }
+    return nil
+}
+
+// 调用方判断
+if errors.Is(err, errors.ErrUnsupported) {
+    log.Println("当前文件系统不支持硬链接，使用软链接替代")
+}
+```
+
+**ErrUnsupported vs 自定义 sentinel error 的选择：**
+- **ErrUnsupported**：标准库操作在某些环境下不支持（如 `os.Link` 在只读文件系统）
+- **自定义 sentinel**：业务层面的「不支持」语义，如 `ErrFeatureNotEnabled`
+
 #### errors.Unwrap — 解包一层
 
 ```go
@@ -361,6 +491,12 @@ func A() error {
 ### Q4：error 和异常（panic）的边界是什么？
 
 > 核心原则：**可预见的错误（业务错误）用 error，不可预见的严重错误用 panic**。网络超时、文件不存在、权限不足都是可预见的，应该返回 error。数组越界、空指针、解码失败（编程错误）用 panic，因为说明代码有 bug。简单记忆：**如果是调用方的责任，用 error；如果是编写者自己的责任，用 panic**。
+
+### Q5：errors.Join 和 errors.AsType 在生产中适合哪些场景？
+
+> **AsType** 适合在 if 条件中直接提取特定类型错误，省去变量声明，代码更紧凑。典型场景：从错误链中提取 `*fs.PathError`、`*net.AddrError` 等标准库结构化错误类型。
+>
+> **Join** 适合批量操作的错误聚合——比如一次更新 100 条数据库记录，部分失败时不想丢弃成功信息，也不接受部分失败就用一个错误吞掉所有信息。调用方可以用 `errors.Is` 逐一判断每个子错误，或者遍历 `Unwrap()` 逐个处理。
 
 ---
 
