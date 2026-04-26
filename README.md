@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-145-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.49-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.50-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -150,6 +150,7 @@
 | 01-golang/03-language-deep | Go 1.24 Swiss Tables 全新的 Map 实现（SIMD/Swiss Tables/性能提升）| P1 | ✅ 已完成（v2.40）|
 | 01-golang/05-stdlib | Go 1.27 新增：uuid 标准库（v4/v7）/maphash.Hasher 接口/pprof labels traceback | P1 | ✅ 已完成（v2.48）|
 | 01-golang/05-stdlib | Go 1.26 新增密码学套件（crypto/mlkem 后量子Kyber / crypto/hpke Hybrid加密）| P2 | ✅ 已完成（v2.49）|
+| 02-database/01-mysql | MySQL MDL Lock（元数据锁）：生产故障场景 + pt-osc/gh-ost/Instant ADD COLUMN 解决方案 | P1 | ✅ 已完成（v2.50）|
 
 ---
 
@@ -255,7 +256,7 @@
 |------|----------|
 | 🔴 [索引原理与优化](./docs/02-database/01-mysql/01-index.md) | B+ 树、聚簇/二级索引、联合索引、索引失效全场景、EXPLAIN |
 | 🔴 [事务、隔离级别与 MVCC](./docs/02-database/01-mysql/02-transaction.md) | ACID、ReadView、版本链、RC vs RR、间隙锁、死锁 |
-| 🔴 [锁机制深度](./docs/02-database/01-mysql/03-lock.md) | 行锁/表锁/间隙锁/临键锁、死锁检测与避免 |
+| 🔴 [锁机制深度](./docs/02-database/01-mysql/03-lock.md) | 行锁/表锁/间隙锁/临键锁/MDL锁、死锁检测与避免 |
 | 🟡 [慢查询优化](./docs/02-database/01-mysql/04-slow-query.md) | EXPLAIN 解读、SQL 改写、深分页优化 |
 | 🔴 [EXPLAIN 输出字段逐一解读](./docs/02-database/01-mysql/07-explain.md) | 12 字段详解、Using filesort/temporary 优化、实战案例、EXPLAIN ANALYZE |
 | 🟡 [分库分表](./docs/02-database/01-mysql/05-sharding.md) | ShardingSphere、路由策略、数据迁移 |

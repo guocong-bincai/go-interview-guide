@@ -141,16 +141,147 @@ SELECT * FROM users WHERE id = 10 FOR UPDATE;
 
 ---
 
-## 5. 死锁（Dead Lock）
+## 5. 元数据锁（MDL Lock）
 
-### 5.1 死锁的四个必要条件
+> 本节为 2026-04 新增内容，属于 P1 高频生产问题。
+
+### 5.1 什么是 MDL Lock
+
+MDL Lock（Metadata Lock）是 MySQL Server 层的锁，**保护表结构定义**，与 InnoDB 行锁是完全独立的锁系统。
+
+MDL 锁的对象是**表**，在以下场景自动加锁：
+- DML 操作（SELECT/INSERT/UPDATE/DELETE）：加 MDL 读锁
+- DDL 操作（ALTER TABLE/DROP TABLE/TRUNCATE）：加 MDL 写锁
+
+```sql
+-- 事务 A：SELECT（MDL 读锁）
+BEGIN;
+SELECT * FROM orders WHERE id = 1;  -- 持有 MDL 读锁
+-- 事务 B：DDL（MDL 写锁，需等所有读锁释放）
+ALTER TABLE orders ADD COLUMN remark VARCHAR(255);  -- 等待 MDL 写锁
+```
+
+**MDL 锁兼容矩阵：**
+
+| | MDL 读锁 | MDL 写锁 |
+|--|---------|---------|
+| MDL 读锁 | ✅ 兼容 | ❌ 互斥 |
+| MDL 写锁 | ❌ 互斥 | ❌ 互斥 |
+
+### 5.2 MDL 锁导致的经典生产故障
+
+**故障场景：线上 ALTER TABLE 导致大量连接堆积。**
+
+```sql
+-- 监控发现：大量查询 hang 住，SHOW PROCESSLIST 看到
+-- State: "Waiting for table metadata lock"
+
+-- 根因：应用代码开启了长事务，持有该表的 MDL 读锁
+-- 同时 DBA 发了 ALTER TABLE（需要 MDL 写锁），被阻塞
+-- 所有新进来的 SELECT 全部排队 → 数据库连接池打满 → 服务不可用
+```
+
+**典型触发条件：**
+
+| 场景 | 说明 |
+|------|------|
+| 长事务未提交 | `BEGIN` 后长时间不 `COMMIT`，其他 DDL 全部阻塞 |
+| 慢查询占用读锁 | 一个 30s 的复杂 SELECT 会 block 后续所有 DDL |
+| MySQL Slave 延迟 | 读 Binlog 的线程持有旧版本的 MDL 读锁 |
+| ORM 自动开启事务 | GORM 默认 `db.Where().First()` 在事务中执行 |
+
+```go
+// GORM 默认行为：First() 会自动加 FOR UPDATE（等效 MDL 读锁）
+// 如果外层有长事务，会 block 整个表的 DDL
+var user User
+db.Where("id = ?", 1).First(&user)  // 自动开启事务 + FOR UPDATE
+```
+
+### 5.3 MDL 锁预防方案
+
+**方案一：pt-osc（Online DDL，推荐生产使用）**
+
+```bash
+# pt-online-schema-change：在从表上操作，通过触发器同步数据
+pt-online-schema-change \
+  --alter "ADD COLUMN remark VARCHAR(255)" \
+  --user=root \
+  --password=xxx \
+  --execute \
+  D=t order_db,t=orders
+```
+
+原理：
+1. 创建新表（新结构）
+2. 在原表建三个触发器（INSERT/UPDATE/DELETE）同步增量
+3. 拷贝原表数据到新表
+4. 两表交换（Rename）
+5. 删除触发器和原表
+
+**方案二：gh-ost（GitHub Online Schema Tool）**
+
+```bash
+# gh-ost：通过 Binlog 同步增量，不依赖触发器
+# 优势：对主库无任何触发器开销，更安全
+gh-ost \
+  --alter="ADD COLUMN remark VARCHAR(255)" \
+  --database="order_db" \
+  --table="orders" \
+  --execute \
+  --切口切换"
+```
+
+**方案三：MySQL 8.0 原生 Instant ADD COLUMN（最轻量）**
+
+```sql
+-- MySQL 8.0.12+ 支持 ADD COLUMN 瞬时完成（不重建表）
+-- 仅限于：在末尾添加有 DEFAULT 值的列
+ALTER TABLE orders ADD COLUMN remark VARCHAR(255) DEFAULT '' NOT NULL, ALGORITHM=INSTANT;
+
+-- 查看是否使用了 INSTANT 算法
+SHOW ALTER TABLE PROCEDURES WHERE Field like '%algorithm%';
+```
+
+**MySQL 8.0 INSTANT ADD COLUMN 限制：**
+- 只能添加在末尾（不能插入列中间）
+- 不能与其他 ALGORITHM=COPY/INPLACE 的操作一起执行
+- 不支持带全文索引或 spatial 索引的表
+
+### 5.4 MDL 锁排查命令
+
+```sql
+-- 查看当前所有 MDL 锁等待
+SELECT * FROM performance_schema.metadata_locks;
+
+-- 查看哪条 SQL 持有 MDL 锁
+SELECT
+  pl.id AS thread_id,
+  pl.user,
+  pl.host,
+  pl.db,
+  pl.command,
+  pl.time,
+  pl.state,
+  REPLACE(REPLACE(SUBSTRING(pl.info, 1, 80), '\n', ''), '\r', '') AS info
+FROM information_schema.processlist pl
+WHERE pl.state = 'Waiting for table metadata lock';
+
+-- 强制杀掉持有 MDL 读锁的会话
+KILL <thread_id>;
+```
+
+---
+
+## 6. 死锁（Dead Lock）
+
+### 6.1 死锁的四个必要条件
 
 1. **互斥**：资源只能被一个事务占用
 2. **占有并等待**：事务持有锁，同时等待其他锁
 3. **不抢占**：已分配的锁不能被强制夺取
 4. **循环等待**：事务之间形成循环锁等待
 
-### 5.2 典型死锁场景
+### 6.2 典型死锁场景
 
 **场景 1：双向顺序依赖**
 
@@ -218,7 +349,7 @@ func TransferFixed(db *sql.DB, from, to int64, amount float64) error {
 }
 ```
 
-### 5.3 死锁检测与处理
+### 6.3 死锁检测与处理
 
 InnoDB 有**等待图**（Wait-For Graph）算法自动检测死锁，默认 50ms 检测一次。
 
@@ -244,7 +375,7 @@ Transaction B:
 *** WE ROLL BACK TRANSACTION (B)  -- InnoDB 选择回滚 undo log 较少的事务
 ```
 
-### 5.4 生产环境死锁预防策略
+### 6.4 生产环境死锁预防策略
 
 | 策略 | 说明 |
 |------|------|
@@ -257,9 +388,9 @@ Transaction B:
 
 ---
 
-## 6. Go + MySQL 锁的最佳实践
+## 7. Go + MySQL 锁的最佳实践
 
-### 6.1 使用 `FOR UPDATE` 的正确姿势
+### 7.1 使用 `FOR UPDATE` 的正确姿势
 
 ```go
 func GetAndUpdateOrder(db *sql.DB, orderID int64) error {
@@ -295,7 +426,7 @@ func GetAndUpdateOrder(db *sql.DB, orderID int64) error {
 }
 ```
 
-### 6.2 乐观锁（无锁方案）
+### 7.2 乐观锁（无锁方案）
 
 适合读多写少场景，避免数据库锁竞争：
 
@@ -331,7 +462,7 @@ func UpdateWithOptimisticLock(db *sql.DB, id int64, newName string) error {
 
 ---
 
-## 7. 面试高频追问
+## 8. 面试高频追问
 
 **Q：InnoDB 和 MyISAM 的锁区别？**
 > InnoDB 支持行锁+间隙锁，MyISAM 只有表锁。InnoDB 的锁是索引记录锁，MyISAM 是整表锁，并发性能差距巨大。
