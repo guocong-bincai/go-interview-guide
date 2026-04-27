@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-145-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.52-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.53-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -150,6 +150,7 @@
 | 01-golang/03-language-deep | Go 1.24 Swiss Tables 全新的 Map 实现（SIMD/Swiss Tables/性能提升）| P1 | ✅ 已完成（v2.40）|
 | 01-golang/05-stdlib | Go 1.27 新增：uuid 标准库（v4/v7）/maphash.Hasher 接口/pprof labels traceback | P1 | ✅ 已完成（v2.48）|
 | 01-golang/05-stdlib | Go 1.26 新增密码学套件（crypto/mlkem 后量子Kyber / crypto/hpke Hybrid加密）| P2 | ✅ 已完成（v2.49）|
+| 01-golang/05-stdlib | encoding/json v2 新一代 JSON API（jsontext 零拷贝流式解析 / v2 严格 UTF-8 / 拒绝重复 key）| P1 | ✅ 已完成（v2.53）|
 | 02-database/01-mysql | MySQL MDL Lock（元数据锁）：生产故障场景 + pt-osc/gh-ost/Instant ADD COLUMN 解决方案 | P1 | ✅ 已完成（v2.50）|
 
 ---
@@ -242,6 +243,7 @@
 | 🟡 [go:embed 静态资源内嵌](./docs/01-golang/05-stdlib/05-embed.md) | 编译时嵌入、embed.FS、glob 模式、与构建约束配合、生产坑点 |
 | 🟡 [Go 1.27 标准库新特性](./docs/01-golang/05-stdlib/06-go1.27-stdlib.md) | CutLast、Response File、HTTP Body 自动 drain、连接复用优化 |
 | 🟢 [Go 1.26 新增密码学套件](./docs/01-golang/05-stdlib/07-go1.26-crypto.md) | crypto/mlkem（后量子Kyber）/crypto/hpke（Hybrid加密RFC 9180）/cryptotest |
+| 🟡 [encoding/json v2 新一代 JSON API](./docs/01-golang/05-stdlib/08-json-v2.md) | jsontext 零拷贝/流式、v2 严格 UTF-8/拒绝重复 key、MarshalJSONTo 新接口、性能对比 |
 
 </details>
 
