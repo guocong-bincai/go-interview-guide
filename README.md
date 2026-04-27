@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-148-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.55-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-149-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.56-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -152,7 +152,7 @@
 | 01-golang/05-stdlib | Go 1.26 新增密码学套件（crypto/mlkem 后量子Kyber / crypto/hpke Hybrid加密）| P2 | ✅ 已完成（v2.49）|
 | 01-golang/05-stdlib | encoding/json v2 新一代 JSON API（jsontext 零拷贝流式解析 / v2 严格 UTF-8 / 拒绝重复 key）| P1 | ✅ 已完成（v2.53）|
 | 02-database/01-mysql | MySQL MDL Lock（元数据锁）：生产故障场景 + pt-osc/gh-ost/Instant ADD COLUMN 解决方案 | P1 | ✅ 已完成（v2.50）|
-| 01-golang/01-runtime | Go 网络 I/O：epoll/kqueue 与 Netpoller 原理（sysmon 批量唤醒、M 不阻塞设计、生产坑点）| P1 | ✅ 已完成（v2.55）|
+| 01-golang/01-runtime | Go 网络 I/O：epoll/kqueue 与 Netpoller 原理（sysmon 批量唤醒、M 不阻塞设计、生产坑点）| P1 | ✅ 已完成（v2.55），v2.56 补充 Go 1.26 类型构造与循环检测 |
 
 ---
 
@@ -217,6 +217,7 @@
 | 🟡 [Go 1.26 `new(expr)` 内置函数增强](./docs/01-golang/03-language-deep/08-new-function.md) | new(expr) 表达式参数、自引用泛型约束、堆分配本质 |
 | 🟡 [Go 1.26 栈分配优化](./docs/01-golang/03-language-deep/09-go1.26-stack-alloc.md) | append 推测性栈缓冲、move2heap 逃逸切片优化 |
 | 🟡 [Go 1.24 Swiss Tables](./docs/01-golang/03-language-deep/10-go1.24-swiss-tables.md) | Swiss Tables 原理、SIMD 批量探测、Map 性能提升 |
+| 🟢 [Go 1.26 类型构造与循环检测](./docs/01-golang/03-language-deep/11-type-construction.md) | 类型构造深度优先、递归类型环检测、completeness 与 downstream 操作 |
 
 </details>
 
