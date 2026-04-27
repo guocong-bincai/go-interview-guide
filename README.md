@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-147-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.54-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-148-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.55-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -152,6 +152,7 @@
 | 01-golang/05-stdlib | Go 1.26 新增密码学套件（crypto/mlkem 后量子Kyber / crypto/hpke Hybrid加密）| P2 | ✅ 已完成（v2.49）|
 | 01-golang/05-stdlib | encoding/json v2 新一代 JSON API（jsontext 零拷贝流式解析 / v2 严格 UTF-8 / 拒绝重复 key）| P1 | ✅ 已完成（v2.53）|
 | 02-database/01-mysql | MySQL MDL Lock（元数据锁）：生产故障场景 + pt-osc/gh-ost/Instant ADD COLUMN 解决方案 | P1 | ✅ 已完成（v2.50）|
+| 01-golang/01-runtime | Go 网络 I/O：epoll/kqueue 与 Netpoller 原理（sysmon 批量唤醒、M 不阻塞设计、生产坑点）| P1 | ✅ 已完成（v2.55）|
 
 ---
 
@@ -184,6 +185,7 @@
 | 🟡 [Go 1.26 运行时新特性](./docs/01-golang/01-runtime/06-go1.26-runtime.md) | Green Tea GC（SIMD 加速）、goroutine leak profile 检测原理、Heap Base Randomization 安全加固 |
 | 🟡 [Go 1.25 trace.FlightRecorder](./docs/01-golang/01-runtime/07-flight-recorder.md) | 环形缓冲 trace、生产常驻、按需导出、与传统 trace 的取舍 |
 | 🟡 [Go 1.25 Container-aware GOMAXPROCS](./docs/01-golang/01-runtime/08-go1.25-gomaxprocs.md) | cgroup CPU 带宽感知、动态更新、与 automaxprocs 关系、K8s 性能影响 |
+| 🟡 [Go 网络 I/O：epoll/kqueue 与 Netpoller](./docs/01-golang/01-runtime/09-io-multiplexing.md) | netpoller、goroutine 阻塞不阻塞 M、sysmon 批量唤醒、epoll vs kqueue 生产对比 |
 
 </details>
 
