@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-145-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.53-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-147-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.54-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -212,6 +212,7 @@
 | 🟡 [slice 与 map](./docs/01-golang/03-language-deep/05-slice-map.md) | 底层结构、扩容策略、并发安全问题 |
 | 🟡 [内存模型](./docs/01-golang/03-language-deep/06-memory-model.md) | happens-before、内存对齐、false sharing |
 | 🟢 [循环与迭代器新特性](./docs/01-golang/03-language-deep/07-loop-iterators.md) | Go 1.22 循环变量语义变更、range-over-func |
+| 🟡 [Go 1.26 `new(expr)` 内置函数增强](./docs/01-golang/03-language-deep/08-new-function.md) | new(expr) 表达式参数、自引用泛型约束、堆分配本质 |
 | 🟡 [Go 1.26 栈分配优化](./docs/01-golang/03-language-deep/09-go1.26-stack-alloc.md) | append 推测性栈缓冲、move2heap 逃逸切片优化 |
 | 🟡 [Go 1.24 Swiss Tables](./docs/01-golang/03-language-deep/10-go1.24-swiss-tables.md) | Swiss Tables 原理、SIMD 批量探测、Map 性能提升 |
 
@@ -479,6 +480,15 @@
 | 🟡 [HTTPS 握手流程](./docs/06-network/02-http/02-https.md) | TLS 握手、证书链、性能优化 |
 | 🟡 [WebSocket](./docs/06-network/02-http/03-websocket.md) | 升级握手、与 HTTP 长轮询对比 |
 | 🟡 [gRPC 与 HTTP/2](./docs/06-network/02-http/04-grpc-http2.md) | 多路复用、流控 |
+
+</details>
+
+<details>
+<summary><b>03-http2-priority · HTTP/2 优先级调度</b>（点击展开）</summary>
+
+| 文章 | 核心考点 |
+|------|----------|
+| 🟡 [HTTP/2 优先级调度](./docs/06-network/03-http2-priority/01-http2-priority.md) | RFC 9218 优先级依赖树、Stream 调度、Go 1.27 DisableClientPriority |
 
 </details>
 
