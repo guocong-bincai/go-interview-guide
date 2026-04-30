@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-129-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.28-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.29-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -129,43 +129,43 @@
 
 | 模块 | 缺少的文章 | 优先级 | 状态 |
 |------|----------|--------|------|
-| 01-golang/03-language-deep | 编译器优化：内联决策与逃逸深度 | P1 | ⏳ 待认领 |
-| 01-golang/03-language-deep | CGO 原理与面试考点 | P0 | ⏳ 待认领 |
-| 01-golang/03-language-deep | unsafe 包：原理、使用场景与风险 | P0 | ⏳ 待认领 |
-| 01-golang/06-toolchain | Go Module 与 Workspace 工程实践 | P1 | ⏳ 待认领 |
-| 01-golang/06-toolchain | Build Tags 与条件编译 | P1 | ⏳ 待认领 |
+| 01-golang/03-language-deep | 编译器优化：内联决策与逃逸深度 | P1 | ✅ 已完成 |
+| 01-golang/03-language-deep | CGO 原理与面试考点 | P0 | ✅ 已完成 |
+| 01-golang/03-language-deep | unsafe 包：原理、使用场景与风险 | P0 | ✅ 已完成 |
+| 01-golang/06-toolchain | Go Module 与 Workspace 工程实践 | P1 | ✅ 已完成 |
+| 01-golang/06-toolchain | Build Tags 与条件编译 | P1 | ✅ 已完成 |
 | 02-database/02-redis | Pipeline 与 Lua 脚本 | P1 | ✅ 已完成 |
-| 02-database/05-connection-pool | 连接池原理与调优：database/sql、Redis、gRPC | P0 | ⏳ 待认领 |
-| 02-database/06-mongodb | MongoDB 核心原理与 Go 实战 | P1 | ⏳ 待认领 |
-| 02-database/07-clickhouse | ClickHouse 核心原理与 OLAP 选型 | P1 | ⏳ 待认领 |
-| 03-distributed/05-coordination | 分布式锁横向对比：Redis vs etcd vs ZooKeeper | P0 | ⏳ 待认领 |
+| 02-database/05-connection-pool | 连接池原理与调优：database/sql、Redis、gRPC | P0 | ✅ 已完成 |
+| 02-database/06-mongodb | MongoDB 核心原理与 Go 实战 | P1 | ✅ 已完成 |
+| 02-database/07-clickhouse | ClickHouse 核心原理与 OLAP 选型 | P1 | ✅ 已完成 |
+| 03-distributed/05-coordination | 分布式锁横向对比：Redis vs etcd vs ZooKeeper | P0 | ✅ 已完成 |
 | 04-microservices/04-deployment | Kubernetes 控制面深度原理 | P0 | ✅ 已完成 |
-| 04-microservices/03-observability | Prometheus + Grafana 监控实战 | P1 | ⏳ 待认领 |
-| 05-system-design/09-red-packet | 抢红包系统设计 | P0 | ⏳ 待认领 |
-| 05-system-design/10-leaderboard | 排行榜系统设计（实时 + 历史） | P0 | ⏳ 待认领 |
-| 05-system-design/11-lbs | LBS 地理位置系统设计（附近的人/店） | P1 | ⏳ 待认领 |
+| 04-microservices/03-observability | Prometheus + Grafana 监控实战 | P1 | ✅ 已完成 |
+| 05-system-design/09-red-packet | 抢红包系统设计 | P0 | ✅ 已完成 |
+| 05-system-design/10-leaderboard | 排行榜系统设计（实时 + 历史） | P0 | ✅ 已完成 |
+| 05-system-design/11-lbs | LBS 地理位置系统设计（附近的人/店） | P1 | ✅ 已完成 |
 | 07-algorithms/10-greedy | 贪心算法高频题 | P0 | ✅ 已完成 |
 | 07-algorithms/11-bit-operation | 位运算高频题 | P0 | ✅ 已完成 |
 | 07-algorithms/12-math | 数学类高频题（数论 + 模拟 + 随机） | P1 | ✅ 已完成 |
-| 09-interview-strategy/01-resume | 5-8 年工程师简历写法指南 | P1 | ⏳ 待认领 |
-| 11-go-std-practice | Go 标准库生产实践合集（io/encoding/time/testing） | P2 | ⏳ 待认领 |
+| 09-interview-strategy/01-resume | 5-8 年工程师简历写法指南 | P1 | ✅ 已完成 |
+| 11-go-std-practice | Go 标准库生产实践合集（io/encoding/time/testing） | P2 | ✅ 已完成 |
 | 12-linux-os | 进程/线程、虚拟内存、零拷贝、cgroup、Linux 排障体系 | P0 | ✅ 已完成 |
-| 08-engineering/04-performance-governance | 压测方法论：单接口到全链路压测 | P0 | ⏳ 待认领 |
-| 08-engineering/01-project-design | 故障复盘（Postmortem）方法论 | P0 | ⏳ 待认领 |
-| 08-engineering/01-project-design | 重构与技术债治理 | P0 | ⏳ 待认领 |
-| 08-engineering/03-leadership | 工程质量体系落地 | P0 | ⏳ 待认领 |
-| 05-system-design/01-patterns | DDD 战术设计 | P0 | ⏳ 待认领 |
-| 05-system-design/01-patterns | 业务建模方法论 | P0 | ⏳ 待认领 |
+| 08-engineering/04-performance-governance | 压测方法论：单接口到全链路压测 | P0 | ✅ 已完成 |
+| 08-engineering/01-project-design | 故障复盘（Postmortem）方法论 | P0 | ✅ 已完成 |
+| 08-engineering/01-project-design | 重构与技术债治理 | P0 | ✅ 已完成 |
+| 08-engineering/03-leadership | 工程质量体系落地 | P0 | ✅ 已完成 |
+| 05-system-design/01-patterns | DDD 战术设计 | P0 | ✅ 已完成 |
+| 05-system-design/01-patterns | 业务建模方法论 | P0 | ✅ 已完成 |
 | 03-distributed/01-theory | 容灾设计：单机房、双活与异地多活 | P0 | ✅ 已完成 |
 | 04-microservices/04-deployment | 灰度发布实战 | P0 | ✅ 已完成 |
-| 06-network/03-security | 后端安全体系 | P1 | ⏳ 待认领 |
-| 06-network/03-security | RBAC、ABAC 与 OIDC | P1 | ⏳ 待认领 |
-| 08-engineering/04-performance-governance | 测试策略：单测、集成测试、契约测试 | P1 | ⏳ 待认领 |
-| 08-engineering/03-leadership | 跨团队协作 | P1 | ⏳ 待认领 |
-| 08-engineering/03-leadership | 招聘与面试：高级工程师如何识别候选人 | P1 | ⏳ 待认领 |
-| 08-engineering/02-tech-planning | 降本增效实战 | P1 | ⏳ 待认领 |
-| 08-engineering/01-project-design | Go 服务架构设计：分层、整洁架构与六边形架构 | P1 | ⏳ 待认领 |
-| 08-engineering/02-troubleshooting | 混沌工程与故障演练 | P1 | ⏳ 待认领 |
+| 06-network/03-security | 后端安全体系 | P1 | ✅ 已完成 |
+| 06-network/03-security | RBAC、ABAC 与 OIDC | P1 | ✅ 已完成 |
+| 08-engineering/04-performance-governance | 测试策略：单测、集成测试、契约测试 | P1 | ✅ 已完成 |
+| 08-engineering/03-leadership | 跨团队协作 | P1 | ✅ 已完成 |
+| 08-engineering/03-leadership | 招聘与面试：高级工程师如何识别候选人 | P1 | ✅ 已完成 |
+| 08-engineering/02-tech-planning | 降本增效实战 | P1 | ✅ 已完成 |
+| 08-engineering/01-project-design | Go 服务架构设计：分层、整洁架构与六边形架构 | P1 | ✅ 已完成 |
+| 08-engineering/02-troubleshooting | 混沌工程与故障演练 | P1 | ✅ 已完成 |
 | ~~01-golang/01-runtime~~ | ~~Go 调度器源码走读~~ | ~~P0~~ | ✅ 已完成 |
 | ~~02-database/01-mysql~~ | ~~EXPLAIN 输出字段逐一解读~~ | ~~P0~~ | ✅ 已完成 |
 | ~~03-distributed/04-service-mesh~~ | ~~Service Mesh（Istio/Envoy）原理~~ | ~~P1~~ | ✅ 已完成 |
@@ -262,18 +262,18 @@
 | 🟢 [Go 1.26 栈分配优化](./docs/01-golang/03-language-deep/09-go1.26-stack-alloc.md) | append 推测性栈缓冲、move2heap 机制 |
 | 🟢 [Go 1.24 Swiss Tables](./docs/01-golang/03-language-deep/10-go1.24-swiss-tables.md) | map 底层替换为 Swiss Table、性能提升原理 |
 | 🟢 [类型构造与循环检测](./docs/01-golang/03-language-deep/11-type-construction.md) | Go 1.26 类型检查器底层改进 |
-| 🔴 [CGO 原理与面试考点](./docs/01-golang/03-language-deep/12-cgo.md) | CGO 调用开销、LockOSThread、C 内存管理、CGO_ENABLED=0 ⚠️ 待补充 |
-| 🔴 [unsafe 包：原理、使用场景与风险](./docs/01-golang/03-language-deep/13-unsafe.md) | unsafe.Pointer 四条规则、uintptr 陷阱、零拷贝转换 ⚠️ 待补充 |
+| 🔴 [CGO 原理与面试考点](./docs/01-golang/03-language-deep/12-cgo.md) | CGO 调用开销、LockOSThread、C 内存管理、CGO_ENABLED=0 |
+| 🔴 [unsafe 包：原理、使用场景与风险](./docs/01-golang/03-language-deep/13-unsafe.md) | unsafe.Pointer 四条规则、uintptr 陷阱、零拷贝转换 |
 
 </details>
 
 <details>
-<summary><b>06-toolchain · 工具链与工程实践</b>（点击展开）⚠️ 待补充</summary>
+<summary><b>06-toolchain · 工具链与工程实践</b>（点击展开）</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
-| 🟡 [Go Module 与 Workspace 工程实践](./docs/01-golang/06-toolchain/01-go-module.md) | go.mod / replace / exclude / MVS / GOPRIVATE / go.work ⚠️ 待补充 |
-| 🟡 [Build Tags 与条件编译](./docs/01-golang/06-toolchain/02-build-tags.md) | //go:build 语法、平台编译、集成测试 tag、与 embed 联动 ⚠️ 待补充 |
+| 🟡 [Go Module 与 Workspace 工程实践](./docs/01-golang/06-toolchain/01-go-module.md) | go.mod / replace / exclude / MVS / GOPRIVATE / go.work |
+| 🟡 [Build Tags 与条件编译](./docs/01-golang/06-toolchain/02-build-tags.md) | //go:build 语法、平台编译、集成测试 tag、与 embed 联动 |
 
 </details>
 
@@ -292,7 +292,7 @@
 </details>
 
 <details>
-<summary><b>05-stdlib · 标准库与工程实践</b>（点击展开）⚠️ 待补充</summary>
+<summary><b>05-stdlib · 标准库与工程实践</b>（点击展开）</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
@@ -353,7 +353,7 @@
 </details>
 
 <details>
-<summary><b>04-tidb · TiDB</b>（点击展开）⚠️ 待补充</summary>
+<summary><b>04-tidb · TiDB</b>（点击展开）</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
@@ -362,29 +362,29 @@
 </details>
 
 <details>
-<summary><b>05-connection-pool · 连接池</b>（点击展开）⚠️ 待补充</summary>
+<summary><b>05-connection-pool · 连接池</b>（点击展开）</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
-| 🔴 [连接池原理与调优](./docs/02-database/05-connection-pool/01-connection-pool.md) | database/sql、Redis、gRPC 连接池参数、泄漏排查、WaitCount/Stats 监控 ⚠️ 待补充 |
+| 🔴 [连接池原理与调优](./docs/02-database/05-connection-pool/01-connection-pool.md) | database/sql、Redis、gRPC 连接池参数、泄漏排查、WaitCount/Stats 监控 |
 
 </details>
 
 <details>
-<summary><b>06-mongodb · MongoDB</b>（点击展开）⚠️ 待补充</summary>
+<summary><b>06-mongodb · MongoDB</b>（点击展开）</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
-| 🟡 [MongoDB 核心原理与 Go 实战](./docs/02-database/06-mongodb/01-mongodb.md) | BSON、聚合管道、WiredTiger、副本集、分片集群、mongo-driver ⚠️ 待补充 |
+| 🟡 [MongoDB 核心原理与 Go 实战](./docs/02-database/06-mongodb/01-mongodb.md) | BSON、聚合管道、WiredTiger、副本集、分片集群、mongo-driver |
 
 </details>
 
 <details>
-<summary><b>07-clickhouse · ClickHouse</b>（点击展开）⚠️ 待补充</summary>
+<summary><b>07-clickhouse · ClickHouse</b>（点击展开）</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
-| 🟡 [ClickHouse 核心原理与 OLAP 选型](./docs/02-database/07-clickhouse/01-clickhouse.md) | 列式存储、MergeTree、向量化执行、OLAP 选型、Go SDK ⚠️ 待补充 |
+| 🟡 [ClickHouse 核心原理与 OLAP 选型](./docs/02-database/07-clickhouse/01-clickhouse.md) | 列式存储、MergeTree、向量化执行、OLAP 选型、Go SDK |
 
 </details>
 
@@ -401,7 +401,7 @@
 | 🟡 [Raft 协议](./docs/03-distributed/01-theory/02-raft.md) | Leader 选举、日志复制、成员变更 |
 | 🟢 [Paxos 简述](./docs/03-distributed/01-theory/03-paxos.md) | 与 Raft 的对比、应用场景 |
 | 🟡 [一致性模型](./docs/03-distributed/01-theory/04-consistency.md) | 强一致 / 最终一致 / 线性一致性 |
-| 🔴 [容灾设计：单机房、双活与异地多活](./docs/03-distributed/01-theory/05-disaster-recovery.md) | RPO/RTO、同城双活、异地多活、流量切换、数据一致性 ⚠️ 待补充 |
+| 🔴 [容灾设计：单机房、双活与异地多活](./docs/03-distributed/01-theory/05-disaster-recovery.md) | RPO/RTO、同城双活、异地多活、流量切换、数据一致性 |
 
 </details>
 
@@ -438,19 +438,19 @@
 | 文章 | 核心考点 |
 |------|----------|
 | 🟡 [注册中心](./docs/03-distributed/04-service-mesh/01-service-discovery.md) | Consul/etcd/Nacos 原理与选型 |
-| 🟡 [Service Mesh：Istio/Envoy 原理](./docs/03-distributed/04-service-mesh/02-service-mesh.md) | Sidecar 模式、xDS 协议、Listener/Route/Cluster/Endpoint、VirtualService 灰度 ⚠️ 待补充 |
+| 🟡 [Service Mesh：Istio/Envoy 原理](./docs/03-distributed/04-service-mesh/02-service-mesh.md) | Sidecar 模式、xDS 协议、Listener/Route/Cluster/Endpoint、VirtualService 灰度 |
 | 🟡 [链路追踪](./docs/03-distributed/04-service-mesh/03-tracing.md) | Jaeger/Zipkin、TraceID 传播、采样策略 |
 
 </details>
 
 <details>
-<summary><b>05-coordination · 协调服务</b>（点击展开）⚠️ 待补充</summary>
+<summary><b>05-coordination · 协调服务</b>（点击展开）</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
 | 🟡 [etcd 原理与实战](./docs/03-distributed/05-coordination/01-etcd.md) | Raft + boltdb + MVCC、Watch 机制、分布式锁、Leader 选举 |
 | 🟢 [配置中心选型与实践](./docs/03-distributed/05-coordination/02-config-center.md) | Apollo vs Nacos vs etcd、热更新原理、配置灰度、Go 接入 |
-| 🔴 [分布式锁横向对比](./docs/03-distributed/05-coordination/03-distributed-lock-comparison.md) | Redis vs etcd vs ZooKeeper、一致性/性能/公平性对比、Redlock 争议 ⚠️ 待补充 |
+| 🔴 [分布式锁横向对比](./docs/03-distributed/05-coordination/03-distributed-lock-comparison.md) | Redis vs etcd vs ZooKeeper、一致性/性能/公平性对比、Redlock 争议 |
 
 </details>
 
@@ -489,7 +489,7 @@
 | 🟡 [Metrics 监控](./docs/04-microservices/03-observability/01-metrics.md) | Prometheus + Grafana、RED 指标、SLO/SLA |
 | 🟡 [日志体系](./docs/04-microservices/03-observability/02-logging.md) | 结构化日志、ELK 方案、日志采样 |
 | 🟡 [告警设计](./docs/04-microservices/03-observability/03-alerting.md) | 告警规则、告警疲劳治理 |
-| 🟡 [Prometheus + Grafana 监控实战](./docs/04-microservices/03-observability/04-prometheus-grafana-practice.md) | PromQL、Histogram/Summary、Grafana 看板、AlertManager ⚠️ 待补充 |
+| 🟡 [Prometheus + Grafana 监控实战](./docs/04-microservices/03-observability/04-prometheus-grafana-practice.md) | PromQL、Histogram/Summary、Grafana 看板、AlertManager |
 
 </details>
 
@@ -500,8 +500,8 @@
 |------|----------|
 | 🟢 [Docker 实践](./docs/04-microservices/04-deployment/01-docker.md) | 多阶段构建、镜像优化、资源限制 |
 | 🟢 [Kubernetes 核心](./docs/04-microservices/04-deployment/02-kubernetes.md) | Pod 调度、HPA、滚动发布、Service Mesh |
-| 🔴 [Kubernetes 控制面深度原理](./docs/04-microservices/04-deployment/03-k8s-internals.md) | API Server、Controller、Scheduler、Informer、CRD/Operator ⚠️ 待补充 |
-| 🔴 [灰度发布实战](./docs/04-microservices/04-deployment/04-gray-release.md) | 蓝绿/金丝雀/影子流量、DB schema 升级、快速回滚 ⚠️ 待补充 |
+| 🔴 [Kubernetes 控制面深度原理](./docs/04-microservices/04-deployment/03-k8s-internals.md) | API Server、Controller、Scheduler、Informer、CRD/Operator |
+| 🔴 [灰度发布实战](./docs/04-microservices/04-deployment/04-gray-release.md) | 蓝绿/金丝雀/影子流量、DB schema 升级、快速回滚 |
 | 🟢 [CI/CD 流水线](./docs/04-microservices/03-cicd/03-cicd.md) | 蓝绿部署、金丝雀发布 |
 
 </details>
@@ -518,8 +518,8 @@
 | 🟡 [CQRS 模式](./docs/05-system-design/01-patterns/01-cqrs.md) | 读写分离、Event Sourcing 结合 |
 | 🟡 [事件驱动架构](./docs/05-system-design/01-patterns/02-event-driven.md) | Outbox Pattern、事件溯源 |
 | 🟢 [DDD 战略设计](./docs/05-system-design/01-patterns/03-ddd.md) | 领域、限界上下文、聚合根 |
-| 🔴 [DDD 战术设计](./docs/05-system-design/01-patterns/05-ddd-tactical-design.md) | 实体、值对象、聚合、领域服务、Repository、Go 落地 ⚠️ 待补充 |
-| 🔴 [业务建模方法论](./docs/05-system-design/01-patterns/06-business-modeling.md) | Event Storming、核心域/支撑域、状态机、服务边界划分 ⚠️ 待补充 |
+| 🔴 [DDD 战术设计](./docs/05-system-design/01-patterns/05-ddd-tactical-design.md) | 实体、值对象、聚合、领域服务、Repository、Go 落地 |
+| 🔴 [业务建模方法论](./docs/05-system-design/01-patterns/06-business-modeling.md) | Event Storming、核心域/支撑域、状态机、服务边界划分 |
 | 🟡 [Saga 落地](./docs/05-system-design/02-scenarios/01-saga.md) | 编排型 vs 协调型、补偿事务设计 |
 | 🟡 [IM 系统](./docs/05-system-design/02-scenarios/02-im.md) | 消息投递、离线消息、已读未读 |
 
@@ -532,9 +532,9 @@
 |------|----------|
 | 🔴 [秒杀系统](./docs/05-system-design/01-seckill/01-seckill.md) | 预减库存、异步下单、防超卖、流量漏斗 |
 | 🔴 [短链系统](./docs/05-system-design/02-short-url/02-short-url.md) | 发号器、跳转、高可用 |
-| 🔴 [抢红包系统](./docs/05-system-design/09-red-packet/09-red-packet.md) | 二倍均值法、预生成红包队列、Redis LPOP、防超发 ⚠️ 待补充 |
-| 🔴 [排行榜系统](./docs/05-system-design/10-leaderboard/10-leaderboard.md) | Redis ZSet、分桶设计、历史排行榜、近似 TopK ⚠️ 待补充 |
-| 🟡 [LBS 地理位置系统](./docs/05-system-design/11-lbs/11-lbs.md) | GeoHash、Redis GEO、附近的人/店、边界问题 ⚠️ 待补充 |
+| 🔴 [抢红包系统](./docs/05-system-design/09-red-packet/09-red-packet.md) | 二倍均值法、预生成红包队列、Redis LPOP、防超发 |
+| 🔴 [排行榜系统](./docs/05-system-design/10-leaderboard/10-leaderboard.md) | Redis ZSet、分桶设计、历史排行榜、近似 TopK |
+| 🟡 [LBS 地理位置系统](./docs/05-system-design/11-lbs/11-lbs.md) | GeoHash、Redis GEO、附近的人/店、边界问题 |
 | 🟡 [Feed 流](./docs/05-system-design/04-feed/04-feed.md) | 推模式 vs 拉模式 vs 推拉结合 |
 | 🔴 [分布式 ID](./docs/05-system-design/05-distributed-id/05-distributed-id.md) | Snowflake、Leaf、UUIDv7 对比 |
 | 🔴 [限流系统](./docs/05-system-design/06-rate-limiter/06-rate-limiter.md) | 令牌桶、滑动窗口、分布式限流 |
@@ -587,8 +587,8 @@
 | 文章 | 核心考点 |
 |------|----------|
 | 🟡 [常见攻击与防御](./docs/06-network/03-security/01-common-attacks.md) | SQL 注入、XSS、CSRF、SSRF、JWT 安全、敏感数据处理 |
-| 🟡 [后端安全体系](./docs/06-network/03-security/02-backend-security.md) | 服务间认证、审计日志、脱敏、密钥轮换、最小权限 ⚠️ 待补充 |
-| 🟡 [RBAC、ABAC 与 OIDC](./docs/06-network/03-security/03-authz-rbac-abac.md) | 权限模型、多租户权限、统一鉴权中间件、OIDC 与 OAuth2 ⚠️ 待补充 |
+| 🟡 [后端安全体系](./docs/06-network/03-security/02-backend-security.md) | 服务间认证、审计日志、脱敏、密钥轮换、最小权限 |
+| 🟡 [RBAC、ABAC 与 OIDC](./docs/06-network/03-security/03-authz-rbac-abac.md) | 权限模型、多租户权限、统一鉴权中间件、OIDC 与 OAuth2 |
 
 </details>
 
@@ -652,9 +652,9 @@
 | 🟡 [单调栈](./docs/07-algorithms/07-monotonic-stack/07-monotonic-stack.md) | 下一个更大元素、柱状图 |
 | 🟡 [堆 / TopK](./docs/07-algorithms/08-heap/08-heap.md) | 优先队列、TopK、合并 K 个有序列表 |
 | 🟢 [图论高频题](./docs/07-algorithms/09-graph/01-graph.md) | DFS/BFS 模板、拓扑排序、并查集（岛屿数量/课程表） |
-| 🔴 [贪心算法高频题](./docs/07-algorithms/10-greedy/10-greedy.md) | 区间调度、跳跃游戏、分发糖果、加油站 ⚠️ 待补充 |
-| 🔴 [位运算高频题](./docs/07-algorithms/11-bit-operation/11-bit-operation.md) | n&(n-1)、异或、自消性、只出现一次的数字系列 ⚠️ 待补充 |
-| 🟡 [数学类高频题](./docs/07-algorithms/12-math/12-math.md) | 快速幂、质数筛、水塘抽样、螺旋矩阵 ⚠️ 待补充 |
+| 🔴 [贪心算法高频题](./docs/07-algorithms/10-greedy/10-greedy.md) | 区间调度、跳跃游戏、分发糖果、加油站 |
+| 🔴 [位运算高频题](./docs/07-algorithms/11-bit-operation/11-bit-operation.md) | n&(n-1)、异或、自消性、只出现一次的数字系列 |
+| 🟡 [数学类高频题](./docs/07-algorithms/12-math/12-math.md) | 快速幂、质数筛、水塘抽样、螺旋矩阵 |
 
 </details>
 
@@ -684,7 +684,7 @@
 | 🔴 [死锁排查](./docs/08-engineering/02-troubleshooting/03-deadlock.md) | 数据库死锁、Go 并发死锁、pprof 定位 |
 | 🔴 [goroutine 泄漏排查 SOP](./docs/08-engineering/02-troubleshooting/06-goroutine-leak-sop.md) | 泄漏告警→profile采集→定位根因→修复验证完整闭环 |
 | 🟡 [高延迟排查](./docs/08-engineering/02-troubleshooting/04-high-latency.md) | 链路追踪、GC 停顿、连接池 |
-| 🟡 [混沌工程与故障演练](./docs/08-engineering/02-troubleshooting/08-chaos-engineering.md) | 故障注入、风险控制、演练闭环、稳定性建设 ⚠️ 待补充 |
+| 🟡 [混沌工程与故障演练](./docs/08-engineering/02-troubleshooting/08-chaos-engineering.md) | 故障注入、风险控制、演练闭环、稳定性建设 |
 | 🟡 [goroutine 泄漏](./docs/08-engineering/05-goroutine-leak/05-goroutine-leak.md) | 识别、定位、修复模式 |
 
 </details>
@@ -697,20 +697,20 @@
 | 🟡 [技术选型方法论](./docs/08-engineering/01-project-design/01-tech-selection.md) | 如何在面试中讲清楚为什么选 X |
 | 🟡 [架构演进复盘](./docs/08-engineering/01-project-design/02-architecture-evolution.md) | 从单体到微服务的决策过程 |
 | 🟡 [项目复盘模板](./docs/08-engineering/03-project-review/03-project-review.md) | 背景 / 方案 / 结果 / 反思 |
-| 🔴 [故障复盘（Postmortem）方法论](./docs/08-engineering/01-project-design/04-incident-postmortem.md) | RCA、时间线、根因/诱因区分、改进项闭环 ⚠️ 待补充 |
-| 🔴 [重构与技术债治理](./docs/08-engineering/01-project-design/05-refactoring-and-tech-debt.md) | 重构 vs 重写、绞杀者模式、灰度重构、技术债治理 ⚠️ 待补充 |
-| 🟡 [Go 服务架构设计](./docs/08-engineering/01-project-design/06-code-architecture.md) | 分层、Clean Architecture、Hexagonal、避免过度设计 ⚠️ 待补充 |
+| 🔴 [故障复盘（Postmortem）方法论](./docs/08-engineering/01-project-design/04-incident-postmortem.md) | RCA、时间线、根因/诱因区分、改进项闭环 |
+| 🔴 [重构与技术债治理](./docs/08-engineering/01-project-design/05-refactoring-and-tech-debt.md) | 重构 vs 重写、绞杀者模式、灰度重构、技术债治理 |
+| 🟡 [Go 服务架构设计](./docs/08-engineering/01-project-design/06-code-architecture.md) | 分层、Clean Architecture、Hexagonal、避免过度设计 |
 
 </details>
 
 <details>
-<summary><b>性能治理与测试</b>（点击展开）⚠️ 待补充</summary>
+<summary><b>性能治理与测试</b>（点击展开）</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
-| 🔴 [压测方法论：从单接口到全链路](./docs/08-engineering/04-performance-governance/01-load-testing.md) | 压测目标、指标体系、环境准备、压测误区 ⚠️ 待补充 |
-| 🔴 [全链路压测实战](./docs/08-engineering/04-performance-governance/02-full-link-stress-testing.md) | 影子流量、数据隔离、瓶颈定位、扩容与回滚预案 ⚠️ 待补充 |
-| 🟡 [测试策略：单测、集成测试、契约测试](./docs/08-engineering/04-performance-governance/03-testing-strategy.md) | 测试金字塔、契约测试、重构安全、测试体系落地 ⚠️ 待补充 |
+| 🔴 [压测方法论：从单接口到全链路](./docs/08-engineering/04-performance-governance/01-load-testing.md) | 压测目标、指标体系、环境准备、压测误区 |
+| 🔴 [全链路压测实战](./docs/08-engineering/04-performance-governance/02-full-link-stress-testing.md) | 影子流量、数据隔离、瓶颈定位、扩容与回滚预案 |
+| 🟡 [测试策略：单测、集成测试、契约测试](./docs/08-engineering/04-performance-governance/03-testing-strategy.md) | 测试金字塔、契约测试、重构安全、测试体系落地 |
 
 </details>
 
@@ -720,12 +720,12 @@
 | 文章 | 核心考点 |
 |------|----------|
 | 🟡 [技术规划](./docs/08-engineering/02-tech-planning/02-tech-planning.md) | 季度/年度技术 OKR 制定 |
-| 🟡 [降本增效实战](./docs/08-engineering/02-tech-planning/03-cost-optimization.md) | 资源/数据库/缓存/日志成本优化、收益量化 ⚠️ 待补充 |
+| 🟡 [降本增效实战](./docs/08-engineering/02-tech-planning/03-cost-optimization.md) | 资源/数据库/缓存/日志成本优化、收益量化 |
 | 🟢 [带新人](./docs/08-engineering/03-mentoring/03-mentoring.md) | 技术传承、文档文化 |
 | 🟢 [Code Review 规范](./docs/08-engineering/03-leadership/01-code-review.md) | 什么值得 block，什么只是建议 |
-| 🔴 [工程质量体系落地](./docs/08-engineering/03-leadership/04-engineering-quality.md) | 质量门禁、lint、测试覆盖率、CI 落地 ⚠️ 待补充 |
-| 🟡 [跨团队协作](./docs/08-engineering/03-leadership/05-cross-team-collaboration.md) | 目标对齐、资源冲突处理、推动复杂项目落地 ⚠️ 待补充 |
-| 🟡 [招聘与面试：识别候选人](./docs/08-engineering/03-leadership/06-hiring-interviewing.md) | 评价维度、问题设计、面试流程、识别八股型候选人 ⚠️ 待补充 |
+| 🔴 [工程质量体系落地](./docs/08-engineering/03-leadership/04-engineering-quality.md) | 质量门禁、lint、测试覆盖率、CI 落地 |
+| 🟡 [跨团队协作](./docs/08-engineering/03-leadership/05-cross-team-collaboration.md) | 目标对齐、资源冲突处理、推动复杂项目落地 |
+| 🟡 [招聘与面试：识别候选人](./docs/08-engineering/03-leadership/06-hiring-interviewing.md) | 评价维度、问题设计、面试流程、识别八股型候选人 |
 
 </details>
 
@@ -784,7 +784,7 @@
 
 | 文章 | 核心考点 |
 |------|----------|
-| 🟡 [5-8 年工程师简历写法指南](./docs/09-interview-strategy/01-resume/01-resume-guide.md) | 项目经历量化、关键词优化、五段式项目描述 ⚠️ 待补充 |
+| 🟡 [5-8 年工程师简历写法指南](./docs/09-interview-strategy/01-resume/01-resume-guide.md) | 项目经历量化、关键词优化、五段式项目描述 |
 | 🟡 [STAR 法则](./docs/09-interview-strategy/02-behavioral/01-star-method.md) | Situation/Task/Action/Result |
 | 🟡 [高频行为题](./docs/09-interview-strategy/02-behavioral/02-common-questions.md) | 冲突处理、失败经历、晋升理由 |
 | 🟡 [晋升答辩](./docs/09-interview-strategy/03-promotion-interview/03-promotion-interview.md) | 结构化表达、影响力量化 |
@@ -798,11 +798,11 @@
 ### 📚 11 · Go 标准库生产实践
 
 <details>
-<summary><b>实战专题</b>（点击展开）⚠️ 待补充</summary>
+<summary><b>实战专题</b>（点击展开）</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
-| 🟡 [io / encoding / time / testing 生产实践](./docs/11-go-std-practice/01-io-encoding.md) | Reader/Writer 组合、json 性能、Timer 泄漏、测试最佳实践 ⚠️ 待补充 |
+| 🟡 [io / encoding / time / testing 生产实践](./docs/11-go-std-practice/01-io-encoding.md) | Reader/Writer 组合、json 性能、Timer 泄漏、测试最佳实践 |
 
 </details>
 
