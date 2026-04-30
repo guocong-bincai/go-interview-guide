@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-149-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.56-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-125-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.25-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -90,7 +90,7 @@
 
 | 禁止内容 | 原因 |
 |---------|------|
-| 未发布的 Go 版本特性（如 Go 1.27+） | 面试考不到，写了是误导 |
+| 未发布的 Go 版本特性（如 Go 1.26+） | 面试考不到，写了是误导 |
 | 算法题只贴代码、没有思路讲解 | 对读者没有帮助 |
 | 复制粘贴官方文档 | 没有附加价值 |
 | 没有代码示例的纯文字理论 | 不可信，面试时说不清楚 |
@@ -129,30 +129,25 @@
 
 | 模块 | 缺少的文章 | 优先级 | 状态 |
 |------|----------|--------|------|
-| 01-golang/04-performance | testing/synctest 并发测试（bubble/Wait/fake time）| P1 | ✅ 已完成（v2.34），v2.46 补充 Go 1.27 synctest.Sleep |
-| 01-golang/01-runtime | Go 1.26 运行时新特性（Green Tea GC / Leak Profile / Heap 随机化）| P1 | ✅ 已完成（v2.32）|
-| 02-database/01-mysql | EXPLAIN 输出字段逐一解读 + 实战案例 | P0 | ✅ 已完成（2026-04）|
-| 01-golang/03-language-deep | Go 1.26 `new(expr)` 内置函数增强 + 自引用泛型约束 | P1 | ✅ 已完成（v2.31）|
-| 03-distributed/04-service-mesh | Service Mesh（Istio/Envoy）原理 | P1 | ✅ 已完成（v2.28）|
-| 01-golang/05-stdlib | net/http 深度解析 | P1 | ✅ 已完成（2026-04）|
-| 01-golang/05-stdlib | sync.Map 与并发安全 Map | P1 | ✅ 已完成（2026-04）|
-| 01-golang/05-stdlib | 错误处理最佳实践 | P1 | ✅ 已完成（2026-04）|
-| 03-distributed/05-coordination | etcd 原理与实战 | P1 | ✅ 已完成（v2.27）|
-| 03-distributed/05-coordination | 配置中心选型与实践 | P2 | ✅ 已完成（v2.27）|
-| 02-database/04-tidb | TiDB 架构与适用场景 | P2 | ✅ 已完成（v2.27）|
-| 06-network/03-security | Web 安全：常见攻击与防御 | P1 | ✅ 已完成（2026-04）|
-| 07-algorithms/09-graph | 图论高频题（DFS/BFS/并查集） | P2 | ✅ 已完成（v2.28）|
-| 10-real-problems/05 | 数据迁移与重构问题 | P1 | ✅ 已完成（2026-04）|
-| 10-real-problems/06 | 并发编程实战问题 | P0 | ✅ 已完成（2026-04）|
-| 10-real-problems/07 | 面试高频场景题（开放性） | P0 | ✅ 已完成（2026-04）|
+| 01-golang/03-language-deep | 编译器优化：内联决策与逃逸深度 | P1 | ⏳ 待认领 |
+| 02-database/02-redis | Pipeline 与 Lua 脚本 | P1 | ⏳ 待认领 |
+| 09-interview-strategy/01-resume | 5-8 年工程师简历写法指南 | P1 | ⏳ 待认领 |
+| 11-go-std-practice | Go 标准库生产实践合集（io/encoding/time/testing） | P2 | ⏳ 待认领 |
+| ~~01-golang/01-runtime~~ | ~~Go 调度器源码走读~~ | ~~P0~~ | ✅ 已完成 |
+| ~~02-database/01-mysql~~ | ~~EXPLAIN 输出字段逐一解读~~ | ~~P0~~ | ✅ 已完成 |
+| ~~03-distributed/04-service-mesh~~ | ~~Service Mesh（Istio/Envoy）原理~~ | ~~P1~~ | ✅ 已完成 |
+| ~~01-golang/05-stdlib~~ | ~~net/http 深度解析~~ | ~~P1~~ | ✅ 已完成 |
+| ~~01-golang/05-stdlib~~ | ~~sync.Map 与并发安全 Map~~ | ~~P1~~ | ✅ 已完成 |
+| ~~01-golang/05-stdlib~~ | ~~错误处理最佳实践~~ | ~~P1~~ | ✅ 已完成 |
+| ~~03-distributed/05-coordination~~ | ~~etcd 原理与实战~~ | ~~P1~~ | ✅ 已完成 |
+| ~~03-distributed/05-coordination~~ | ~~配置中心选型与实践~~ | ~~P2~~ | ✅ 已完成 |
+| ~~02-database/04-tidb~~ | ~~TiDB 架构与适用场景~~ | ~~P2~~ | ✅ 已完成 |
+| ~~06-network/03-security~~ | ~~Web 安全：常见攻击与防御~~ | ~~P1~~ | ✅ 已完成 |
+| ~~07-algorithms/09-graph~~ | ~~图论高频题（DFS/BFS/并查集）~~ | ~~P2~~ | ✅ 已完成 |
+| ~~10-real-problems/05~~ | ~~数据迁移与重构问题~~ | ~~P1~~ | ✅ 已完成 |
+| ~~10-real-problems/06~~ | ~~并发编程实战问题~~ | ~~P0~~ | ✅ 已完成 |
+| ~~10-real-problems/07~~ | ~~面试高频场景题（开放性）~~ | ~~P0~~ | ✅ 已完成 |
 | ~~08-engineering/02-troubleshooting~~ | ~~goroutine 泄漏排查 SOP~~ | ~~P0~~ | ✅ 已完成 |
-| 01-golang/01-runtime | Go 1.25 Container-aware GOMAXPROCS（cgroup 感知/动态更新/K8s 性能）| P1 | ✅ 已完成（v2.38）|
-| 01-golang/03-language-deep | Go 1.24 Swiss Tables 全新的 Map 实现（SIMD/Swiss Tables/性能提升）| P1 | ✅ 已完成（v2.40）|
-| 01-golang/05-stdlib | Go 1.27 新增：uuid 标准库（v4/v7）/maphash.Hasher 接口/pprof labels traceback | P1 | ✅ 已完成（v2.48）|
-| 01-golang/05-stdlib | Go 1.26 新增密码学套件（crypto/mlkem 后量子Kyber / crypto/hpke Hybrid加密）| P2 | ✅ 已完成（v2.49）|
-| 01-golang/05-stdlib | encoding/json v2 新一代 JSON API（jsontext 零拷贝流式解析 / v2 严格 UTF-8 / 拒绝重复 key）| P1 | ✅ 已完成（v2.53）|
-| 02-database/01-mysql | MySQL MDL Lock（元数据锁）：生产故障场景 + pt-osc/gh-ost/Instant ADD COLUMN 解决方案 | P1 | ✅ 已完成（v2.50）|
-| 01-golang/01-runtime | Go 网络 I/O：epoll/kqueue 与 Netpoller 原理（sysmon 批量唤醒、M 不阻塞设计、生产坑点）| P1 | ✅ 已完成（v2.55），v2.56 补充 Go 1.26 类型构造与循环检测 |
 
 ---
 
@@ -178,14 +173,14 @@
 | 文章 | 核心考点 |
 |------|----------|
 | 🔴 [GMP 调度模型](./docs/01-golang/01-runtime/01-gmp.md) | G/M/P 角色、Work Stealing、Hand Off、sysmon 抢占 |
-| 🔴 [GC 垃圾回收机制](./docs/01-golang/01-runtime/02-gc.md) | 三色标记、混合写屏障、STW 优化历程、Green Tea GC（Go 1.26）|
-| 🔴 [Go 调度器源码走读](./docs/01-golang/01-runtime/05-scheduler-source-code.md) | schedule/findRunnable/execute 源码解读、g0 栈、Hand Off 细节、sysmon、netpoller |
+| 🔴 [GC 垃圾回收机制](./docs/01-golang/01-runtime/02-gc.md) | 三色标记、混合写屏障、STW 优化历程、GOGC 调优 |
 | 🟡 [内存分配器](./docs/01-golang/01-runtime/03-memory-alloc.md) | tcmalloc、mspan、mcache/mcentral/mheap |
 | 🟡 [goroutine 栈机制](./docs/01-golang/01-runtime/04-stack.md) | 动态栈增长/收缩、连续栈 vs 分段栈 |
-| 🟡 [Go 1.26 运行时新特性](./docs/01-golang/01-runtime/06-go1.26-runtime.md) | Green Tea GC（SIMD 加速）、goroutine leak profile 检测原理、Heap Base Randomization 安全加固 |
-| 🟡 [Go 1.25 trace.FlightRecorder](./docs/01-golang/01-runtime/07-flight-recorder.md) | 环形缓冲 trace、生产常驻、按需导出、与传统 trace 的取舍 |
-| 🟡 [Go 1.25 Container-aware GOMAXPROCS](./docs/01-golang/01-runtime/08-go1.25-gomaxprocs.md) | cgroup CPU 带宽感知、动态更新、与 automaxprocs 关系、K8s 性能影响 |
-| 🟡 [Go 网络 I/O：epoll/kqueue 与 Netpoller](./docs/01-golang/01-runtime/09-io-multiplexing.md) | netpoller、goroutine 阻塞不阻塞 M、sysmon 批量唤醒、epoll vs kqueue 生产对比 |
+| 🟡 [调度器源码走读](./docs/01-golang/01-runtime/05-scheduler-source-code.md) | schedule()/findRunnable() 优先级、Work Stealing 实现、sysmon、抢占 |
+| 🟢 [Go 1.26 运行时新特性](./docs/01-golang/01-runtime/06-go1.26-runtime.md) | Green Tea GC、Goroutine Leak Profile、堆地址随机化 |
+| 🟢 [Flight Recorder](./docs/01-golang/01-runtime/07-flight-recorder.md) | 生产 trace 环形缓冲区捕获、事后故障还原 |
+| 🟢 [容器感知 GOMAXPROCS](./docs/01-golang/01-runtime/08-go1.25-gomaxprocs.md) | Go 1.25 自动感知容器 CPU 配额 |
+| 🟢 [网络 I/O：epoll/kqueue 与 Netpoller](./docs/01-golang/01-runtime/09-io-multiplexing.md) | Go 网络层事件循环、与 goroutine 调度的整合 |
 
 </details>
 
@@ -209,15 +204,16 @@
 |------|----------|
 | 🔴 [interface 原理](./docs/01-golang/03-language-deep/01-interface.md) | iface/eface 内存布局、动态分发、nil 陷阱 |
 | 🟡 [reflect 原理](./docs/01-golang/03-language-deep/02-reflect.md) | 性能代价、实际使用场景 |
-| 🟡 [泛型实现](./docs/01-golang/03-language-deep/03-generics.md) | GCShape stenciling、泛型类型别名（Go 1.24）、自引用约束（Go 1.26） |
+| 🟡 [泛型实现](./docs/01-golang/03-language-deep/03-generics.md) | GCShape stenciling、使用边界 |
 | 🟡 [逃逸分析](./docs/01-golang/03-language-deep/04-escape.md) | 堆 vs 栈分配、如何避免不必要逃逸 |
 | 🟡 [slice 与 map](./docs/01-golang/03-language-deep/05-slice-map.md) | 底层结构、扩容策略、并发安全问题 |
 | 🟡 [内存模型](./docs/01-golang/03-language-deep/06-memory-model.md) | happens-before、内存对齐、false sharing |
 | 🟢 [循环与迭代器新特性](./docs/01-golang/03-language-deep/07-loop-iterators.md) | Go 1.22 循环变量语义变更、range-over-func |
-| 🟡 [Go 1.26 `new(expr)` 内置函数增强](./docs/01-golang/03-language-deep/08-new-function.md) | new(expr) 表达式参数、自引用泛型约束、堆分配本质 |
-| 🟡 [Go 1.26 栈分配优化](./docs/01-golang/03-language-deep/09-go1.26-stack-alloc.md) | append 推测性栈缓冲、move2heap 逃逸切片优化 |
-| 🟡 [Go 1.24 Swiss Tables](./docs/01-golang/03-language-deep/10-go1.24-swiss-tables.md) | Swiss Tables 原理、SIMD 批量探测、Map 性能提升 |
-| 🟢 [Go 1.26 类型构造与循环检测](./docs/01-golang/03-language-deep/11-type-construction.md) | 类型构造深度优先、递归类型环检测、completeness 与 downstream 操作 |
+| 🟡 [编译器优化：内联与逃逸深度](./docs/01-golang/03-language-deep/08-compiler-optimize.md) | 内联决策（AST节点数阈值）、-gcflags="-m=2" 解读、BCE、常量折叠 ⚠️ 待补充 |
+| 🟢 [内置函数 new：从基础到 Go 1.26 增强](./docs/01-golang/03-language-deep/08-new-function.md) | new() vs make()、逃逸分析、Go 1.26 new(expr) 表达式参数 |
+| 🟢 [Go 1.26 栈分配优化](./docs/01-golang/03-language-deep/09-go1.26-stack-alloc.md) | append 推测性栈缓冲、move2heap 机制 |
+| 🟢 [Go 1.24 Swiss Tables](./docs/01-golang/03-language-deep/10-go1.24-swiss-tables.md) | map 底层替换为 Swiss Table、性能提升原理 |
+| 🟢 [类型构造与循环检测](./docs/01-golang/03-language-deep/11-type-construction.md) | Go 1.26 类型检查器底层改进 |
 
 </details>
 
@@ -230,24 +226,24 @@
 | 🟡 [内存泄漏排查](./docs/01-golang/04-performance/02-memory-leak.md) | goroutine 泄漏、全局变量、缓存失控 |
 | 🟡 [基准测试规范](./docs/01-golang/04-performance/03-benchmark.md) | benchmark 写法、避免编译器优化干扰 |
 | 🟡 [真实调优案例](./docs/01-golang/04-performance/04-tuning-cases.md) | JSON 解析、字符串拼接、sync.Pool 实战 |
-| 🟡 [并发测试利器：testing/synctest](./docs/01-golang/04-performance/05-synctest.md) | synctest bubble/Wait 机制、fake time、flaky 测试根治 |
-| 🟡 [go fix 与 //go:fix inline](./docs/01-golang/04-performance/06-go-fix-inline.md) | 源码级内联、API 迁移、废弃函数自动替换 |
+| 🟢 [testing/synctest 并发测试](./docs/01-golang/04-performance/05-synctest.md) | 确定性并发测试、fake clock、race condition 复现 |
+| 🟢 [go fix 与 //go:fix inline](./docs/01-golang/04-performance/06-go-fix-inline.md) | 源码级内联重写、API 自动迁移 |
 
 </details>
 
 <details>
-<summary><b>05-stdlib · 标准库与工程实践</b>（点击展开）</summary>
+<summary><b>05-stdlib · 标准库与工程实践</b>（点击展开）⚠️ 待补充</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
 | 🟡 [net/http 深度解析](./docs/01-golang/05-stdlib/01-net-http.md) | Server 底层结构、Transport 连接池、优雅关闭、中间件链 |
 | 🟡 [sync.Map 与并发安全 Map](./docs/01-golang/05-stdlib/02-sync-map.md) | 双 map 设计、读写流程、与 RWMutex+map 性能对比 |
 | 🟡 [错误处理最佳实践](./docs/01-golang/05-stdlib/03-errors.md) | errors.Is/As/Unwrap、%w 包装、panic/recover 边界 |
-| 🟡 [log/slog 结构化日志](./docs/01-golang/05-stdlib/04-slog.md) | TextHandler/JSONHandler、自定义 Handler、Logger.With、与 zap/logrus 对比 |
-| 🟡 [go:embed 静态资源内嵌](./docs/01-golang/05-stdlib/05-embed.md) | 编译时嵌入、embed.FS、glob 模式、与构建约束配合、生产坑点 |
-| 🟡 [Go 1.27 标准库新特性](./docs/01-golang/05-stdlib/06-go1.27-stdlib.md) | CutLast、Response File、HTTP Body 自动 drain、连接复用优化 |
-| 🟢 [Go 1.26 新增密码学套件](./docs/01-golang/05-stdlib/07-go1.26-crypto.md) | crypto/mlkem（后量子Kyber）/crypto/hpke（Hybrid加密RFC 9180）/cryptotest |
-| 🟡 [encoding/json v2 新一代 JSON API](./docs/01-golang/05-stdlib/08-json-v2.md) | jsontext 零拷贝/流式、v2 严格 UTF-8/拒绝重复 key、MarshalJSONTo 新接口、性能对比 |
+| 🟢 [log/slog 结构化日志](./docs/01-golang/05-stdlib/04-slog.md) | slog.Handler 接口、结构化字段、生产最佳实践 |
+| 🟢 [embed 静态资源嵌入](./docs/01-golang/05-stdlib/05-embed.md) | //go:embed 用法、与 os.ReadFile 对比、发布单二进制 |
+| 🟢 [Go 1.27 标准库新特性](./docs/01-golang/05-stdlib/06-go1.27-stdlib.md) | CutLast/Response File/HTTP Body Drain |
+| 🟢 [Go 1.26 密码学套件](./docs/01-golang/05-stdlib/07-go1.26-crypto.md) | crypto/mlkem、crypto/hpke、后量子加密 |
+| 🟢 [encoding/json v2](./docs/01-golang/05-stdlib/08-json-v2.md) | v2 与 v1 差异、性能提升、迁移指南 |
 
 </details>
 
@@ -262,9 +258,10 @@
 |------|----------|
 | 🔴 [索引原理与优化](./docs/02-database/01-mysql/01-index.md) | B+ 树、聚簇/二级索引、联合索引、索引失效全场景、EXPLAIN |
 | 🔴 [事务、隔离级别与 MVCC](./docs/02-database/01-mysql/02-transaction.md) | ACID、ReadView、版本链、RC vs RR、间隙锁、死锁 |
-| 🔴 [锁机制深度](./docs/02-database/01-mysql/03-lock.md) | 行锁/表锁/间隙锁/临键锁/MDL锁、死锁检测与避免 |
+| 🔴 [锁机制深度](./docs/02-database/01-mysql/03-lock.md) | 行锁/表锁/间隙锁/临键锁、死锁检测与避免 |
 | 🟡 [慢查询优化](./docs/02-database/01-mysql/04-slow-query.md) | EXPLAIN 解读、SQL 改写、深分页优化 |
-| 🔴 [EXPLAIN 输出字段逐一解读](./docs/02-database/01-mysql/07-explain.md) | 12 字段详解、Using filesort/temporary 优化、实战案例、EXPLAIN ANALYZE |
+| 🟡 [MySQL 查询优化深度](./docs/02-database/01-mysql/08-query-optimization.md) | 慢查询日志、索引失效全场景、JOIN/分页/COUNT 优化、Go 连接池配置 |
+| 🟡 [EXPLAIN 全字段解读](./docs/02-database/01-mysql/07-explain.md) | type/Extra 字段含义、执行计划实战案例 |
 | 🟡 [分库分表](./docs/02-database/01-mysql/05-sharding.md) | ShardingSphere、路由策略、数据迁移 |
 | 🟡 [主从复制](./docs/02-database/01-mysql/06-replication.md) | binlog、半同步复制、主从延迟处理 |
 
@@ -281,6 +278,7 @@
 | 🟡 [集群方案](./docs/02-database/02-redis/04-cluster.md) | Sentinel vs Cluster、槽位分配、故障转移 |
 | 🟡 [分布式锁](./docs/02-database/02-redis/05-distributed-lock.md) | Redlock 算法、Lua 脚本原子性、锁续期 |
 | 🟡 [热 key / 大 key](./docs/02-database/02-redis/06-hot-key.md) | 识别方法、拆分方案、本地缓存兜底 |
+| 🟡 [Pipeline 与 Lua 脚本](./docs/02-database/02-redis/07-pipeline-lua.md) | RTT 优化原理、Lua 原子性、MULTI/EXEC 对比、Cluster 限制 ⚠️ 待补充 |
 
 </details>
 
@@ -295,7 +293,7 @@
 </details>
 
 <details>
-<summary><b>04-tidb · TiDB</b>（点击展开）</summary>
+<summary><b>04-tidb · TiDB</b>（点击展开）⚠️ 待补充</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
@@ -352,13 +350,13 @@
 | 文章 | 核心考点 |
 |------|----------|
 | 🟡 [注册中心](./docs/03-distributed/04-service-mesh/01-service-discovery.md) | Consul/etcd/Nacos 原理与选型 |
-| 🟡 [Service Mesh 原理](./docs/03-distributed/04-service-mesh/02-service-mesh.md) | Istio/Envoy、Sidecar 注入、流量管理、mTLS、熔断 |
+| 🟡 [Service Mesh：Istio/Envoy 原理](./docs/03-distributed/04-service-mesh/02-service-mesh.md) | Sidecar 模式、xDS 协议、Listener/Route/Cluster/Endpoint、VirtualService 灰度 ⚠️ 待补充 |
 | 🟡 [链路追踪](./docs/03-distributed/04-service-mesh/03-tracing.md) | Jaeger/Zipkin、TraceID 传播、采样策略 |
 
 </details>
 
 <details>
-<summary><b>05-coordination · 协调服务</b>（点击展开）</summary>
+<summary><b>05-coordination · 协调服务</b>（点击展开）⚠️ 待补充</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
@@ -441,7 +439,7 @@
 | 🔴 [秒杀系统](./docs/05-system-design/01-seckill/01-seckill.md) | 预减库存、异步下单、防超卖、流量漏斗 |
 | 🔴 [短链系统](./docs/05-system-design/02-short-url/02-short-url.md) | 发号器、跳转、高可用 |
 | 🟡 [Feed 流](./docs/05-system-design/04-feed/04-feed.md) | 推模式 vs 拉模式 vs 推拉结合 |
-| 🔴 [分布式 ID](./docs/05-system-design/05-distributed-id/05-distributed-id.md) | Snowflake、Leaf、UUIDv7 对比 | P0 | ✅ 已完成（v2.39）|
+| 🔴 [分布式 ID](./docs/05-system-design/05-distributed-id/05-distributed-id.md) | Snowflake、Leaf、UUIDv7 对比 |
 | 🔴 [限流系统](./docs/05-system-design/06-rate-limiter/06-rate-limiter.md) | 令牌桶、滑动窗口、分布式限流 |
 | 🟡 [搜索系统](./docs/05-system-design/07-search/07-search.md) | 倒排索引、分词、搜索建议 |
 | 🟡 [支付系统](./docs/05-system-design/08-payment/08-payment.md) | 幂等、对账、资金安全 |
@@ -487,20 +485,20 @@
 </details>
 
 <details>
-<summary><b>03-http2-priority · HTTP/2 优先级调度</b>（点击展开）</summary>
-
-| 文章 | 核心考点 |
-|------|----------|
-| 🟡 [HTTP/2 优先级调度](./docs/06-network/03-http2-priority/01-http2-priority.md) | RFC 9218 优先级依赖树、Stream 调度、Go 1.27 DisableClientPriority |
-
-</details>
-
-<details>
 <summary><b>03-security · Web 安全</b>（点击展开）</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
 | 🟡 [常见攻击与防御](./docs/06-network/03-security/01-common-attacks.md) | SQL 注入、XSS、CSRF、SSRF、JWT 安全、敏感数据处理 |
+
+</details>
+
+<details>
+<summary><b>03-http2-priority · HTTP/2 优先级</b>（点击展开）</summary>
+
+| 文章 | 核心考点 |
+|------|----------|
+| 🟢 [HTTP/2 优先级调度](./docs/06-network/03-http2-priority/01-http2-priority.md) | 流优先级、依赖树、Go 实现细节 |
 
 </details>
 
