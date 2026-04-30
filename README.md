@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-127-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.26-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.27-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -149,7 +149,7 @@
 | 07-algorithms/12-math | 数学类高频题（数论 + 模拟 + 随机） | P1 | ⏳ 待认领 |
 | 09-interview-strategy/01-resume | 5-8 年工程师简历写法指南 | P1 | ⏳ 待认领 |
 | 11-go-std-practice | Go 标准库生产实践合集（io/encoding/time/testing） | P2 | ⏳ 待认领 |
-| 12-linux-os | 进程/线程、虚拟内存、零拷贝、cgroup、Linux 排障体系 | P0 | ⏳ 待认领 |
+| 12-linux-os | 进程/线程、虚拟内存、零拷贝、cgroup、Linux 排障体系 | P0 | ✅ 已完成 |
 | 08-engineering/04-performance-governance | 压测方法论：单接口到全链路压测 | P0 | ⏳ 待认领 |
 | 08-engineering/01-project-design | 故障复盘（Postmortem）方法论 | P0 | ⏳ 待认领 |
 | 08-engineering/01-project-design | 重构与技术债治理 | P0 | ⏳ 待认领 |
@@ -201,15 +201,15 @@
 ### 📦 01 · Go 语言深度 🔴 P0
 
 <details>
-<summary><b>12-linux-os · Linux / 操作系统基础</b>（点击展开）⚠️ 待补充</summary>
+<summary><b>12-linux-os · Linux / 操作系统基础</b>（点击展开）</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
-| 🔴 [进程、线程、协程与调度](./docs/12-linux-os/01-process-thread.md) | 进程/线程/协程区别、上下文切换、goroutine 与线程映射 ⚠️ 待补充 |
-| 🔴 [虚拟内存、页缓存与 mmap](./docs/12-linux-os/02-virtual-memory-page-cache.md) | 页表、缺页中断、Page Cache、mmap vs read/write ⚠️ 待补充 |
-| 🔴 [I/O 模型与零拷贝](./docs/12-linux-os/03-io-model-zero-copy.md) | select/poll/epoll、sendfile、splice、Go netpoller ⚠️ 待补充 |
-| 🔴 [cgroup、namespace 与容器资源隔离](./docs/12-linux-os/04-cgroup-namespace.md) | 容器资源限制、OOMKilled、GOMAXPROCS、K8s resource 控制 ⚠️ 待补充 |
-| 🔴 [Linux 线上排障基础](./docs/12-linux-os/05-linux-troubleshooting.md) | load、CPU、内存、fd、IO、TIME_WAIT 排查 SOP ⚠️ 待补充 |
+| 🔴 [进程、线程、协程与调度](./docs/12-linux-os/01-process-thread.md) | 进程/线程/协程区别、上下文切换、goroutine 与线程映射 |
+| 🔴 [虚拟内存、页缓存与 mmap](./docs/12-linux-os/02-virtual-memory-page-cache.md) | 页表、缺页中断、Page Cache、mmap vs read/write |
+| 🔴 [I/O 模型与零拷贝](./docs/12-linux-os/03-io-model-zero-copy.md) | select/poll/epoll、sendfile、splice、Go netpoller |
+| 🔴 [cgroup、namespace 与容器资源隔离](./docs/12-linux-os/04-cgroup-namespace.md) | 容器资源限制、OOMKilled、GOMAXPROCS、K8s resource 控制 |
+| 🔴 [Linux 线上排障基础](./docs/12-linux-os/05-linux-troubleshooting.md) | load、CPU、内存、fd、IO、TIME_WAIT 排查 SOP |
 
 </details>
 
@@ -811,15 +811,15 @@
 ### 🐧 12 · Linux / 操作系统 🔴 P0
 
 <details>
-<summary><b>基础与排障</b>（点击展开）⚠️ 待补充</summary>
+<summary><b>基础与排障</b>（点击展开）</summary>
 
 | 文章 | 核心考点 |
 |------|----------|
-| 🔴 [进程、线程、协程与调度](./docs/12-linux-os/01-process-thread.md) | 进程/线程/协程区别、上下文切换、goroutine 与线程映射 ⚠️ 待补充 |
-| 🔴 [虚拟内存、页缓存与 mmap](./docs/12-linux-os/02-virtual-memory-page-cache.md) | 页表、缺页中断、Page Cache、mmap vs read/write ⚠️ 待补充 |
-| 🔴 [I/O 模型与零拷贝](./docs/12-linux-os/03-io-model-zero-copy.md) | select/poll/epoll、sendfile、splice、Go netpoller ⚠️ 待补充 |
-| 🔴 [cgroup、namespace 与容器资源隔离](./docs/12-linux-os/04-cgroup-namespace.md) | 容器资源限制、OOMKilled、GOMAXPROCS、K8s resource 控制 ⚠️ 待补充 |
-| 🔴 [Linux 线上排障基础](./docs/12-linux-os/05-linux-troubleshooting.md) | load、CPU、内存、fd、IO、TIME_WAIT 排查 SOP ⚠️ 待补充 |
+| 🔴 [进程、线程、协程与调度](./docs/12-linux-os/01-process-thread.md) | 进程/线程/协程区别、上下文切换、goroutine 与线程映射 |
+| 🔴 [虚拟内存、页缓存与 mmap](./docs/12-linux-os/02-virtual-memory-page-cache.md) | 页表、缺页中断、Page Cache、mmap vs read/write |
+| 🔴 [I/O 模型与零拷贝](./docs/12-linux-os/03-io-model-zero-copy.md) | select/poll/epoll、sendfile、splice、Go netpoller |
+| 🔴 [cgroup、namespace 与容器资源隔离](./docs/12-linux-os/04-cgroup-namespace.md) | 容器资源限制、OOMKilled、GOMAXPROCS、K8s resource 控制 |
+| 🔴 [Linux 线上排障基础](./docs/12-linux-os/05-linux-troubleshooting.md) | load、CPU、内存、fd、IO、TIME_WAIT 排查 SOP |
 
 </details>
 
