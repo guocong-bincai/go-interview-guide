@@ -1,84 +1,68 @@
-# 题目标题
+# 18. 买卖股票最佳时机（Best Time to Buy and Sell Stock）
 
-> 频率：★★★★★  难度：中等  LeetCode X
+> 频率：★★★★☆  难度：简单  LeetCode 121
 
 ## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+给定一个数组 `prices`，其中 `prices[i]` 表示某支股票第 i 天的价格。
+你只能选择某一天买入这只股票，并选择在未来某一天卖出。请你计算你能获得的最大利润。
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+本质就是：
+**前面尽量低价买，后面尽量高价卖。**
+
+但要注意：
+- 买必须在卖前面
 
 ---
 
-## 解法一：直观解法
+## 解法一：暴力枚举
 
 ### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
+每一天都当作买入日，再去后面找最好的卖出日。
 
 ### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+- 时间：`O(n^2)`
 
 ---
 
-## 解法二：推荐解法
+## 解法二：维护最低价格（推荐）
 
 ### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
+遍历数组时：
+- 记录到目前为止最便宜的价格 `minPrice`
+- 当前价格如果卖出，利润就是 `price - minPrice`
+- 取最大值
 
 ### Go
 ```go
-// TODO
+func maxProfit(prices []int) int {
+    minPrice := prices[0]
+    ans := 0
+
+    for _, price := range prices {
+        if price < minPrice {
+            minPrice = price
+        }
+        if price-minPrice > ans {
+            ans = price - minPrice
+        }
+    }
+    return ans
+}
 ```
 
 ### Python
 ```python
-# TODO
+def max_profit(prices):
+    min_price = prices[0]
+    ans = 0
+
+    for price in prices:
+        min_price = min(min_price, price)
+        ans = max(ans, price - min_price)
+
+    return ans
 ```
 
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
-
 ## 一句话记忆
-> TODO
+**股票题核心：边遍历边维护历史最低价。**

@@ -1,84 +1,80 @@
-# 题目标题
+# 16. Top K 高频元素（Top K Frequent Elements）
 
-> 频率：★★★★★  难度：中等  LeetCode X
+> 频率：★★★★★  难度：中等  LeetCode 347
 
 ## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+给你一个整数数组 `nums` 和一个整数 `k`，请你返回其中出现频率前 `k` 高的元素。
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+先数出每个数字出现了几次，然后再找出出现次数最多的前 k 个。
+
+所以这题自然分两步：
+1. 统计频率
+2. 找 TopK
 
 ---
 
-## 解法一：直观解法
+## 解法一：哈希 + 排序
 
 ### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
+- 用哈希表统计次数
+- 转成数组后按频率排序
+- 取前 k 个
 
 ### Go
 ```go
-// TODO
+import "sort"
+
+func topKFrequentSort(nums []int, k int) []int {
+    freq := map[int]int{}
+    for _, num := range nums {
+        freq[num]++
+    }
+
+    arr := make([][2]int, 0, len(freq))
+    for num, cnt := range freq {
+        arr = append(arr, [2]int{num, cnt})
+    }
+
+    sort.Slice(arr, func(i, j int) bool {
+        return arr[i][1] > arr[j][1]
+    })
+
+    res := []int{}
+    for i := 0; i < k; i++ {
+        res = append(res, arr[i][0])
+    }
+    return res
+}
 ```
 
 ### Python
 ```python
-# TODO
-```
+def top_k_frequent_sort(nums, k):
+    freq = {}
+    for num in nums:
+        freq[num] = freq.get(num, 0) + 1
 
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+    arr = sorted(freq.items(), key=lambda x: x[1], reverse=True)
+    return [arr[i][0] for i in range(k)]
+```
 
 ---
 
-## 解法二：推荐解法
+## 解法二：最小堆（推荐）
 
 ### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
+用一个大小为 `k` 的最小堆：
+- 堆里只保留当前前 k 高频元素
+- 如果新元素频率更高，就把堆顶弹掉
 
 ### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+比全排序更适合 TopK 问题。
+
+### 一句话理解
+不是把所有人都排一遍名次，而是只维护“前 k 名候选人”。
 
 ---
 
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
-
 ## 一句话记忆
-> TODO
+**TopK 问题：先统计，再考虑堆。**

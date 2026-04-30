@@ -1,84 +1,90 @@
-# 题目标题
+# 13. 无重叠区间（Non-overlapping Intervals）
 
-> 频率：★★★★★  难度：中等  LeetCode X
+> 频率：★★★★★  难度：中等  LeetCode 435
 
 ## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+给定一个区间集合 `intervals`，返回需要移除区间的最小数量，使剩余区间互不重叠。
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+题目不是问你“保留哪些区间”，而是问：
+**最少删几个，才能让区间之间不打架。**
+
+这类题通常反过来想更简单：
+- 与其想删谁
+- 不如想“最多能保留多少个不重叠区间”
 
 ---
 
-## 解法一：直观解法
+## 解法一：DP
 
 ### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
+定义 `dp[i]` 表示以第 i 个区间结尾时，最多能保留多少个不重叠区间。
 
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+### 问题
+能做，但不是最优。
 
 ---
 
-## 解法二：推荐解法
+## 解法二：贪心（推荐）
 
 ### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
+按区间结束位置排序。
+
+为什么按结束位置？
+因为结束越早，越不影响后面留更多区间。
+
+步骤：
+1. 按结束位置排序
+2. 先保留第一个
+3. 遇到新区间时：
+   - 如果和当前已保留区间不重叠，就保留
+   - 否则跳过它
+4. 最后总数减去保留数，就是最少删除数
 
 ### Go
 ```go
-// TODO
+import "sort"
+
+func eraseOverlapIntervals(intervals [][]int) int {
+    if len(intervals) == 0 {
+        return 0
+    }
+
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][1] < intervals[j][1]
+    })
+
+    count := 1
+    end := intervals[0][1]
+
+    for i := 1; i < len(intervals); i++ {
+        if intervals[i][0] >= end {
+            count++
+            end = intervals[i][1]
+        }
+    }
+
+    return len(intervals) - count
+}
 ```
 
 ### Python
 ```python
-# TODO
+def erase_overlap_intervals(intervals):
+    if not intervals:
+        return 0
+
+    intervals.sort(key=lambda x: x[1])
+    count = 1
+    end = intervals[0][1]
+
+    for i in range(1, len(intervals)):
+        if intervals[i][0] >= end:
+            count += 1
+            end = intervals[i][1]
+
+    return len(intervals) - count
 ```
 
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
-
 ## 一句话记忆
-> TODO
+**区间不重叠问题，优先按结束位置排序做贪心。**
