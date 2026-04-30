@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-127-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.27-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-129-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.28-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -134,19 +134,19 @@
 | 01-golang/03-language-deep | unsafe 包：原理、使用场景与风险 | P0 | ⏳ 待认领 |
 | 01-golang/06-toolchain | Go Module 与 Workspace 工程实践 | P1 | ⏳ 待认领 |
 | 01-golang/06-toolchain | Build Tags 与条件编译 | P1 | ⏳ 待认领 |
-| 02-database/02-redis | Pipeline 与 Lua 脚本 | P1 | ⏳ 待认领 |
+| 02-database/02-redis | Pipeline 与 Lua 脚本 | P1 | ✅ 已完成 |
 | 02-database/05-connection-pool | 连接池原理与调优：database/sql、Redis、gRPC | P0 | ⏳ 待认领 |
 | 02-database/06-mongodb | MongoDB 核心原理与 Go 实战 | P1 | ⏳ 待认领 |
 | 02-database/07-clickhouse | ClickHouse 核心原理与 OLAP 选型 | P1 | ⏳ 待认领 |
 | 03-distributed/05-coordination | 分布式锁横向对比：Redis vs etcd vs ZooKeeper | P0 | ⏳ 待认领 |
-| 04-microservices/04-deployment | Kubernetes 控制面深度原理 | P0 | ⏳ 待认领 |
+| 04-microservices/04-deployment | Kubernetes 控制面深度原理 | P0 | ✅ 已完成 |
 | 04-microservices/03-observability | Prometheus + Grafana 监控实战 | P1 | ⏳ 待认领 |
 | 05-system-design/09-red-packet | 抢红包系统设计 | P0 | ⏳ 待认领 |
 | 05-system-design/10-leaderboard | 排行榜系统设计（实时 + 历史） | P0 | ⏳ 待认领 |
 | 05-system-design/11-lbs | LBS 地理位置系统设计（附近的人/店） | P1 | ⏳ 待认领 |
-| 07-algorithms/10-greedy | 贪心算法高频题 | P0 | ⏳ 待认领 |
-| 07-algorithms/11-bit-operation | 位运算高频题 | P0 | ⏳ 待认领 |
-| 07-algorithms/12-math | 数学类高频题（数论 + 模拟 + 随机） | P1 | ⏳ 待认领 |
+| 07-algorithms/10-greedy | 贪心算法高频题 | P0 | ✅ 已完成 |
+| 07-algorithms/11-bit-operation | 位运算高频题 | P0 | ✅ 已完成 |
+| 07-algorithms/12-math | 数学类高频题（数论 + 模拟 + 随机） | P1 | ✅ 已完成 |
 | 09-interview-strategy/01-resume | 5-8 年工程师简历写法指南 | P1 | ⏳ 待认领 |
 | 11-go-std-practice | Go 标准库生产实践合集（io/encoding/time/testing） | P2 | ⏳ 待认领 |
 | 12-linux-os | 进程/线程、虚拟内存、零拷贝、cgroup、Linux 排障体系 | P0 | ✅ 已完成 |
@@ -156,8 +156,8 @@
 | 08-engineering/03-leadership | 工程质量体系落地 | P0 | ⏳ 待认领 |
 | 05-system-design/01-patterns | DDD 战术设计 | P0 | ⏳ 待认领 |
 | 05-system-design/01-patterns | 业务建模方法论 | P0 | ⏳ 待认领 |
-| 03-distributed/01-theory | 容灾设计：单机房、双活与异地多活 | P0 | ⏳ 待认领 |
-| 04-microservices/04-deployment | 灰度发布实战 | P0 | ⏳ 待认领 |
+| 03-distributed/01-theory | 容灾设计：单机房、双活与异地多活 | P0 | ✅ 已完成 |
+| 04-microservices/04-deployment | 灰度发布实战 | P0 | ✅ 已完成 |
 | 06-network/03-security | 后端安全体系 | P1 | ⏳ 待认领 |
 | 06-network/03-security | RBAC、ABAC 与 OIDC | P1 | ⏳ 待认领 |
 | 08-engineering/04-performance-governance | 测试策略：单测、集成测试、契约测试 | P1 | ⏳ 待认领 |
