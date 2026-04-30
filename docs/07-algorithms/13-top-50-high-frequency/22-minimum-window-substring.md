@@ -1,84 +1,70 @@
-# 题目标题
+# 22. 最小覆盖子串（Minimum Window Substring）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★★☆  难度：困难  LeetCode 76
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+在字符串 `s` 里，找一个最短的连续子串，这个子串必须把 `t` 里的所有字符都包含进去。
+这是滑动窗口经典题。
 
----
+## 解法一：暴力枚举所有子串
+- 枚举起点终点
+- 判断是否包含 t
+- 很慢
 
-## 解法一：直观解法
-
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
+## 解法二：滑动窗口（推荐）
 ### Go
 ```go
-// TODO
+func minWindow(s string, t string) string {
+    need := map[byte]int{}
+    for i := 0; i < len(t); i++ { need[t[i]]++ }
+    window := map[byte]int{}
+    left, valid, start, length := 0, 0, 0, 1<<30
+    for right := 0; right < len(s); right++ {
+        c := s[right]
+        if _, ok := need[c]; ok {
+            window[c]++
+            if window[c] == need[c] { valid++ }
+        }
+        for valid == len(need) {
+            if right-left+1 < length { start, length = left, right-left+1 }
+            d := s[left]
+            left++
+            if _, ok := need[d]; ok {
+                if window[d] == need[d] { valid-- }
+                window[d]--
+            }
+        }
+    }
+    if length == 1<<30 { return "" }
+    return s[start:start+length]
+}
 ```
-
 ### Python
 ```python
-# TODO
+def min_window(s, t):
+    need = {}
+    for ch in t:
+        need[ch] = need.get(ch, 0) + 1
+    window = {}
+    left = valid = 0
+    start = 0
+    length = float('inf')
+    for right, ch in enumerate(s):
+        if ch in need:
+            window[ch] = window.get(ch, 0) + 1
+            if window[ch] == need[ch]:
+                valid += 1
+        while valid == len(need):
+            if right - left + 1 < length:
+                start, length = left, right - left + 1
+            d = s[left]
+            left += 1
+            if d in need:
+                if window[d] == need[d]:
+                    valid -= 1
+                window[d] -= 1
+    return '' if length == float('inf') else s[start:start+length]
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
-### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**最小覆盖子串 = 滑动窗口先扩张满足条件，再收缩找最短。**

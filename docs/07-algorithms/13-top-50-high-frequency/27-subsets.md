@@ -1,84 +1,48 @@
-# 题目标题
+# 27. 子集（Subsets）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★★☆  难度：中等  LeetCode 78
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+每个元素都只有两种选择：选 or 不选。
+所以子集问题天然适合回溯。
 
----
+## 解法一：递归二叉树选择
+- 每个数都分“选”和“不选”
 
-## 解法一：直观解法
-
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
+## 解法二：回溯枚举起点（推荐）
 ### Go
 ```go
-// TODO
+func subsets(nums []int) [][]int {
+    res := [][]int{}
+    path := []int{}
+    var backtrack func(int)
+    backtrack = func(start int) {
+        tmp := append([]int{}, path...)
+        res = append(res, tmp)
+        for i := start; i < len(nums); i++ {
+            path = append(path, nums[i])
+            backtrack(i + 1)
+            path = path[:len(path)-1]
+        }
+    }
+    backtrack(0)
+    return res
+}
 ```
-
 ### Python
 ```python
-# TODO
+def subsets(nums):
+    res = []
+    path = []
+    def backtrack(start):
+        res.append(path[:])
+        for i in range(start, len(nums)):
+            path.append(nums[i])
+            backtrack(i + 1)
+            path.pop()
+    backtrack(0)
+    return res
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
-### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**子集问题 = 每层决定后面还能选谁。**

@@ -1,84 +1,48 @@
-# 题目标题
+# 29. 下一个更大元素（Next Greater Element）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★★☆  难度：中等
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+对于每个元素，找它右边第一个比它大的数。
+如果暴力往右找，每个都找一遍会很慢。
 
----
+## 解法一：暴力枚举
+- 每个元素都往右扫
 
-## 解法一：直观解法
-
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
+## 解法二：单调栈（推荐）
 ### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
+维护一个“从栈底到栈顶递减”的栈。
+新元素一来，如果比栈顶大，就说明它是栈顶元素的下一个更大元素。
 
 ### Go
 ```go
-// TODO
+func nextGreaterElement(nums []int) []int {
+    res := make([]int, len(nums))
+    for i := range res { res[i] = -1 }
+    stack := []int{}
+    for i := 0; i < len(nums); i++ {
+        for len(stack) > 0 && nums[i] > nums[stack[len(stack)-1]] {
+            idx := stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+            res[idx] = nums[i]
+        }
+        stack = append(stack, i)
+    }
+    return res
+}
 ```
-
 ### Python
 ```python
-# TODO
+def next_greater_element(nums):
+    res = [-1] * len(nums)
+    stack = []
+    for i, num in enumerate(nums):
+        while stack and num > nums[stack[-1]]:
+            idx = stack.pop()
+            res[idx] = num
+        stack.append(i)
+    return res
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**找右边第一个更大，优先想单调栈。**

@@ -1,84 +1,52 @@
-# 题目标题
+# 21. 有效括号（Valid Parentheses）
 
-> 频率：★★★★★  难度：中等  LeetCode X
+> 频率：★★★★☆  难度：简单  LeetCode 20
 
 ## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+给定一个只包括 `(`，`)`，`{`，`}`，`[`，`]` 的字符串，判断字符串是否有效。
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+遇到左括号，先记下来；遇到右括号，检查能不能和最近的左括号配对。
+这就是典型的“后进先出”，所以要用栈。
 
----
+## 解法一：反复替换匹配括号
+- 不断把 `()`, `[]`, `{}` 替换成空
+- 最后如果字符串为空，则有效
 
-## 解法一：直观解法
-
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
+## 解法二：栈（推荐）
 ### Go
 ```go
-// TODO
+func isValid(s string) bool {
+    stack := []byte{}
+    pairs := map[byte]byte{')': '(', ']': '[', '}': '{'}
+    for i := 0; i < len(s); i++ {
+        ch := s[i]
+        if ch == '(' || ch == '[' || ch == '{' {
+            stack = append(stack, ch)
+        } else {
+            if len(stack) == 0 || stack[len(stack)-1] != pairs[ch] {
+                return false
+            }
+            stack = stack[:len(stack)-1]
+        }
+    }
+    return len(stack) == 0
+}
 ```
-
 ### Python
 ```python
-# TODO
+def is_valid(s):
+    stack = []
+    pairs = {')': '(', ']': '[', '}': '{'}
+    for ch in s:
+        if ch in '([{':
+            stack.append(ch)
+        else:
+            if not stack or stack[-1] != pairs[ch]:
+                return False
+            stack.pop()
+    return len(stack) == 0
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
-### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**括号匹配 = 栈。**

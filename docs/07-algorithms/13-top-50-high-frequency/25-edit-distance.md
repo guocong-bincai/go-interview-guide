@@ -1,84 +1,52 @@
-# 题目标题
+# 25. 编辑距离（Edit Distance）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★★☆  难度：困难  LeetCode 72
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+把单词 A 变成单词 B，最少需要几步。
+允许操作：插入、删除、替换。
 
----
+## 解法一：递归搜索
+- 每一步尝试三种操作
+- 会大量重复计算
 
-## 解法一：直观解法
-
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
+## 解法二：动态规划（推荐）
 ### Go
 ```go
-// TODO
+func minDistance(word1 string, word2 string) int {
+    m, n := len(word1), len(word2)
+    dp := make([][]int, m+1)
+    for i := range dp { dp[i] = make([]int, n+1) }
+    for i := 0; i <= m; i++ { dp[i][0] = i }
+    for j := 0; j <= n; j++ { dp[0][j] = j }
+    for i := 1; i <= m; i++ {
+        for j := 1; j <= n; j++ {
+            if word1[i-1] == word2[j-1] {
+                dp[i][j] = dp[i-1][j-1]
+            } else {
+                dp[i][j] = min3(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) + 1
+            }
+        }
+    }
+    return dp[m][n]
+}
+func min3(a,b,c int) int { if a>b { a=b }; if a>c { a=c }; return a }
 ```
-
 ### Python
 ```python
-# TODO
+def min_distance(word1, word2):
+    m, n = len(word1), len(word2)
+    dp = [[0]*(n+1) for _ in range(m+1)]
+    for i in range(m+1): dp[i][0] = i
+    for j in range(n+1): dp[0][j] = j
+    for i in range(1, m+1):
+        for j in range(1, n+1):
+            if word1[i-1] == word2[j-1]:
+                dp[i][j] = dp[i-1][j-1]
+            else:
+                dp[i][j] = min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) + 1
+    return dp[m][n]
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
-### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**编辑距离 = 三种操作的 DP。**

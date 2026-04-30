@@ -1,84 +1,61 @@
-# 题目标题
+# 24. 螺旋矩阵（Spiral Matrix）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★★☆  难度：中等  LeetCode 54
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+按“右、下、左、上”一圈一圈地把矩阵走完。
+核心是维护四条边界：上、下、左、右。
 
----
+## 解法一：visited 数组模拟走路
+- 每走一步标记已访问
+- 简单但额外空间大
 
-## 解法一：直观解法
-
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
+## 解法二：四边界收缩（推荐）
 ### Go
 ```go
-// TODO
+func spiralOrder(matrix [][]int) []int {
+    if len(matrix) == 0 { return []int{} }
+    top, bottom := 0, len(matrix)-1
+    left, right := 0, len(matrix[0])-1
+    res := []int{}
+    for top <= bottom && left <= right {
+        for j := left; j <= right; j++ { res = append(res, matrix[top][j]) }
+        top++
+        for i := top; i <= bottom; i++ { res = append(res, matrix[i][right]) }
+        right--
+        if top <= bottom {
+            for j := right; j >= left; j-- { res = append(res, matrix[bottom][j]) }
+            bottom--
+        }
+        if left <= right {
+            for i := bottom; i >= top; i-- { res = append(res, matrix[i][left]) }
+            left++
+        }
+    }
+    return res
+}
 ```
-
 ### Python
 ```python
-# TODO
+def spiral_order(matrix):
+    if not matrix:
+        return []
+    top, bottom = 0, len(matrix) - 1
+    left, right = 0, len(matrix[0]) - 1
+    res = []
+    while top <= bottom and left <= right:
+        for j in range(left, right + 1): res.append(matrix[top][j])
+        top += 1
+        for i in range(top, bottom + 1): res.append(matrix[i][right])
+        right -= 1
+        if top <= bottom:
+            for j in range(right, left - 1, -1): res.append(matrix[bottom][j])
+            bottom -= 1
+        if left <= right:
+            for i in range(bottom, top - 1, -1): res.append(matrix[i][left])
+            left += 1
+    return res
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
-### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**螺旋矩阵 = 四条边界不断往里收。**

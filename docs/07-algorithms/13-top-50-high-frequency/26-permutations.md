@@ -1,84 +1,63 @@
-# 题目标题
+# 26. 全排列（Permutations）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★★☆  难度：中等  LeetCode 46
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+从一堆数字里，每次选一个放进路径里，直到所有数字都选完。
+这就是典型回溯。
 
----
+## 解法一：递归 + 新数组
+- 每次传剩余元素
+- 直观，但拷贝多
 
-## 解法一：直观解法
-
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
+## 解法二：回溯 + used 数组（推荐）
 ### Go
 ```go
-// TODO
+func permute(nums []int) [][]int {
+    res := [][]int{}
+    path := []int{}
+    used := make([]bool, len(nums))
+    var backtrack func()
+    backtrack = func() {
+        if len(path) == len(nums) {
+            tmp := append([]int{}, path...)
+            res = append(res, tmp)
+            return
+        }
+        for i := 0; i < len(nums); i++ {
+            if used[i] { continue }
+            used[i] = true
+            path = append(path, nums[i])
+            backtrack()
+            path = path[:len(path)-1]
+            used[i] = false
+        }
+    }
+    backtrack()
+    return res
+}
 ```
-
 ### Python
 ```python
-# TODO
+def permute(nums):
+    res = []
+    path = []
+    used = [False] * len(nums)
+    def backtrack():
+        if len(path) == len(nums):
+            res.append(path[:])
+            return
+        for i in range(len(nums)):
+            if used[i]:
+                continue
+            used[i] = True
+            path.append(nums[i])
+            backtrack()
+            path.pop()
+            used[i] = False
+    backtrack()
+    return res
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
-### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**全排列 = for 循环枚举选择 + 回溯撤销选择。**
