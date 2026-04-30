@@ -1,84 +1,52 @@
-# 题目标题
+# 36. 盛最多水的容器（Container With Most Water）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★★☆  难度：中等  LeetCode 11
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+两根柱子和地面可以围出一个容器。
+面积 = 宽度 × 较短柱子的高度。
 
----
+## 解法一：暴力枚举所有两根柱子
+- 每对都算一次面积
 
-## 解法一：直观解法
-
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
+## 解法二：双指针（推荐）
 ### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
+左右各一个指针。
+每次移动较短的那根，因为面积受短板限制。
 
 ### Go
 ```go
-// TODO
+func maxArea(height []int) int {
+    left, right := 0, len(height)-1
+    ans := 0
+    for left < right {
+        h := height[left]
+        if height[right] < h { h = height[right] }
+        area := h * (right - left)
+        if area > ans { ans = area }
+        if height[left] < height[right] {
+            left++
+        } else {
+            right--
+        }
+    }
+    return ans
+}
 ```
-
 ### Python
 ```python
-# TODO
+def max_area(height):
+    left, right = 0, len(height) - 1
+    ans = 0
+    while left < right:
+        area = min(height[left], height[right]) * (right - left)
+        ans = max(ans, area)
+        if height[left] < height[right]:
+            left += 1
+        else:
+            right -= 1
+    return ans
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**盛水容器 = 双指针，每次移动短板。**

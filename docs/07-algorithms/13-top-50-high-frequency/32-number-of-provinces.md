@@ -1,84 +1,64 @@
-# 题目标题
+# 32. 省份数量（Number of Provinces）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★★☆  难度：中等  LeetCode 547
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+城市之间有的互相连通，直接连也算，间接连也算。
+问最后一共能分成几个连通块。
 
----
+这题本质就是：
+**数图里有几个连通分量。**
 
-## 解法一：直观解法
-
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
+## 解法一：DFS
 ### Go
 ```go
-// TODO
+func findCircleNum(isConnected [][]int) int {
+    n := len(isConnected)
+    visited := make([]bool, n)
+    var dfs func(int)
+    dfs = func(i int) {
+        for j := 0; j < n; j++ {
+            if isConnected[i][j] == 1 && !visited[j] {
+                visited[j] = true
+                dfs(j)
+            }
+        }
+    }
+    ans := 0
+    for i := 0; i < n; i++ {
+        if !visited[i] {
+            visited[i] = true
+            dfs(i)
+            ans++
+        }
+    }
+    return ans
+}
 ```
-
 ### Python
 ```python
-# TODO
+def find_circle_num(isConnected):
+    n = len(isConnected)
+    visited = [False] * n
+
+    def dfs(i):
+        for j in range(n):
+            if isConnected[i][j] == 1 and not visited[j]:
+                visited[j] = True
+                dfs(j)
+
+    ans = 0
+    for i in range(n):
+        if not visited[i]:
+            visited[i] = True
+            dfs(i)
+            ans += 1
+    return ans
 ```
 
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
-### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
+## 解法二：并查集
+- 把连通的城市合并到一个集合里
+- 最后看有多少个根节点
 
 ## 一句话记忆
-> TODO
+**省份数量 = 连通分量个数。**

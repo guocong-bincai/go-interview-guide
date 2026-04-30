@@ -1,84 +1,56 @@
-# 题目标题
+# 40. 最长连续序列（Longest Consecutive Sequence）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★☆☆  难度：中等  LeetCode 128
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+给定一个无序数组，找到数字连续的最长序列长度。
+比如 `[100,4,200,1,3,2]` 中，最长连续序列是 `[1,2,3,4]`，长度 4。
 
----
+## 解法一：排序
+- 排序后线性扫描
+- 简单但不是最优
 
-## 解法一：直观解法
-
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
+## 解法二：哈希集合（推荐）
 ### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
+把所有数放进集合里。
+如果一个数 `x-1` 不在集合中，说明它可能是连续序列起点。
+然后从它往后一直找 `x+1, x+2...`。
 
 ### Go
 ```go
-// TODO
+func longestConsecutive(nums []int) int {
+    set := map[int]bool{}
+    for _, num := range nums { set[num] = true }
+    ans := 0
+    for num := range set {
+        if !set[num-1] {
+            cur := num
+            length := 1
+            for set[cur+1] {
+                cur++
+                length++
+            }
+            if length > ans { ans = length }
+        }
+    }
+    return ans
+}
 ```
-
 ### Python
 ```python
-# TODO
+def longest_consecutive(nums):
+    s = set(nums)
+    ans = 0
+    for num in s:
+        if num - 1 not in s:
+            cur = num
+            length = 1
+            while cur + 1 in s:
+                cur += 1
+                length += 1
+            ans = max(ans, length)
+    return ans
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**最长连续序列 = 只从“起点”开始往后扩。**

@@ -1,84 +1,70 @@
-# 题目标题
+# 35. 最长回文子串（Longest Palindromic Substring）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★★☆  难度：中等  LeetCode 5
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+回文就是正着读和反着读一样。
 
----
+比如：
+- `aba`
+- `abba`
 
-## 解法一：直观解法
+注意奇数长度和偶数长度都可能是回文。
 
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
+## 解法一：动态规划
+- 判断 `s[i:j]` 是否为回文
+- 能做，但写起来稍复杂
 
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
+## 解法二：中心扩展（推荐）
 ### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
+每个回文都有一个“中心”。
+- 奇数回文：中心是一个字符
+- 偶数回文：中心是两个字符之间
+
+从中心往两边扩，看能扩多远。
 
 ### Go
 ```go
-// TODO
+func longestPalindrome(s string) string {
+    if len(s) < 2 { return s }
+    start, end := 0, 0
+    var expand func(int, int) (int, int)
+    expand = func(l, r int) (int, int) {
+        for l >= 0 && r < len(s) && s[l] == s[r] {
+            l--
+            r++
+        }
+        return l + 1, r - 1
+    }
+    for i := 0; i < len(s); i++ {
+        l1, r1 := expand(i, i)
+        l2, r2 := expand(i, i+1)
+        if r1-l1 > end-start { start, end = l1, r1 }
+        if r2-l2 > end-start { start, end = l2, r2 }
+    }
+    return s[start:end+1]
+}
 ```
-
 ### Python
 ```python
-# TODO
+def longest_palindrome(s):
+    if len(s) < 2:
+        return s
+    start = end = 0
+    def expand(l, r):
+        while l >= 0 and r < len(s) and s[l] == s[r]:
+            l -= 1
+            r += 1
+        return l + 1, r - 1
+    for i in range(len(s)):
+        l1, r1 = expand(i, i)
+        l2, r2 = expand(i, i + 1)
+        if r1 - l1 > end - start:
+            start, end = l1, r1
+        if r2 - l2 > end - start:
+            start, end = l2, r2
+    return s[start:end+1]
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**最长回文子串 = 以每个位置为中心向两边扩。**

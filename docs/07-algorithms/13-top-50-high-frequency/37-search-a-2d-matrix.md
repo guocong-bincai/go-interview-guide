@@ -1,84 +1,53 @@
-# 题目标题
+# 37. 搜索二维矩阵（Search a 2D Matrix）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★★☆  难度：中等  LeetCode 74
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+矩阵满足：
+- 每行升序
+- 每行第一个数大于上一行最后一个数
 
----
+所以整个矩阵其实可以看成一个“拉平后有序的一维数组”。
 
-## 解法一：直观解法
+## 解法一：先找行再找列
+- 先确定目标在哪一行
+- 再在那一行里二分
 
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
+## 解法二：整体二分（推荐）
 ### Go
 ```go
-// TODO
+func searchMatrix(matrix [][]int, target int) bool {
+    rows, cols := len(matrix), len(matrix[0])
+    left, right := 0, rows*cols-1
+    for left <= right {
+        mid := left + (right-left)/2
+        val := matrix[mid/cols][mid%cols]
+        if val == target { return true }
+        if val < target {
+            left = mid + 1
+        } else {
+            right = mid - 1
+        }
+    }
+    return false
+}
 ```
-
 ### Python
 ```python
-# TODO
+def search_matrix(matrix, target):
+    rows, cols = len(matrix), len(matrix[0])
+    left, right = 0, rows * cols - 1
+    while left <= right:
+        mid = (left + right) // 2
+        val = matrix[mid // cols][mid % cols]
+        if val == target:
+            return True
+        elif val < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return False
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
-### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**二维矩阵整体有序时，可以当一维数组二分。**
