@@ -1,84 +1,60 @@
-# 题目标题
+# 44. 颜色分类（Sort Colors）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★★☆  难度：中等  LeetCode 75
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+数组中只有 0、1、2 三种数，要把它们原地排好序。
 
----
+这题其实就是：
+- 0 放左边
+- 2 放右边
+- 1 留中间
 
-## 解法一：直观解法
+## 解法一：计数排序
+- 先数 0、1、2 各多少个
+- 再覆盖回去
 
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
+## 解法二：三指针（推荐）
 ### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
+荷兰国旗问题。
+维护三个区域：
+- 左边都是 0
+- 中间都是 1
+- 右边都是 2
 
 ### Go
 ```go
-// TODO
+func sortColors(nums []int) {
+    zero, i, two := 0, 0, len(nums)-1
+    for i <= two {
+        if nums[i] == 0 {
+            nums[i], nums[zero] = nums[zero], nums[i]
+            zero++
+            i++
+        } else if nums[i] == 2 {
+            nums[i], nums[two] = nums[two], nums[i]
+            two--
+        } else {
+            i++
+        }
+    }
+}
 ```
-
 ### Python
 ```python
-# TODO
+def sort_colors(nums):
+    zero, i, two = 0, 0, len(nums) - 1
+    while i <= two:
+        if nums[i] == 0:
+            nums[i], nums[zero] = nums[zero], nums[i]
+            zero += 1
+            i += 1
+        elif nums[i] == 2:
+            nums[i], nums[two] = nums[two], nums[i]
+            two -= 1
+        else:
+            i += 1
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**颜色分类 = 荷兰国旗三指针。**

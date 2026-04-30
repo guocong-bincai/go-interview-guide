@@ -1,84 +1,67 @@
-# 题目标题
+# 50. 螺旋矩阵 II（Spiral Matrix II）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★☆☆  难度：中等  LeetCode 59
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+和“螺旋矩阵”相反，这题不是读矩阵，而是生成一个 `n x n` 的矩阵，把数字 1 到 n² 按螺旋顺序填进去。
 
----
+## 解法一：模拟 + visited
+- 边走边填
+- 用 visited 记录
 
-## 解法一：直观解法
-
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
+## 解法二：四边界填充（推荐）
 ### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
+维护上、下、左、右四条边界，按右、下、左、上的顺序一圈一圈填数字。
 
 ### Go
 ```go
-// TODO
+func generateMatrix(n int) [][]int {
+    matrix := make([][]int, n)
+    for i := range matrix { matrix[i] = make([]int, n) }
+    top, bottom := 0, n-1
+    left, right := 0, n-1
+    num := 1
+    for top <= bottom && left <= right {
+        for j := left; j <= right; j++ { matrix[top][j] = num; num++ }
+        top++
+        for i := top; i <= bottom; i++ { matrix[i][right] = num; num++ }
+        right--
+        for j := right; j >= left && top <= bottom; j-- { matrix[bottom][j] = num; num++ }
+        bottom--
+        for i := bottom; i >= top && left <= right; i-- { matrix[i][left] = num; num++ }
+        left++
+    }
+    return matrix
+}
 ```
-
 ### Python
 ```python
-# TODO
+def generate_matrix(n):
+    matrix = [[0] * n for _ in range(n)]
+    top, bottom = 0, n - 1
+    left, right = 0, n - 1
+    num = 1
+    while top <= bottom and left <= right:
+        for j in range(left, right + 1):
+            matrix[top][j] = num
+            num += 1
+        top += 1
+        for i in range(top, bottom + 1):
+            matrix[i][right] = num
+            num += 1
+        right -= 1
+        if top <= bottom:
+            for j in range(right, left - 1, -1):
+                matrix[bottom][j] = num
+                num += 1
+            bottom -= 1
+        if left <= right:
+            for i in range(bottom, top - 1, -1):
+                matrix[i][left] = num
+                num += 1
+            left += 1
+    return matrix
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**螺旋矩阵 II = 四边界一圈一圈填数字。**

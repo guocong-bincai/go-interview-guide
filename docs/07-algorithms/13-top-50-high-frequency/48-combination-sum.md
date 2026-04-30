@@ -1,84 +1,61 @@
-# 题目标题
+# 48. 组合总和（Combination Sum）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★☆☆  难度：中等  LeetCode 39
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+给你一组数字，可以重复选，问有多少种组合能凑成 target。
 
----
+## 解法一：暴力枚举
+- 所有情况都试
 
-## 解法一：直观解法
-
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
+## 解法二：回溯（推荐）
 ### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
+每次从当前位置开始选：
+- 选当前数，目标变小
+- 还能继续选当前数（因为可以重复）
+- 如果目标变成 0，记录答案
 
 ### Go
 ```go
-// TODO
+func combinationSum(candidates []int, target int) [][]int {
+    res := [][]int{}
+    path := []int{}
+    var backtrack func(int, int)
+    backtrack = func(start, remain int) {
+        if remain == 0 {
+            tmp := append([]int{}, path...)
+            res = append(res, tmp)
+            return
+        }
+        if remain < 0 { return }
+        for i := start; i < len(candidates); i++ {
+            path = append(path, candidates[i])
+            backtrack(i, remain-candidates[i])
+            path = path[:len(path)-1]
+        }
+    }
+    backtrack(0, target)
+    return res
+}
 ```
-
 ### Python
 ```python
-# TODO
+def combination_sum(candidates, target):
+    res = []
+    path = []
+    def backtrack(start, remain):
+        if remain == 0:
+            res.append(path[:])
+            return
+        if remain < 0:
+            return
+        for i in range(start, len(candidates)):
+            path.append(candidates[i])
+            backtrack(i, remain - candidates[i])
+            path.pop()
+    backtrack(0, target)
+    return res
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**组合总和 = 回溯，且可以重复选当前数。**

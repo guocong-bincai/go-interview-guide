@@ -1,84 +1,43 @@
-# 题目标题
+# 46. 对称二叉树（Symmetric Tree）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★☆☆  难度：简单  LeetCode 101
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+一棵树如果左右两边像照镜子一样，就是对称的。
 
----
+## 解法一：BFS 成对检查
+- 队列里每次取两个节点比较
 
-## 解法一：直观解法
-
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
+## 解法二：递归镜像比较（推荐）
 ### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
+判断两棵树是否互为镜像：
+- 根值相同
+- 左的左 = 右的右
+- 左的右 = 右的左
 
 ### Go
 ```go
-// TODO
+func isSymmetric(root *TreeNode) bool {
+    var check func(*TreeNode, *TreeNode) bool
+    check = func(a, b *TreeNode) bool {
+        if a == nil && b == nil { return true }
+        if a == nil || b == nil || a.Val != b.Val { return false }
+        return check(a.Left, b.Right) && check(a.Right, b.Left)
+    }
+    return check(root, root)
+}
 ```
-
 ### Python
 ```python
-# TODO
+def is_symmetric(root):
+    def check(a, b):
+        if not a and not b:
+            return True
+        if not a or not b or a.val != b.val:
+            return False
+        return check(a.left, b.right) and check(a.right, b.left)
+    return check(root, root)
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**对称二叉树 = 判断左右子树是否互为镜像。**

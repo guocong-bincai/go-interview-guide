@@ -1,84 +1,58 @@
-# 题目标题
+# 41. 滑动窗口最大值（Sliding Window Maximum）
 
-> 频率：★★★★★  难度：中等  LeetCode X
-
-## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+> 频率：★★★★☆  难度：困难  LeetCode 239
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+给你一个窗口大小 `k`，窗口在数组上从左往右滑动。
+每次滑动后，都要知道窗口里的最大值。
 
----
+如果每次都重新遍历窗口找最大值，会很慢。
 
-## 解法一：直观解法
+## 解法一：暴力枚举
+- 每个窗口都扫一遍
+- 时间复杂度高
 
-### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
-
-### Go
-```go
-// TODO
-```
-
-### Python
-```python
-# TODO
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
-
+## 解法二：单调队列（推荐）
 ### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
+维护一个“单调递减”的队列，队首永远是当前窗口最大值。
 
 ### Go
 ```go
-// TODO
+func maxSlidingWindow(nums []int, k int) []int {
+    q := []int{}
+    res := []int{}
+    for i := 0; i < len(nums); i++ {
+        if len(q) > 0 && q[0] <= i-k {
+            q = q[1:]
+        }
+        for len(q) > 0 && nums[q[len(q)-1]] <= nums[i] {
+            q = q[:len(q)-1]
+        }
+        q = append(q, i)
+        if i >= k-1 {
+            res = append(res, nums[q[0]])
+        }
+    }
+    return res
+}
 ```
-
 ### Python
 ```python
-# TODO
+from collections import deque
+
+def max_sliding_window(nums, k):
+    q = deque()
+    res = []
+    for i, num in enumerate(nums):
+        if q and q[0] <= i - k:
+            q.popleft()
+        while q and nums[q[-1]] <= num:
+            q.pop()
+        q.append(i)
+        if i >= k - 1:
+            res.append(nums[q[0]])
+    return res
 ```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
 
 ## 一句话记忆
-> TODO
+**滑动窗口最大值 = 单调队列。**
