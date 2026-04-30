@@ -10,3 +10,4 @@
 - [✅ `04-cluster.md` — Sentinel vs Cluster、槽位分配、故障转移](./04-cluster.md)
 - [✅ `05-distributed-lock.md` — Redlock 算法、单机锁、Lua 脚本原子性](./05-distributed-lock.md)
 - [✅ `06-hot-key.md` — 热 key 识别、大 key 处理、本地缓存方案](./06-hot-key.md)
+- [✅ `07-pipeline-lua.md` — Pipeline RTT 优化、Lua 原子性、超卖/限流实战](./07-pipeline-lua.md)

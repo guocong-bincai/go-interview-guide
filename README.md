@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-125-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.25-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-127-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.26-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -209,7 +209,7 @@
 | 🟡 [slice 与 map](./docs/01-golang/03-language-deep/05-slice-map.md) | 底层结构、扩容策略、并发安全问题 |
 | 🟡 [内存模型](./docs/01-golang/03-language-deep/06-memory-model.md) | happens-before、内存对齐、false sharing |
 | 🟢 [循环与迭代器新特性](./docs/01-golang/03-language-deep/07-loop-iterators.md) | Go 1.22 循环变量语义变更、range-over-func |
-| 🟡 [编译器优化：内联与逃逸深度](./docs/01-golang/03-language-deep/08-compiler-optimize.md) | 内联决策（AST节点数阈值）、-gcflags="-m=2" 解读、BCE、常量折叠 ⚠️ 待补充 |
+| 🟡 [编译器优化：内联与逃逸深度](./docs/01-golang/03-language-deep/08-compiler-optimize.md) | 内联决策（AST节点数阈值）、-gcflags="-m=2" 解读、BCE、常量折叠 ✅
 | 🟢 [内置函数 new：从基础到 Go 1.26 增强](./docs/01-golang/03-language-deep/08-new-function.md) | new() vs make()、逃逸分析、Go 1.26 new(expr) 表达式参数 |
 | 🟢 [Go 1.26 栈分配优化](./docs/01-golang/03-language-deep/09-go1.26-stack-alloc.md) | append 推测性栈缓冲、move2heap 机制 |
 | 🟢 [Go 1.24 Swiss Tables](./docs/01-golang/03-language-deep/10-go1.24-swiss-tables.md) | map 底层替换为 Swiss Table、性能提升原理 |
@@ -278,7 +278,7 @@
 | 🟡 [集群方案](./docs/02-database/02-redis/04-cluster.md) | Sentinel vs Cluster、槽位分配、故障转移 |
 | 🟡 [分布式锁](./docs/02-database/02-redis/05-distributed-lock.md) | Redlock 算法、Lua 脚本原子性、锁续期 |
 | 🟡 [热 key / 大 key](./docs/02-database/02-redis/06-hot-key.md) | 识别方法、拆分方案、本地缓存兜底 |
-| 🟡 [Pipeline 与 Lua 脚本](./docs/02-database/02-redis/07-pipeline-lua.md) | RTT 优化原理、Lua 原子性、MULTI/EXEC 对比、Cluster 限制 ⚠️ 待补充 |
+| 🟡 [Pipeline 与 Lua 脚本](./docs/02-database/02-redis/07-pipeline-lua.md) | RTT 优化原理、Lua 原子性、MULTI/EXEC 对比、Cluster 限制 ✅
 
 </details>
 

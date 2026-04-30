@@ -26,7 +26,7 @@
 - [✅] `05-slice-map.md` — slice/map 底层结构、扩容策略、并发安全问题
 - [✅] `06-memory-model.md` — Go 内存模型、happens-before、内存对齐
 - [✅] `07-loop-iterators.md` — Go 1.22 循环变量语义变更、range-over-int、Go 1.23 range-over-func
-- [⏳] `08-compiler-optimize.md` — 内联决策、逃逸深度、BCE、常量折叠（**P1 待认领**）
+- [✅] `08-compiler-optimize.md` — 内联决策、逃逸深度、BCE、常量折叠（**P1 已完成**）
 
 ### 04-performance · 性能调优
 - [✅] `01-pprof.md` — pprof 使用、CPU/内存/goroutine 火焰图分析
