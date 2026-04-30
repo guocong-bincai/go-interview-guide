@@ -9,6 +9,8 @@
 - [✅] `02-event-driven.md` — 事件驱动架构、Outbox Pattern
 - [✅] `03-saga-pattern.md` — Saga 在业务中的落地
 - [✅] `04-ddd.md` — DDD 战略设计：领域、限界上下文、聚合根
+- [⏳] `05-ddd-tactical-design.md` — DDD 战术设计：实体、值对象、聚合、领域服务、Repository
+- [⏳] `06-business-modeling.md` — 业务建模方法论：Event Storming、核心域/支撑域、服务边界
 
 ### 02-scenarios · 高频设计题
 - [✅] `01-seckill/01-seckill.md` — 秒杀系统设计：预减库存、异步下单、防超卖

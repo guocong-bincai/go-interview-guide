@@ -16,5 +16,10 @@
 - [✅] `03-websocket.md` — WebSocket 升级握手、与 HTTP 长轮询对比
 - [✅] `04-grpc-http2.md` — gRPC 基于 HTTP/2 的多路复用、流控
 
+### 03-security · 安全
+- [⏳] `01-common-attacks.md` — 常见攻击与防御：SQL 注入、XSS、CSRF、SSRF、JWT 安全
+- [⏳] `02-backend-security.md` — 后端安全体系：服务间认证、审计日志、敏感数据脱敏、密钥轮换
+- [⏳] `03-authz-rbac-abac.md` — RBAC、ABAC 与 OIDC：权限模型、多租户权限、统一鉴权
+
 ### 03-http2-priority · HTTP/2 优先级调度
 - [✅] `01-http2-priority.md` — RFC 9218 优先级信号、Server 端调度优化、DisableClientPriority
