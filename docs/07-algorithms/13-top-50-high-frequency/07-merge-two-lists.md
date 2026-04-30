@@ -1,84 +1,140 @@
-# 题目标题
+# 07. 合并两个有序链表（Merge Two Sorted Lists）
 
-> 频率：★★★★★  难度：中等  LeetCode X
+> 频率：★★★★★  难度：简单  LeetCode 21
 
 ## 题目描述
-> TODO：用小白能懂的话重写题目，最好配一个例子。
-
-## 面试为什么爱问
-- [ ] 这题考哪个核心套路
-- [ ] 面试官通常怎么追问
-- [ ] 这题为什么算高频
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件
-- [ ] 时间复杂度优化
+将两个升序链表合并为一个新的升序链表，并返回合并后的链表头节点。
 
 ## 小白先理解
-- [ ] 不要一上来讲术语，先讲题目本质
-- [ ] 用一个例子手推一遍
-- [ ] 说清楚为什么会想到这种做法
+比如：
+
+```text
+l1 = 1 -> 2 -> 4
+l2 = 1 -> 3 -> 4
+```
+
+合并后：
+
+```text
+1 -> 1 -> 2 -> 3 -> 4 -> 4
+```
+
+你可以把它想成：
+**每次从两个链表头部，挑一个更小的接到结果后面。**
 
 ---
 
-## 解法一：直观解法
+## 解法一：递归
 
 ### 思路
-- [ ] 先给最容易想到的方法
-- [ ] 帮助建立直觉
+每次比较两个头节点：
+- 谁小，谁就做结果头
+- 然后把剩余部分继续递归合并
 
 ### Go
 ```go
-// TODO
+func mergeTwoListsRecursive(list1 *ListNode, list2 *ListNode) *ListNode {
+    if list1 == nil {
+        return list2
+    }
+    if list2 == nil {
+        return list1
+    }
+
+    if list1.Val < list2.Val {
+        list1.Next = mergeTwoListsRecursive(list1.Next, list2)
+        return list1
+    }
+    list2.Next = mergeTwoListsRecursive(list1, list2.Next)
+    return list2
+}
 ```
 
 ### Python
 ```python
-# TODO
+def merge_two_lists_recursive(list1, list2):
+    if not list1:
+        return list2
+    if not list2:
+        return list1
+
+    if list1.val < list2.val:
+        list1.next = merge_two_lists_recursive(list1.next, list2)
+        return list1
+    else:
+        list2.next = merge_two_lists_recursive(list1, list2.next)
+        return list2
 ```
 
 ### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+- 时间：`O(m+n)`
+- 空间：`O(m+n)`（递归栈）
 
 ---
 
-## 解法二：推荐解法
+## 解法二：迭代 + 虚拟头节点（推荐）
 
 ### 核心思路
-- [ ] 为什么更优
-- [ ] 关键变量是什么意思
+创建一个 `dummy` 虚拟头节点，这样不用反复处理“第一个节点怎么接”的特殊情况。
+
+然后：
+- 比较两个链表当前节点
+- 把较小的接到结果链表末尾
+- 对应链表往后走一步
+- 最后把剩下的链表直接接上
 
 ### Go
 ```go
-// TODO
+func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
+    dummy := &ListNode{}
+    cur := dummy
+
+    for list1 != nil && list2 != nil {
+        if list1.Val < list2.Val {
+            cur.Next = list1
+            list1 = list1.Next
+        } else {
+            cur.Next = list2
+            list2 = list2.Next
+        }
+        cur = cur.Next
+    }
+
+    if list1 != nil {
+        cur.Next = list1
+    }
+    if list2 != nil {
+        cur.Next = list2
+    }
+
+    return dummy.Next
+}
 ```
 
 ### Python
 ```python
-# TODO
+def merge_two_lists(list1, list2):
+    dummy = ListNode(0)
+    cur = dummy
+
+    while list1 and list2:
+        if list1.val < list2.val:
+            cur.next = list1
+            list1 = list1.next
+        else:
+            cur.next = list2
+            list2 = list2.next
+        cur = cur.next
+
+    cur.next = list1 if list1 else list2
+    return dummy.next
 ```
 
 ### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+- 时间：`O(m+n)`
+- 空间：`O(1)`
 
 ---
 
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 思路 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] TODO
-
-## 面试追问
-- [ ] TODO
-
 ## 一句话记忆
-> TODO
+**合并有序链表 = 每次挑更小的接上，dummy 节点能省很多事。**
