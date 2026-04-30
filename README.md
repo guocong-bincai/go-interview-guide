@@ -608,30 +608,21 @@
 > 所有题目提供 **Go + Python 双语实现**，通俗讲解思路，适合所有阶段工程师
 
 <details>
-<summary><b>Top 20 高频算法题（按面试频率排序）</b>（点击展开）</summary>
+<summary><b>Top 50 高频算法题（按面试频率排序）</b>（点击展开）</summary>
 
 | 排名 | 题目 | 核心考点 |
 |------|------|----------|
-| 01 | [两数之和](./docs/07-algorithms/13-top-20-high-frequency/01-two-sum.md) | 哈希表、空间换时间 |
-| 02 | [三数之和](./docs/07-algorithms/13-top-20-high-frequency/02-three-sum.md) | 排序 + 双指针、去重 |
-| 03 | [最长不重复子串](./docs/07-algorithms/13-top-20-high-frequency/03-longest-substring.md) | 滑动窗口 |
-| 04 | [LRU 缓存](./docs/07-algorithms/13-top-20-high-frequency/04-lru-cache.md) | 哈希表 + 双向链表 |
-| 05 | [反转链表](./docs/07-algorithms/13-top-20-high-frequency/05-reverse-linked-list.md) | 链表指针 |
-| 06 | [环形链表](./docs/07-algorithms/13-top-20-high-frequency/06-linked-list-cycle.md) | 快慢指针 |
-| 07 | [合并两个有序链表](./docs/07-algorithms/13-top-20-high-frequency/07-merge-two-lists.md) | 递归 / 迭代 |
-| 08 | [二叉树层序遍历](./docs/07-algorithms/13-top-20-high-frequency/08-level-order.md) | BFS 队列 |
-| 09 | [二叉树最近公共祖先](./docs/07-algorithms/13-top-20-high-frequency/09-lca.md) | 树递归 |
-| 10 | [岛屿数量](./docs/07-algorithms/13-top-20-high-frequency/10-number-of-islands.md) | DFS / BFS |
-| 11 | [课程表](./docs/07-algorithms/13-top-20-high-frequency/11-course-schedule.md) | 拓扑排序 |
-| 12 | [合并区间](./docs/07-algorithms/13-top-20-high-frequency/12-merge-intervals.md) | 排序 + 合并 |
-| 13 | [无重叠区间](./docs/07-algorithms/13-top-20-high-frequency/13-non-overlapping-intervals.md) | 贪心 |
-| 14 | [跳跃游戏](./docs/07-algorithms/13-top-20-high-frequency/14-jump-game.md) | 贪心 / DP |
-| 15 | [接雨水](./docs/07-algorithms/13-top-20-high-frequency/15-trapping-rain-water.md) | 双指针 / 前后缀 |
-| 16 | [Top K 高频元素](./docs/07-algorithms/13-top-20-high-frequency/16-top-k-frequent.md) | 堆 / 桶排序 |
-| 17 | [二叉树最大路径和](./docs/07-algorithms/13-top-20-high-frequency/17-binary-tree-max-path-sum.md) | 树形 DP |
-| 18 | [买卖股票最佳时机](./docs/07-algorithms/13-top-20-high-frequency/18-best-time-to-buy-sell-stock.md) | 贪心 / DP |
-| 19 | [打家劫舍](./docs/07-algorithms/13-top-20-high-frequency/19-house-robber.md) | 动态规划 |
-| 20 | [最长递增子序列](./docs/07-algorithms/13-top-20-high-frequency/20-longest-increasing-subsequence.md) | DP / 二分 |
+| 01 | [两数之和](./docs/07-algorithms/13-top-50-high-frequency/01-two-sum.md) | 哈希表、空间换时间 |
+| 02 | [三数之和](./docs/07-algorithms/13-top-50-high-frequency/02-three-sum.md) | 排序 + 双指针、去重 |
+| 03 | [最长不重复子串](./docs/07-algorithms/13-top-50-high-frequency/03-longest-substring.md) | 滑动窗口 |
+| 04 | [LRU 缓存](./docs/07-algorithms/13-top-50-high-frequency/04-lru-cache.md) | 哈希表 + 双向链表 |
+| 05 | [反转链表](./docs/07-algorithms/13-top-50-high-frequency/05-reverse-linked-list.md) | 链表指针 |
+| 06 | [环形链表](./docs/07-algorithms/13-top-50-high-frequency/06-linked-list-cycle.md) | 快慢指针 |
+| 07 | [合并两个有序链表](./docs/07-algorithms/13-top-50-high-frequency/07-merge-two-lists.md) | 递归 / 迭代 |
+| 08 | [二叉树层序遍历](./docs/07-algorithms/13-top-50-high-frequency/08-level-order.md) | BFS 队列 |
+| 09 | [二叉树最近公共祖先](./docs/07-algorithms/13-top-50-high-frequency/09-lca.md) | 树递归 |
+| 10 | [岛屿数量](./docs/07-algorithms/13-top-50-high-frequency/10-number-of-islands.md) | DFS / BFS |
+| 11-50 | [查看完整 Top50 目录](./docs/07-algorithms/13-top-50-high-frequency/README.md) | 课程表、合并区间、跳跃游戏、DP、单调栈、回溯等 |
 
 </details>
 
