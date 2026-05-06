@@ -1,89 +1,80 @@
-# 模板占位
+# 16. Top K 高频元素（Top K Frequent Elements）
 
-> 频率：★★★★★  难度：中等  LeetCode X
+> 频率：★★★★★  难度：中等  LeetCode 347
 
 ## 题目描述
-> TODO：补充清晰题意，可配 1 个简单例子帮助小白理解。
-
-## 面试为什么爱问
-- [ ] 这题想考什么
-- [ ] 这题为什么高频
-- [ ] 面试官通常怎么追问
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件处理
-- [ ] 时间复杂度优化
+给你一个整数数组 `nums` 和一个整数 `k`，请你返回其中出现频率前 `k` 高的元素。
 
 ## 小白先理解
-- [ ] 用最直白的话解释题意
-- [ ] 用一个具体样例手推过程
-- [ ] 先讲“为什么想到这种做法”
+先数出每个数字出现了几次，然后再找出出现次数最多的前 k 个。
+
+所以这题自然分两步：
+1. 统计频率
+2. 找 TopK
 
 ---
 
-## 解法一：基础思路
+## 解法一：哈希 + 排序
 
 ### 思路
-- [ ] 先从最容易想到的方法讲起
-- [ ] 适合新手建立直觉
+- 用哈希表统计次数
+- 转成数组后按频率排序
+- 取前 k 个
 
 ### Go
 ```go
-// TODO: 补 Go 代码
+import "sort"
+
+func topKFrequentSort(nums []int, k int) []int {
+    freq := map[int]int{}
+    for _, num := range nums {
+        freq[num]++
+    }
+
+    arr := make([][2]int, 0, len(freq))
+    for num, cnt := range freq {
+        arr = append(arr, [2]int{num, cnt})
+    }
+
+    sort.Slice(arr, func(i, j int) bool {
+        return arr[i][1] > arr[j][1]
+    })
+
+    res := []int{}
+    for i := 0; i < k; i++ {
+        res = append(res, arr[i][0])
+    }
+    return res
+}
 ```
 
 ### Python
 ```python
-# TODO: 补 Python 代码
-```
+def top_k_frequent_sort(nums, k):
+    freq = {}
+    for num in nums:
+        freq[num] = freq.get(num, 0) + 1
 
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+    arr = sorted(freq.items(), key=lambda x: x[1], reverse=True)
+    return [arr[i][0] for i in range(k)]
+```
 
 ---
 
-## 解法二：推荐解法
+## 解法二：最小堆（推荐）
 
 ### 核心思路
-- [ ] 为什么这是更优解
-- [ ] 关键优化点是什么
-
-### Go
-```go
-// TODO: 补 Go 代码
-```
-
-### Python
-```python
-# TODO: 补 Python 代码
-```
+用一个大小为 `k` 的最小堆：
+- 堆里只保留当前前 k 高频元素
+- 如果新元素频率更高，就把堆顶弹掉
 
 ### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+比全排序更适合 TopK 问题。
+
+### 一句话理解
+不是把所有人都排一遍名次，而是只维护“前 k 名候选人”。
 
 ---
 
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 核心思想 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] 下标越界 / 空输入
-- [ ] 去重问题（如果有）
-- [ ] 递归终止条件（如果有）
-- [ ] 指针移动条件（如果有）
-
-## 面试追问
-- [ ] 还有没有第三种做法
-- [ ] 如果数据规模变大怎么办
-- [ ] 如果输入条件变化怎么办
-
 ## 一句话记忆
-> TODO：用一句最短的话记住这题的核心套路。
+**TopK 问题：先统计，再考虑堆。**

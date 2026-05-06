@@ -1,89 +1,136 @@
-# 模板占位
+# 03. 最长不重复子串（Longest Substring Without Repeating Characters）
 
-> 频率：★★★★★  难度：中等  LeetCode X
+> 频率：★★★★★  难度：中等  LeetCode 3
 
 ## 题目描述
-> TODO：补充清晰题意，可配 1 个简单例子帮助小白理解。
+给定一个字符串 `s`，请你找出其中 **不含有重复字符的最长子串** 的长度。
+
+## 小白先理解题意
+注意：这里说的是 **子串**，不是子序列。
+
+子串要求：
+- 必须连续
+
+比如：
+```text
+s = "abcabcbb"
+```
+
+最长不重复子串是：`"abc"`
+长度是 `3`。
+
+---
 
 ## 面试为什么爱问
-- [ ] 这题想考什么
-- [ ] 这题为什么高频
-- [ ] 面试官通常怎么追问
+- 经典滑动窗口题
+- 可以看出你会不会“边走边维护区间”
+- 很适合追问优化思路
 
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件处理
-- [ ] 时间复杂度优化
-
-## 小白先理解
-- [ ] 用最直白的话解释题意
-- [ ] 用一个具体样例手推过程
-- [ ] 先讲“为什么想到这种做法”
-
----
-
-## 解法一：基础思路
+## 解法一：暴力枚举
 
 ### 思路
-- [ ] 先从最容易想到的方法讲起
-- [ ] 适合新手建立直觉
+把所有子串都找出来，然后检查有没有重复字符。
 
 ### Go
 ```go
-// TODO: 补 Go 代码
+func lengthOfLongestSubstringBruteForce(s string) int {
+    ans := 0
+    for i := 0; i < len(s); i++ {
+        seen := map[byte]bool{}
+        for j := i; j < len(s); j++ {
+            if seen[s[j]] {
+                break
+            }
+            seen[s[j]] = true
+            if j-i+1 > ans {
+                ans = j - i + 1
+            }
+        }
+    }
+    return ans
+}
 ```
 
 ### Python
 ```python
-# TODO: 补 Python 代码
+def length_of_longest_substring_bruteforce(s: str) -> int:
+    ans = 0
+    for i in range(len(s)):
+        seen = set()
+        for j in range(i, len(s)):
+            if s[j] in seen:
+                break
+            seen.add(s[j])
+            ans = max(ans, j - i + 1)
+    return ans
 ```
 
 ### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+- 时间：`O(n^2)`
+- 空间：`O(n)`
 
 ---
 
-## 解法二：推荐解法
+## 解法二：滑动窗口（推荐）
 
 ### 核心思路
-- [ ] 为什么这是更优解
-- [ ] 关键优化点是什么
+用一个窗口 `[left, right]` 表示当前“没有重复字符”的区间。
+
+- 右指针不断往右扩
+- 如果发现重复字符，就移动左指针，直到窗口重新合法
+
+### 例子
+`s = "abba"`
+
+- 先看 `a`，窗口 = `a`
+- 再看 `b`，窗口 = `ab`
+- 再看 `b`，重复了，就移动左指针，直到窗口不重复
 
 ### Go
 ```go
-// TODO: 补 Go 代码
+func lengthOfLongestSubstring(s string) int {
+    window := map[byte]int{}
+    left, ans := 0, 0
+
+    for right := 0; right < len(s); right++ {
+        ch := s[right]
+        window[ch]++
+
+        for window[ch] > 1 {
+            window[s[left]]--
+            left++
+        }
+
+        if right-left+1 > ans {
+            ans = right - left + 1
+        }
+    }
+    return ans
+}
 ```
 
 ### Python
 ```python
-# TODO: 补 Python 代码
+def length_of_longest_substring(s: str) -> int:
+    window = {}
+    left = 0
+    ans = 0
+
+    for right, ch in enumerate(s):
+        window[ch] = window.get(ch, 0) + 1
+        while window[ch] > 1:
+            window[s[left]] -= 1
+            left += 1
+        ans = max(ans, right - left + 1)
+
+    return ans
 ```
 
 ### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+- 时间：`O(n)`
+- 空间：`O(n)`
 
 ---
 
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 核心思想 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] 下标越界 / 空输入
-- [ ] 去重问题（如果有）
-- [ ] 递归终止条件（如果有）
-- [ ] 指针移动条件（如果有）
-
-## 面试追问
-- [ ] 还有没有第三种做法
-- [ ] 如果数据规模变大怎么办
-- [ ] 如果输入条件变化怎么办
-
 ## 一句话记忆
-> TODO：用一句最短的话记住这题的核心套路。
+**看到“连续 + 不重复”，优先想滑动窗口。**

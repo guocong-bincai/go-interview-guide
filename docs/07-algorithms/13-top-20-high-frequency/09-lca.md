@@ -1,89 +1,87 @@
-# 模板占位
+# 09. 二叉树最近公共祖先（Lowest Common Ancestor of a Binary Tree）
 
-> 频率：★★★★★  难度：中等  LeetCode X
+> 频率：★★★★★  难度：中等  LeetCode 236
 
 ## 题目描述
-> TODO：补充清晰题意，可配 1 个简单例子帮助小白理解。
-
-## 面试为什么爱问
-- [ ] 这题想考什么
-- [ ] 这题为什么高频
-- [ ] 面试官通常怎么追问
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件处理
-- [ ] 时间复杂度优化
+给定一个二叉树，找到该树中两个指定节点 `p` 和 `q` 的最近公共祖先。
 
 ## 小白先理解
-- [ ] 用最直白的话解释题意
-- [ ] 用一个具体样例手推过程
-- [ ] 先讲“为什么想到这种做法”
+最近公共祖先，就是：
+**离 p 和 q 最近的那个“共同祖先”节点。**
+
+比如：
+- `p` 在左子树
+- `q` 在右子树
+那么当前根节点就是它们最近公共祖先。
 
 ---
 
-## 解法一：基础思路
+## 解法一：记录父节点
 
 ### 思路
-- [ ] 先从最容易想到的方法讲起
-- [ ] 适合新手建立直觉
-
-### Go
-```go
-// TODO: 补 Go 代码
-```
-
-### Python
-```python
-# TODO: 补 Python 代码
-```
+先遍历整棵树，记录每个节点的父亲是谁。
+然后：
+- 从 p 一路往上走，存到集合里
+- 再从 q 一路往上走，第一个出现在集合里的就是答案
 
 ### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+- 时间：`O(n)`
+- 空间：`O(n)`
 
 ---
 
-## 解法二：推荐解法
+## 解法二：递归分治（推荐）
 
 ### 核心思路
-- [ ] 为什么这是更优解
-- [ ] 关键优化点是什么
+对于当前节点 root：
+- 如果 root 是空，返回空
+- 如果 root 就是 p 或 q，直接返回 root
+- 分别去左子树和右子树找 p/q
+
+情况分三种：
+1. 左边找到了，右边也找到了 → 当前 root 就是最近公共祖先
+2. 只左边找到 → 返回左边结果
+3. 只右边找到 → 返回右边结果
 
 ### Go
 ```go
-// TODO: 补 Go 代码
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+    if root == nil || root == p || root == q {
+        return root
+    }
+
+    left := lowestCommonAncestor(root.Left, p, q)
+    right := lowestCommonAncestor(root.Right, p, q)
+
+    if left != nil && right != nil {
+        return root
+    }
+    if left != nil {
+        return left
+    }
+    return right
+}
 ```
 
 ### Python
 ```python
-# TODO: 补 Python 代码
+def lowest_common_ancestor(root, p, q):
+    if not root or root == p or root == q:
+        return root
+
+    left = lowest_common_ancestor(root.left, p, q)
+    right = lowest_common_ancestor(root.right, p, q)
+
+    if left and right:
+        return root
+    return left if left else right
 ```
 
 ### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+- 时间：`O(n)`
+- 空间：`O(h)`，h 是树高
 
 ---
 
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 核心思想 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] 下标越界 / 空输入
-- [ ] 去重问题（如果有）
-- [ ] 递归终止条件（如果有）
-- [ ] 指针移动条件（如果有）
-
-## 面试追问
-- [ ] 还有没有第三种做法
-- [ ] 如果数据规模变大怎么办
-- [ ] 如果输入条件变化怎么办
-
 ## 一句话记忆
-> TODO：用一句最短的话记住这题的核心套路。
+**LCA 递归核心：左右都找到，当前就是答案。**

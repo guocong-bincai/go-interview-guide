@@ -1,89 +1,90 @@
-# 模板占位
+# 13. 无重叠区间（Non-overlapping Intervals）
 
-> 频率：★★★★★  难度：中等  LeetCode X
+> 频率：★★★★★  难度：中等  LeetCode 435
 
 ## 题目描述
-> TODO：补充清晰题意，可配 1 个简单例子帮助小白理解。
-
-## 面试为什么爱问
-- [ ] 这题想考什么
-- [ ] 这题为什么高频
-- [ ] 面试官通常怎么追问
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件处理
-- [ ] 时间复杂度优化
+给定一个区间集合 `intervals`，返回需要移除区间的最小数量，使剩余区间互不重叠。
 
 ## 小白先理解
-- [ ] 用最直白的话解释题意
-- [ ] 用一个具体样例手推过程
-- [ ] 先讲“为什么想到这种做法”
+题目不是问你“保留哪些区间”，而是问：
+**最少删几个，才能让区间之间不打架。**
+
+这类题通常反过来想更简单：
+- 与其想删谁
+- 不如想“最多能保留多少个不重叠区间”
 
 ---
 
-## 解法一：基础思路
+## 解法一：DP
 
 ### 思路
-- [ ] 先从最容易想到的方法讲起
-- [ ] 适合新手建立直觉
+定义 `dp[i]` 表示以第 i 个区间结尾时，最多能保留多少个不重叠区间。
 
-### Go
-```go
-// TODO: 补 Go 代码
-```
-
-### Python
-```python
-# TODO: 补 Python 代码
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+### 问题
+能做，但不是最优。
 
 ---
 
-## 解法二：推荐解法
+## 解法二：贪心（推荐）
 
 ### 核心思路
-- [ ] 为什么这是更优解
-- [ ] 关键优化点是什么
+按区间结束位置排序。
+
+为什么按结束位置？
+因为结束越早，越不影响后面留更多区间。
+
+步骤：
+1. 按结束位置排序
+2. 先保留第一个
+3. 遇到新区间时：
+   - 如果和当前已保留区间不重叠，就保留
+   - 否则跳过它
+4. 最后总数减去保留数，就是最少删除数
 
 ### Go
 ```go
-// TODO: 补 Go 代码
+import "sort"
+
+func eraseOverlapIntervals(intervals [][]int) int {
+    if len(intervals) == 0 {
+        return 0
+    }
+
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][1] < intervals[j][1]
+    })
+
+    count := 1
+    end := intervals[0][1]
+
+    for i := 1; i < len(intervals); i++ {
+        if intervals[i][0] >= end {
+            count++
+            end = intervals[i][1]
+        }
+    }
+
+    return len(intervals) - count
+}
 ```
 
 ### Python
 ```python
-# TODO: 补 Python 代码
+def erase_overlap_intervals(intervals):
+    if not intervals:
+        return 0
+
+    intervals.sort(key=lambda x: x[1])
+    count = 1
+    end = intervals[0][1]
+
+    for i in range(1, len(intervals)):
+        if intervals[i][0] >= end:
+            count += 1
+            end = intervals[i][1]
+
+    return len(intervals) - count
 ```
 
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 核心思想 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] 下标越界 / 空输入
-- [ ] 去重问题（如果有）
-- [ ] 递归终止条件（如果有）
-- [ ] 指针移动条件（如果有）
-
-## 面试追问
-- [ ] 还有没有第三种做法
-- [ ] 如果数据规模变大怎么办
-- [ ] 如果输入条件变化怎么办
-
 ## 一句话记忆
-> TODO：用一句最短的话记住这题的核心套路。
+**区间不重叠问题，优先按结束位置排序做贪心。**

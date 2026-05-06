@@ -1,89 +1,185 @@
-# 模板占位
+# 11. 课程表（Course Schedule）
 
-> 频率：★★★★★  难度：中等  LeetCode X
+> 频率：★★★★★  难度：中等  LeetCode 207
 
 ## 题目描述
-> TODO：补充清晰题意，可配 1 个简单例子帮助小白理解。
+有 `numCourses` 门课程，编号从 `0` 到 `numCourses-1`。
 
-## 面试为什么爱问
-- [ ] 这题想考什么
-- [ ] 这题为什么高频
-- [ ] 面试官通常怎么追问
+给你一个数组 `prerequisites`，其中 `prerequisites[i] = [a, b]` 表示：
+想学课程 `a`，必须先学课程 `b`。
 
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件处理
-- [ ] 时间复杂度优化
+请你判断：是否可能完成所有课程。
 
 ## 小白先理解
-- [ ] 用最直白的话解释题意
-- [ ] 用一个具体样例手推过程
-- [ ] 先讲“为什么想到这种做法”
+比如：
+
+```text
+0 <- 1
+```
+
+表示学 1 之前要先学 0，这是可以完成的。
+
+但如果是：
+
+```text
+0 <- 1 <- 2 <- 0
+```
+
+就形成了一个圈，谁都得先学别人，永远学不完。
+
+所以这题本质就是：
+**判断有向图里有没有环。**
 
 ---
 
-## 解法一：基础思路
+## 解法一：DFS 判环
 
 ### 思路
-- [ ] 先从最容易想到的方法讲起
-- [ ] 适合新手建立直觉
+每个节点有三种状态：
+- 0：没访问过
+- 1：正在访问
+- 2：访问完成
+
+如果 DFS 时遇到一个“正在访问”的节点，说明有环。
 
 ### Go
 ```go
-// TODO: 补 Go 代码
+func canFinishDFS(numCourses int, prerequisites [][]int) bool {
+    graph := make([][]int, numCourses)
+    for _, p := range prerequisites {
+        graph[p[1]] = append(graph[p[1]], p[0])
+    }
+
+    visited := make([]int, numCourses)
+    var dfs func(int) bool
+    dfs = func(node int) bool {
+        if visited[node] == 1 {
+            return false
+        }
+        if visited[node] == 2 {
+            return true
+        }
+        visited[node] = 1
+        for _, next := range graph[node] {
+            if !dfs(next) {
+                return false
+            }
+        }
+        visited[node] = 2
+        return true
+    }
+
+    for i := 0; i < numCourses; i++ {
+        if !dfs(i) {
+            return false
+        }
+    }
+    return true
+}
 ```
 
 ### Python
 ```python
-# TODO: 补 Python 代码
-```
+def can_finish_dfs(numCourses, prerequisites):
+    graph = [[] for _ in range(numCourses)]
+    for a, b in prerequisites:
+        graph[b].append(a)
 
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+    visited = [0] * numCourses
+
+    def dfs(node):
+        if visited[node] == 1:
+            return False
+        if visited[node] == 2:
+            return True
+        visited[node] = 1
+        for nxt in graph[node]:
+            if not dfs(nxt):
+                return False
+        visited[node] = 2
+        return True
+
+    for i in range(numCourses):
+        if not dfs(i):
+            return False
+    return True
+```
 
 ---
 
-## 解法二：推荐解法
+## 解法二：BFS 拓扑排序（推荐）
 
 ### 核心思路
-- [ ] 为什么这是更优解
-- [ ] 关键优化点是什么
+如果一个图没有环，就一定能找到“入度为 0”的点。
+
+步骤：
+1. 统计每门课的入度
+2. 把所有入度为 0 的课放进队列
+3. 每次弹出一门课，相当于“学完它”
+4. 它后面的课程入度减 1
+5. 如果最后学完了所有课，说明没有环
 
 ### Go
 ```go
-// TODO: 补 Go 代码
+func canFinish(numCourses int, prerequisites [][]int) bool {
+    graph := make([][]int, numCourses)
+    indegree := make([]int, numCourses)
+
+    for _, p := range prerequisites {
+        a, b := p[0], p[1]
+        graph[b] = append(graph[b], a)
+        indegree[a]++
+    }
+
+    queue := []int{}
+    for i := 0; i < numCourses; i++ {
+        if indegree[i] == 0 {
+            queue = append(queue, i)
+        }
+    }
+
+    count := 0
+    for len(queue) > 0 {
+        cur := queue[0]
+        queue = queue[1:]
+        count++
+        for _, next := range graph[cur] {
+            indegree[next]--
+            if indegree[next] == 0 {
+                queue = append(queue, next)
+            }
+        }
+    }
+
+    return count == numCourses
+}
 ```
 
 ### Python
 ```python
-# TODO: 补 Python 代码
+from collections import deque
+
+def can_finish(numCourses, prerequisites):
+    graph = [[] for _ in range(numCourses)]
+    indegree = [0] * numCourses
+
+    for a, b in prerequisites:
+        graph[b].append(a)
+        indegree[a] += 1
+
+    queue = deque([i for i in range(numCourses) if indegree[i] == 0])
+    count = 0
+
+    while queue:
+        cur = queue.popleft()
+        count += 1
+        for nxt in graph[cur]:
+            indegree[nxt] -= 1
+            if indegree[nxt] == 0:
+                queue.append(nxt)
+
+    return count == numCourses
 ```
 
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 核心思想 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
-## 易错点
-- [ ] 下标越界 / 空输入
-- [ ] 去重问题（如果有）
-- [ ] 递归终止条件（如果有）
-- [ ] 指针移动条件（如果有）
-
-## 面试追问
-- [ ] 还有没有第三种做法
-- [ ] 如果数据规模变大怎么办
-- [ ] 如果输入条件变化怎么办
-
 ## 一句话记忆
-> TODO：用一句最短的话记住这题的核心套路。
+**课程表 = 判断图里有没有环；推荐用拓扑排序。**

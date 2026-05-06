@@ -1,89 +1,162 @@
-# 模板占位
+# 05. 反转链表（Reverse Linked List）
 
-> 频率：★★★★★  难度：中等  LeetCode X
+> 频率：★★★★★  难度：简单  LeetCode 206
 
 ## 题目描述
-> TODO：补充清晰题意，可配 1 个简单例子帮助小白理解。
+给你一个单链表的头节点 `head`，请你把链表反转，并返回反转后的头节点。
+
+## 小白先理解题意
+比如原链表是：
+
+```text
+1 -> 2 -> 3 -> nil
+```
+
+反转后要变成：
+
+```text
+3 -> 2 -> 1 -> nil
+```
+
+这题的关键不是新建一个链表，而是：
+**把每个节点的 next 指针方向改过来。**
+
+---
 
 ## 面试为什么爱问
-- [ ] 这题想考什么
-- [ ] 这题为什么高频
-- [ ] 面试官通常怎么追问
+- 链表题基础中的基础
+- 能看出你是否真的理解指针
+- 经常作为更多链表题的起点
 
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件处理
-- [ ] 时间复杂度优化
-
-## 小白先理解
-- [ ] 用最直白的话解释题意
-- [ ] 用一个具体样例手推过程
-- [ ] 先讲“为什么想到这种做法”
-
----
-
-## 解法一：基础思路
+## 解法一：借助数组/栈
 
 ### 思路
-- [ ] 先从最容易想到的方法讲起
-- [ ] 适合新手建立直觉
+先把链表所有节点放进数组，再倒着重新连起来。
+
+### 这个方法的价值
+- 小白容易理解
+- 能帮助你明白“反转”到底发生了什么
 
 ### Go
 ```go
-// TODO: 补 Go 代码
+func reverseListWithArray(head *ListNode) *ListNode {
+    if head == nil {
+        return nil
+    }
+
+    nodes := []*ListNode{}
+    for cur := head; cur != nil; cur = cur.Next {
+        nodes = append(nodes, cur)
+    }
+
+    for i := len(nodes) - 1; i > 0; i-- {
+        nodes[i].Next = nodes[i-1]
+    }
+    nodes[0].Next = nil
+    return nodes[len(nodes)-1]
+}
 ```
 
 ### Python
 ```python
-# TODO: 补 Python 代码
+def reverse_list_with_array(head):
+    if not head:
+        return None
+
+    nodes = []
+    cur = head
+    while cur:
+        nodes.append(cur)
+        cur = cur.next
+
+    for i in range(len(nodes) - 1, 0, -1):
+        nodes[i].next = nodes[i - 1]
+    nodes[0].next = None
+    return nodes[-1]
 ```
 
 ### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+- 时间：`O(n)`
+- 空间：`O(n)`
 
 ---
 
-## 解法二：推荐解法
+## 解法二：迭代双指针（推荐）
 
 ### 核心思路
-- [ ] 为什么这是更优解
-- [ ] 关键优化点是什么
+用三个变量：
+- `prev`：当前节点反转后要指向谁
+- `cur`：当前正在处理的节点
+- `next`：先保存下一个节点，避免链断掉
+
+每次做三件事：
+1. 先保存 `cur.Next`
+2. 把 `cur.Next` 指向 `prev`
+3. 整体往后移动
+
+### 例子
+原来：
+```text
+prev=nil, cur=1 -> 2 -> 3
+```
+
+处理 1 后：
+```text
+nil <- 1    2 -> 3
+```
+
+再处理 2：
+```text
+nil <- 1 <- 2    3
+```
+
+再处理 3：
+```text
+nil <- 1 <- 2 <- 3
+```
 
 ### Go
 ```go
-// TODO: 补 Go 代码
+func reverseList(head *ListNode) *ListNode {
+    var prev *ListNode
+    cur := head
+
+    for cur != nil {
+        next := cur.Next
+        cur.Next = prev
+        prev = cur
+        cur = next
+    }
+
+    return prev
+}
 ```
 
 ### Python
 ```python
-# TODO: 补 Python 代码
+def reverse_list(head):
+    prev = None
+    cur = head
+
+    while cur:
+        nxt = cur.next
+        cur.next = prev
+        prev = cur
+        cur = nxt
+
+    return prev
 ```
 
 ### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+- 时间：`O(n)`
+- 空间：`O(1)`
 
 ---
 
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 核心思想 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
 ## 易错点
-- [ ] 下标越界 / 空输入
-- [ ] 去重问题（如果有）
-- [ ] 递归终止条件（如果有）
-- [ ] 指针移动条件（如果有）
-
-## 面试追问
-- [ ] 还有没有第三种做法
-- [ ] 如果数据规模变大怎么办
-- [ ] 如果输入条件变化怎么办
+- 一定要先保存 `next`
+- 最后返回的是 `prev`，不是原来的 `head`
+- 空链表要处理
 
 ## 一句话记忆
-> TODO：用一句最短的话记住这题的核心套路。
+**反转链表就是：保存下一个，反转当前指针，整体后移。**

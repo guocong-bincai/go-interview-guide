@@ -1,89 +1,131 @@
-# 模板占位
+# 20. 最长递增子序列（Longest Increasing Subsequence）
 
-> 频率：★★★★★  难度：中等  LeetCode X
+> 频率：★★★★☆  难度：中等  LeetCode 300
 
 ## 题目描述
-> TODO：补充清晰题意，可配 1 个简单例子帮助小白理解。
-
-## 面试为什么爱问
-- [ ] 这题想考什么
-- [ ] 这题为什么高频
-- [ ] 面试官通常怎么追问
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件处理
-- [ ] 时间复杂度优化
+给你一个整数数组 `nums`，找到其中最长严格递增子序列的长度。
 
 ## 小白先理解
-- [ ] 用最直白的话解释题意
-- [ ] 用一个具体样例手推过程
-- [ ] 先讲“为什么想到这种做法”
+注意：
+- 这里是 **子序列**，不要求连续
+- 只要求前后顺序不变
+
+比如：
+
+```text
+[10,9,2,5,3,7,101,18]
+```
+
+最长递增子序列是：
+
+```text
+[2,3,7,101]
+```
+
+长度是 `4`。
 
 ---
 
-## 解法一：基础思路
-
-### 思路
-- [ ] 先从最容易想到的方法讲起
-- [ ] 适合新手建立直觉
-
-### Go
-```go
-// TODO: 补 Go 代码
-```
-
-### Python
-```python
-# TODO: 补 Python 代码
-```
-
-### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
-
----
-
-## 解法二：推荐解法
+## 解法一：DP
 
 ### 核心思路
-- [ ] 为什么这是更优解
-- [ ] 关键优化点是什么
+定义：
+`dp[i]` 表示以 `nums[i]` 结尾的最长递增子序列长度。
+
+转移：
+- 看前面所有 `j < i`
+- 如果 `nums[j] < nums[i]`，可以接在后面
 
 ### Go
 ```go
-// TODO: 补 Go 代码
+func lengthOfLISDP(nums []int) int {
+    n := len(nums)
+    dp := make([]int, n)
+    ans := 0
+
+    for i := 0; i < n; i++ {
+        dp[i] = 1
+        for j := 0; j < i; j++ {
+            if nums[j] < nums[i] && dp[j]+1 > dp[i] {
+                dp[i] = dp[j] + 1
+            }
+        }
+        if dp[i] > ans {
+            ans = dp[i]
+        }
+    }
+    return ans
+}
 ```
 
 ### Python
 ```python
-# TODO: 补 Python 代码
+def length_of_lis_dp(nums):
+    n = len(nums)
+    dp = [1] * n
+    ans = 0
+
+    for i in range(n):
+        for j in range(i):
+            if nums[j] < nums[i]:
+                dp[i] = max(dp[i], dp[j] + 1)
+        ans = max(ans, dp[i])
+    return ans
 ```
 
 ### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+- 时间：`O(n^2)`
 
 ---
 
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 核心思想 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
+## 解法二：贪心 + 二分（推荐）
 
-## 易错点
-- [ ] 下标越界 / 空输入
-- [ ] 去重问题（如果有）
-- [ ] 递归终止条件（如果有）
-- [ ] 指针移动条件（如果有）
+### 核心思路
+维护一个数组 `tails`：
+- `tails[i]` 表示长度为 `i+1` 的递增子序列中，结尾最小是多少
 
-## 面试追问
-- [ ] 还有没有第三种做法
-- [ ] 如果数据规模变大怎么办
-- [ ] 如果输入条件变化怎么办
+遍历每个数：
+- 用二分找到它应该放进 `tails` 的位置
+- 替换或追加
+
+`tails` 长度就是答案。
+
+### 为什么这样对
+结尾越小，后面越容易接更大的数。
+所以我们总想让同样长度的递增子序列，结尾尽量小。
+
+### Go
+```go
+import "sort"
+
+func lengthOfLIS(nums []int) int {
+    tails := []int{}
+    for _, num := range nums {
+        i := sort.SearchInts(tails, num)
+        if i == len(tails) {
+            tails = append(tails, num)
+        } else {
+            tails[i] = num
+        }
+    }
+    return len(tails)
+}
+```
+
+### Python
+```python
+import bisect
+
+def length_of_lis(nums):
+    tails = []
+    for num in nums:
+        idx = bisect.bisect_left(tails, num)
+        if idx == len(tails):
+            tails.append(num)
+        else:
+            tails[idx] = num
+    return len(tails)
+```
 
 ## 一句话记忆
-> TODO：用一句最短的话记住这题的核心套路。
+**LIS 两种思路：朴素 DP，进阶是贪心 + 二分。**

@@ -1,89 +1,132 @@
-# 模板占位
+# 06. 环形链表（Linked List Cycle）
 
-> 频率：★★★★★  难度：中等  LeetCode X
+> 频率：★★★★★  难度：简单  LeetCode 141
 
 ## 题目描述
-> TODO：补充清晰题意，可配 1 个简单例子帮助小白理解。
+给你一个链表的头节点 `head`，判断链表中是否有环。
 
-## 面试为什么爱问
-- [ ] 这题想考什么
-- [ ] 这题为什么高频
-- [ ] 面试官通常怎么追问
-
-## 核心考点
-- [ ] TODO
-- [ ] 边界条件处理
-- [ ] 时间复杂度优化
+如果链表中某个节点可以通过不断往后走 다시回到自己之前见过的节点，那就说明有环。
 
 ## 小白先理解
-- [ ] 用最直白的话解释题意
-- [ ] 用一个具体样例手推过程
-- [ ] 先讲“为什么想到这种做法”
+正常链表：
+```text
+1 -> 2 -> 3 -> nil
+```
+
+有环链表：
+```text
+1 -> 2 -> 3 -> 4
+     ^         |
+     |_________|
+```
+
+也就是说，走着走着走不出去，会一直绕圈。
 
 ---
 
-## 解法一：基础思路
+## 面试为什么爱问
+- 快慢指针代表题
+- 不仅简单高频，还能延伸到“找环入口”
+- 很适合区分会不会真正理解链表技巧
+
+## 解法一：哈希表
 
 ### 思路
-- [ ] 先从最容易想到的方法讲起
-- [ ] 适合新手建立直觉
+边走边把访问过的节点放进集合。
+如果某个节点之前见过，说明有环。
 
 ### Go
 ```go
-// TODO: 补 Go 代码
+func hasCycleWithMap(head *ListNode) bool {
+    seen := map[*ListNode]bool{}
+    for head != nil {
+        if seen[head] {
+            return true
+        }
+        seen[head] = true
+        head = head.Next
+    }
+    return false
+}
 ```
 
 ### Python
 ```python
-# TODO: 补 Python 代码
+def has_cycle_with_set(head):
+    seen = set()
+    while head:
+        if head in seen:
+            return True
+        seen.add(head)
+        head = head.next
+    return False
 ```
 
 ### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+- 时间：`O(n)`
+- 空间：`O(n)`
 
 ---
 
-## 解法二：推荐解法
+## 解法二：快慢指针（推荐）
 
 ### 核心思路
-- [ ] 为什么这是更优解
-- [ ] 关键优化点是什么
+- 慢指针一次走 1 步
+- 快指针一次走 2 步
+
+如果没有环：
+- 快指针会先走到 `nil`
+
+如果有环：
+- 快指针最终一定会追上慢指针
+
+### 为什么一定会相遇
+可以把它想成操场跑圈：
+- 慢的人每次走 1 步
+- 快的人每次走 2 步
+- 只要一直在圈里跑，快的人迟早追上慢的人
 
 ### Go
 ```go
-// TODO: 补 Go 代码
+func hasCycle(head *ListNode) bool {
+    if head == nil || head.Next == nil {
+        return false
+    }
+
+    slow, fast := head, head
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+        if slow == fast {
+            return true
+        }
+    }
+    return false
+}
 ```
 
 ### Python
 ```python
-# TODO: 补 Python 代码
+def has_cycle(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            return True
+    return False
 ```
 
 ### 复杂度
-- 时间：`TODO`
-- 空间：`TODO`
+- 时间：`O(n)`
+- 空间：`O(1)`
 
 ---
 
-## 两种解法对比
-| 维度 | 解法一 | 解法二 |
-|------|--------|--------|
-| 核心思想 | TODO | TODO |
-| 时间复杂度 | TODO | TODO |
-| 空间复杂度 | TODO | TODO |
-| 面试推荐程度 | 一般 | 高 |
-
 ## 易错点
-- [ ] 下标越界 / 空输入
-- [ ] 去重问题（如果有）
-- [ ] 递归终止条件（如果有）
-- [ ] 指针移动条件（如果有）
-
-## 面试追问
-- [ ] 还有没有第三种做法
-- [ ] 如果数据规模变大怎么办
-- [ ] 如果输入条件变化怎么办
+- while 条件必须写成 `fast != nil && fast.Next != nil`
+- 不能只判断 `fast != nil`
+- 空链表和单节点链表都可能没环
 
 ## 一句话记忆
-> TODO：用一句最短的话记住这题的核心套路。
+**判断链表有没有环，优先想快慢指针。**
