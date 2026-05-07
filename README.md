@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-286-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.44-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-288-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.45-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -302,13 +302,15 @@
 |------|----------|
 | 🟡 [net/http 深度解析](./docs/01-golang/05-stdlib/01-net-http.md) | Server 底层结构、Transport 连接池、优雅关闭、中间件链 |
 | 🟡 [sync.Map 与并发安全 Map](./docs/01-golang/05-stdlib/02-sync-map.md) | 双 map 设计、读写流程、与 RWMutex+map 性能对比 |
-| 🟡 [错误处理最佳实践](./docs/01-golang/05-stdlib/03-errors.md) | errors.Is/As/Unwrap、%w 包装、panic/recover 边界 |
+| 🟡 [错误处理最佳实践](./docs/01-golang/05-stdlib/03-errors.md) | errors.Is/As/AsType/Join、%w 包装、panic/recover 边界 |
 | 🟢 [log/slog 结构化日志](./docs/01-golang/05-stdlib/04-slog.md) | slog.Handler 接口、结构化字段、生产最佳实践 |
 | 🟢 [embed 静态资源嵌入](./docs/01-golang/05-stdlib/05-embed.md) | //go:embed 用法、与 os.ReadFile 对比、发布单二进制 |
 | 🟢 [Go 1.27 标准库新特性](./docs/01-golang/05-stdlib/06-go1.27-stdlib.md) | CutLast/Response File/HTTP Body Drain |
 | 🟢 [Go 1.26 密码学套件](./docs/01-golang/05-stdlib/07-go1.26-crypto.md) | crypto/mlkem、crypto/hpke、后量子加密 |
 | 🟢 [encoding/json v2](./docs/01-golang/05-stdlib/08-json-v2.md) | v2 与 v1 差异、性能提升、迁移指南 |
 | 🟢 [Go 1.21 slices/maps/cmp](./docs/01-golang/05-stdlib/09-go1.21-slices-maps-cmp.md) | slices/maps/cmp 三大泛型标准库新包、排序/搜索/比较/克隆 |
+| 🟡 [Go Web 框架选型：Gin/Echo/Fiber/Chi/Buffalo](./docs/01-golang/05-stdlib/10-web-framework-comparison.md) | 五大框架横向对比、路由性能、选型决策树、生产踩坑 |
+| 🟡 [AI 时代 Go 后端：向量数据库与 RAG 应用](./docs/01-golang/05-stdlib/11-ai-rag-vector-db.md) | pgvector/Milvus/Qdrant、Embedding 接入、RAG 链路、分块策略 |
 
 </details>
 
