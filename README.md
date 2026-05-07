@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-285-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.42-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.43-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -265,6 +265,8 @@
 | 🟢 [Go 1.24 Swiss Tables](./docs/01-golang/03-language-deep/10-go1.24-swiss-tables.md) | map 底层替换为 Swiss Table、性能提升原理 |
 | 🟢 [类型构造与循环检测](./docs/01-golang/03-language-deep/11-type-construction.md) | Go 1.26 类型检查器底层改进 |
 | 🔴 [CGO 原理与面试考点](./docs/01-golang/03-language-deep/12-cgo.md) | CGO 调用开销、LockOSThread、C 内存管理、CGO_ENABLED=0 |
+| 🔴 [iota 枚举：计数器原理与高频面试题](./docs/01-golang/03-language-deep/14-iota.md) | iota 重置规则、跳跃继承、位掩码、网球问题 |
+| 🔴 [init 函数：执行时机与顺序规则](./docs/01-golang/03-language-deep/15-init.md) | 包依赖图拓扑排序、const→var→init 三阶段、多文件执行顺序 |
 | 🔴 [unsafe 包：原理、使用场景与风险](./docs/01-golang/03-language-deep/13-unsafe.md) | unsafe.Pointer 四条规则、uintptr 陷阱、零拷贝转换 |
 
 </details>
