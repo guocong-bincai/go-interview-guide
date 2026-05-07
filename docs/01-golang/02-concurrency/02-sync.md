@@ -479,6 +479,183 @@ func (c *ConfigMap) CompareUpdate(k, old, new string) bool {
 
 ---
 
+### 4. sync.WaitGroup：并发任务等待
+
+#### 4.1 核心用法
+
+```go
+var wg sync.WaitGroup
+
+wg.Add(1)
+go func() {
+    defer wg.Done() // 必须 defer，确保即使 panic 也会调用
+    // 任务逻辑
+}()
+wg.Wait() // 阻塞直到所有任务完成
+```
+
+**三个核心方法：**
+
+| 方法 | 作用 |
+|------|------|
+| `Add(n)` | 增加计数（可正可负） |
+| `Done()` | 减一（等价于 `Add(-1)`） |
+| `Wait()` | 阻塞直到计数归零 |
+
+#### 4.2 Go 1.25 新增：`WaitGroup.Go()`
+
+Go 1.25 为 `sync.WaitGroup` 新增了 `Go()` 方法，简化"启动 goroutine + 自动 Done"的常见模式：
+
+```go
+// 老写法（需配对 Add/Done）
+wg.Add(1)
+go func() {
+    defer wg.Done()
+    // 任务
+}()
+
+// Go 1.25 新写法（一行搞定，自动 Add + defer Done）
+wg.Go(func() {
+    // 任务
+})
+```
+
+**源码实现（伪代码）：**
+
+```go
+func (wg *WaitGroup) Go(f func()) {
+    wg.Add(1)
+    go func() {
+        defer wg.Done()
+        f()
+    }()
+}
+```
+
+**对比：传统写法 vs Go() 的常见错误：**
+
+```go
+// ❌ 常见错误 1：Add 漏掉
+go func() { /* 任务 */ }() // 没 Add，Wait 永远不会结束
+wg.Wait()
+
+// ❌ 常见错误 2：Done 漏掉
+wg.Add(1)
+go func() {
+    // 任务（可能 panic）
+    // 没 defer wg.Done()，Wait 永远不会结束
+}()
+
+// ❌ 常见错误 3：Add/Done 不配对（多 goroutine 场景）
+for i := 0; i < 10; i++ {
+    wg.Add(1)
+    go func() {
+        defer wg.Done()
+        // 任务
+    }()
+}
+
+// ✅ Go() 彻底避免这些问题
+for i := 0; i < 10; i++ {
+    wg.Go(func() {
+        // 任务，自动 Add+defer Done
+    })
+}
+```
+
+**Go() 的优势：**
+
+| 维度 | 传统写法 | `wg.Go()` |
+|------|----------|------------|
+| 代码量 | 3 行（Add + go + Done） | 1 行 |
+| Add/Done 配对错误 | 容易漏 | 不可能 |
+| panic 安全 | 需配合 defer | 内置 defer，安全 |
+| 可读性 | 模板代码干扰 | 意图清晰 |
+
+#### 4.3 常见坑点
+
+**坑 1：WaitGroup 是一次性的**
+
+```go
+// ❌ 错误：Wait 之后重置
+wg.Wait()
+wg.Add(10) // panic: sync: negative WaitGroup counter
+
+// ✅ 正确：需要新实例
+wg := new(sync.WaitGroup)
+wg.Add(1)
+wg.Wait()
+```
+
+**坑 2：在 goroutine 内调用 Wait**
+
+```go
+// ✅ 正确：在主 goroutine Wait
+for i := 0; i < 10; i++ {
+    wg.Add(1)
+    go func() {
+        defer wg.Done()
+        // 任务
+    }()
+}
+wg.Wait() // 主 goroutine 等待
+
+// ❌ 危险：在每个 goroutine 内部等待（可能导致所有 goroutine 互相等待）
+```
+
+**坑 3：Add 负数**
+
+```go
+wg.Add(-1) // 合法，等价于 Done()
+// 但如果计数已经为 0：panic: sync: negative WaitGroup counter
+```
+
+**坑 4：与 errgroup 的取舍**
+
+```go
+import "golang.org/x/sync/errgroup"
+
+var eg errgroup.Group
+for i := 0; i < 10; i++ {
+    eg.Go(func() error {
+        return doSomething()
+    })
+}
+if err := eg.Wait(); err != nil {
+    // 有错误处理
+}
+
+// WaitGroup 没有错误传递，如果需要错误收集，用 errgroup
+```
+
+#### 4.4 生产实战：Worker Pool
+
+```go
+func processJobs(ctx context.Context, jobs []Job) []Result {
+    var wg sync.WaitGroup
+    results := make([]Result, len(jobs))
+
+    for i, job := range jobs {
+        idx := i // 闭包变量捕获
+        wg.Add(1)
+        wg.Go(func() {
+            defer wg.Done()
+            select {
+            case <-ctx.Done():
+                return // context 取消则提前退出
+            default:
+                results[idx] = process(job)
+            }
+        })
+    }
+
+    wg.Wait()
+    return results
+}
+```
+
+---
+
 ## 高频追问
 
 **Q：Mutex 自旋的意义是什么？**
@@ -503,11 +680,23 @@ Go 1.17+：饥饿模式阈值改为 1ms，且严格保证 FIFO（防止等待者
 
 WaitGroup 一旦计数器归零就不能重置使用。设计上，WaitGroup 用于"等待一组任务完成"，是**一次性**工具。如果需要"循环等待"，应该用新的 WaitGroup 实例，或考虑 channel/errgroup。
 
+**Q：Go 1.25 `wg.Go()` 和手动 `Add + goroutine + Done` 有什么区别？**
+
+本质上没有区别，`Go()` 只是便捷封装。但手动模式容易犯错（Add 漏掉、Done 漏掉、panic 时没 defer），`Go()` 内置 defer 保证了 panic 安全，且代码更简洁。
+
+**Q：WaitGroup 和 errgroup.Group 怎么选？**
+
+- 需要错误传递和收集 → `errgroup.Group`
+- 只关心"完成"，无需错误 → `WaitGroup`（或 Go 1.25 的 `wg.Go()`）
+- 需要 context 取消传播 → `errgroup.WithContext`
+
 ---
 
 ## 延伸阅读
 
 - [Go Mutex 源码解析](https://github.com/golang/go/blob/master/src/sync/mutex.go)（官方实现）
+- [sync.WaitGroup 官方文档](https://pkg.go.dev/sync#WaitGroup)
+- [Go 1.25 WaitGroup.Go() 博客文章](https://appliedgo.net/spotlight/go-1.25-waitgroup-go/)
 - [Mutex vs RWMutex: When to use what](https://pkg.go.dev/sync#Mutex)（官方文档）
 - [ArdanLabs: Synchronization Patterns in Go](https://www.ardanlabs.com/blog/2018/10/synchronization-primitives-in-go-part-1.html)
 - [Go 1.17 Mutex 改进](https://groups.google.com/g/golang-dev/c/M-m5cZCm2kM)（官方讨论）
