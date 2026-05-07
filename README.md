@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-288-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.45-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-289-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.46-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -331,6 +331,7 @@
 | 🟡 [EXPLAIN 全字段解读](./docs/02-database/01-mysql/07-explain.md) | type/Extra 字段含义、执行计划实战案例 |
 | 🟡 [分库分表](./docs/02-database/01-mysql/05-sharding.md) | ShardingSphere、路由策略、数据迁移 |
 | 🟡 [主从复制](./docs/02-database/01-mysql/06-replication.md) | binlog、半同步复制、主从延迟处理 |
+| 🟡 [MySQL 8.0 新特性](./docs/02-database/01-mysql/09-mysql8-new-features.md) | 窗口函数、CTE、SKIP LOCKED/NOWAIT、Instant DDL、JSON_TABLE |
 
 </details>
 
