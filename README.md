@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-283-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.40-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-285-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.41-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -239,9 +239,11 @@
 |------|----------|
 | 🔴 [channel 底层原理](./docs/01-golang/02-concurrency/01-channel.md) | hchan 结构、发送/接收流程、select 实现、死锁排查 |
 | 🔴 [sync 原语](./docs/01-golang/02-concurrency/02-sync.md) | Mutex/RWMutex 实现、sync.Once、sync.Pool |
+| 🟡 [sync.Cond 条件变量](./docs/01-golang/02-concurrency/02-cond.md) | Wait/Signal/Broadcast、Go 1.26 breaking change、连接池通知 |
 | 🟡 [atomic 与无锁](./docs/01-golang/02-concurrency/03-atomic.md) | CAS 原理、atomic 操作、无锁数据结构 |
 | 🟡 [并发模式](./docs/01-golang/02-concurrency/04-patterns.md) | Pipeline、Fan-out/Fan-in、errgroup、Worker Pool |
 | 🟡 [context 原理](./docs/01-golang/02-concurrency/05-context.md) | 取消传播、超时控制、底层实现 |
+| 🟡 [SingleFlight 请求合并](./docs/01-golang/02-concurrency/06-singleflight.md) | 请求合并、缓存击穿、并发去重、分布式穿透防护 |
 
 </details>
 
