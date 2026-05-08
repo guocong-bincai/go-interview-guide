@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-289-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.46-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-290-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.47-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -227,6 +227,7 @@
 | 🟡 [调度器源码走读](./docs/01-golang/01-runtime/05-scheduler-source-code.md) | schedule()/findRunnable() 优先级、Work Stealing 实现、sysmon、抢占 |
 | 🟢 [Go 1.26 运行时新特性](./docs/01-golang/01-runtime/06-go1.26-runtime.md) | Green Tea GC、Goroutine Leak Profile、堆地址随机化 |
 | 🟢 [Flight Recorder](./docs/01-golang/01-runtime/07-flight-recorder.md) | 生产 trace 环形缓冲区捕获、事后故障还原 |
+| 🟢 [Go 1.27 SIMD 与 Portable SIMD](./docs/01-golang/01-runtime/10-go1.27-simd-runtime.md) | SIMD 默认开启（amd64）、Portable SIMD 提案、链接器优化 |
 | 🟢 [容器感知 GOMAXPROCS](./docs/01-golang/01-runtime/08-go1.25-gomaxprocs.md) | Go 1.25 自动感知容器 CPU 配额 |
 | 🟢 [网络 I/O：epoll/kqueue 与 Netpoller](./docs/01-golang/01-runtime/09-io-multiplexing.md) | Go 网络层事件循环、与 goroutine 调度的整合 |
 
