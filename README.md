@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-292-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.50-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.51-blue?style=flat-square)](./docs)
 
 <br/>
 

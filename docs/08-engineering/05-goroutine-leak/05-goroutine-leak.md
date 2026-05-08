@@ -368,6 +368,57 @@ curl 'http://localhost:6060/debug/pprof/goroutineleak?debug=1' | grep -A30 "goro
 
 **已于 Go 1.27 默认启用此 profile，届时无需设置 `GOEXPERIMENT`。**
 
+
+### 5.5.1 偏死锁（Partial Deadlock）：更隐蔽的泄漏模式
+
+**偏死锁（Partial Deadlock）**是 Uber 在生产环境中发现的一种特殊泄漏模式：程序的大部分 goroutine 正常工作，但**一小部分 goroutine 永久卡在某个环节**，形成隐性炸弹。
+
+**典型场景：**
+
+```go
+func handleRequestPool(requests []Request) {
+    results := make([]Result, 0, len(requests))
+    pending := make(chan Result, len(requests))
+    
+    // 启动 10 个 worker goroutine
+    for i := 0; i < 10; i++ {
+        go func() {
+            for req := range requests {
+                pending <- process(req) // 如果 requests 提前关闭/读完，这些 G 永远阻塞在 send
+            }
+        }()
+    }
+    
+    // 主 goroutine 只读取前 5 个结果
+    for i := 0; i < 5; i++ {
+        results = append(results, <-pending)
+    }
+    // ⚠️ 剩下 5 个 worker 永久阻塞在 pending <- process(req)
+    // ⚠️ 这 5 个 goroutine 不会让程序崩溃，但会慢慢泄漏内存
+}()
+```
+
+**与全局死锁的区别：**
+
+| 类型 | 表现 | 程序状态 |
+|------|------|----------|
+| **全局死锁** | 所有 goroutine 都阻塞 | 程序立即崩溃，runtime 报告 `fatal error: all goroutines are asleep - deadlock!` |
+| **偏死锁** | 部分 goroutine 永久阻塞 | 程序继续运行，但 goroutine 逐渐泄漏（内存持续增长）|
+| **Goroutine Leak** | 单个/少量 goroutine 泄漏 | 影响局部，通常不影响整体吞吐 |
+
+**为什么偏死锁更危险：**
+
+- 全局死锁：Go runtime 会立即检测并崩溃 → 上线后立即被发现
+- 偏死锁：程序"看似正常"，但资源逐渐耗尽 → **数周后才爆发**，极难排查
+
+**识别方法：**
+
+偏死锁只能通过 `goroutineleak` profile 识别。传统监控会显示"goroutine 数量稳定"，但实际上已经有泄漏 goroutine 在悄悄积累。
+
+> **面试加分点：** 能讲清楚"偏死锁是 Uber 在生产中发现的真实问题，与 Go 1.26 goroutineleak profile 背后的学术研究相互印证"，说明你有生产级的问题经验。
+
+---
+
 ### 5.6 高频追问
 
 **Q：GC 协作检测会增加 GC 开销吗？**
