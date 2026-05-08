@@ -158,6 +158,95 @@ go get github.com/foo@latest   # 升级到最新
 - 删了 `go.sum`，CI 第一次跑会重新计算并写入，本地可能会 checksum mismatch
 - `GOSUMDB` 控制 checksum 数据库，设为 `off` 可跳过（不推荐生产环境）
 
+### 6. Go 1.24 tool 指令：规范化工具依赖
+
+> Go 1.24（2025 年 2 月发布）引入 `tool` 指令，解决「开发工具依赖如何管理」的长期痛点。
+
+#### 6.1 痛点：以前怎么管工具依赖？
+
+在 Go 1.24 之前，管理可执行工具（如 mockery、staticcheck、swag）有三种方式，都是 workaround：
+
+| 方式 | 做法 | 问题 |
+|------|------|------|
+| **空导入** | 创建 `tools.go`，`import _ "github.com/xxx/mockery"` | 工具混入主依赖，版本不同步 |
+| **手动安装** | `brew install mockery` 或下载二进制 | 团队版本不一致，CI 无法复现 |
+| **Makefile** | 在 Makefile 里写 `go install xxx` | 工具依赖不在代码中，CI 隐性依赖 |
+
+#### 6.2 Go 1.24 tool 指令
+
+Go 1.24 允许在 `go.mod` 中直接声明工具依赖：
+
+```go
+module myproject
+
+go 1.24
+
+tool github.com/vektra/mockery/v2@v2.52.1
+tool honnef.co/go/tools/cmd/staticcheck@latest
+```
+
+安装工具的方式：
+```bash
+# 通过 gotip install tool 安装（Go 1.24+）
+gotip install tool github.com/vektra/mockery/v2@v2.52.1
+
+# 运行工具
+gotip tool github.com/vektra/mockery/v2 --all --output ./mocks
+
+# 等价于
+go install github.com/vektra/mockery/v2@v2.52.1@tool
+```
+
+**`go tool`** 子命令（Go 1.24 新增）：
+```bash
+go tool <package>@<version>  # 运行已声明的工具
+go tool staticcheck@latest   # 运行 staticcheck
+go tool --help               # 查看帮助
+```
+
+#### 6.3 可执行文件缓存优化
+
+Go 1.24 之前，通过 `go run` 或 `go tool` 执行的可执行文件**不被缓存**，每次都重新编译。Go 1.24 开始：
+- 可执行文件会被缓存到 Go 构建缓存（`~/.cache/go-build`）
+- **包文件**缓存清理周期：**5 天**
+- **可执行文件**缓存清理周期：**2 天**
+
+这显著加速了 CI 中频繁调用 `go run` 的场景（如代码生成、协议编译）。
+
+#### 6.4 对比：tool 指令 vs 空导入
+
+| 维度 | 空导入（旧） | tool 指令（Go 1.24+） |
+|------|------------|---------------------|
+| 声明位置 | 代码文件 `tools.go` | `go.mod`（与业务依赖分离） |
+| `go list -m all` 可见性 | 混入主依赖 | 显式标记为工具依赖 |
+| 版本控制 | 与主模块版本耦合 | 独立版本，互不影响 |
+| CI 复现性 | 依赖 Makefile/脚本 | go.mod 中声明，天然可复现 |
+| 语义清晰度 | 模糊（间接依赖混入） | 清晰（工具就是工具） |
+
+#### 6.5 实际应用场景
+
+**场景 1：团队统一 mockery 版本**
+```go
+// go.mod
+tool github.com/vektra/mockery/v2@v2.52.1
+```
+- 新成员 `gotip install tool github.com/vektra/mockery/v2` 即可安装正确版本
+- CI 不再依赖手动 `go install`，构建结果可复现
+
+**场景 2：CI 中使用代码生成工具**
+```yaml
+# .github/workflows/ci.yml
+- name: Generate mocks
+  run: gotip tool github.com/vektra/mockery/v2 --all --output ./mocks
+```
+
+**场景 3：统一管理 lint 工具链**
+```go
+// go.mod
+tool honnef.co/go/tools/cmd/staticcheck@latest
+tool github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+```
+
 ## 高频追问
 
 ### Q: `go.sum` 文件的作用是什么，能删掉吗？
