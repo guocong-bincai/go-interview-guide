@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-290-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.47-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-291-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.48-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -264,6 +264,7 @@
 | 🟢 [内置函数 new：从基础到 Go 1.26 增强](./docs/01-golang/03-language-deep/08-new-function.md) | new() vs make()、逃逸分析、Go 1.26 new(expr) 表达式参数 |
 | 🟢 [Go 1.26 栈分配优化](./docs/01-golang/03-language-deep/09-go1.26-stack-alloc.md) | append 推测性栈缓冲、move2heap 机制 |
 | 🟢 [Go 1.24 Swiss Tables](./docs/01-golang/03-language-deep/10-go1.24-swiss-tables.md) | map 底层替换为 Swiss Table、性能提升原理 |
+| 🟡 [Go 1.24 weak 包：弱指针原理与缓存实战](./docs/01-golang/03-language-deep/16-go1.24-weak-package.md) | weak.Pointer、weak.New、缓存映射、GC 交互、生产实践 |
 | 🟢 [类型构造与循环检测](./docs/01-golang/03-language-deep/11-type-construction.md) | Go 1.26 类型检查器底层改进 |
 | 🔴 [CGO 原理与面试考点](./docs/01-golang/03-language-deep/12-cgo.md) | CGO 调用开销、LockOSThread、C 内存管理、CGO_ENABLED=0 |
 | 🔴 [iota 枚举：计数器原理与高频面试题](./docs/01-golang/03-language-deep/14-iota.md) | iota 重置规则、跳跃继承、位掩码、网球问题 |
