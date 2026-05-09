@@ -346,6 +346,8 @@
 | 🟡 [分库分表](./docs/02-database/01-mysql/05-sharding.md) | ShardingSphere、路由策略、数据迁移 |
 | 🟡 [主从复制](./docs/02-database/01-mysql/06-replication.md) | binlog、半同步复制、主从延迟处理 |
 | 🟡 [MySQL 8.0 新特性](./docs/02-database/01-mysql/09-mysql8-new-features.md) | 窗口函数、CTE、SKIP LOCKED/NOWAIT、Instant DDL、JSON_TABLE |
+| ⏳ MySQL 基础高频题 | char vs varchar 区别、NULL 的坑、count(*) vs count(1)、存储引擎对比（InnoDB vs MyISAM）**待补充** |
+| ⏳ 索引失效全场景 | 最左前缀、like %前缀、函数/隐式转换、OR 条件、数据量少全表扫描 **待补充** |
 
 </details>
 
@@ -361,6 +363,8 @@
 | 🟡 [分布式锁](./docs/02-database/02-redis/05-distributed-lock.md) | Redlock 算法、Lua 脚本原子性、锁续期 |
 | 🟡 [热 key / 大 key](./docs/02-database/02-redis/06-hot-key.md) | 识别方法、拆分方案、本地缓存兜底 |
 | 🟡 [Pipeline 与 Lua 脚本](./docs/02-database/02-redis/07-pipeline-lua.md) | RTT 优化原理、Lua 原子性、MULTI/EXEC 对比、Cluster 限制 ✅
+| ⏳ Redis 基础高频题 | Redis 为什么快（单线程/IO多路复用/纯内存）、过期策略（惰性+定期删除）、内存淘汰策略 8 种对比 **待补充** |
+| ⏳ Redis 常见数据类型使用场景 | String/Hash/List/Set/ZSet 各自最佳应用场景，HyperLogLog/Bitmap/Geo 使用场景 **待补充** |
 
 </details>
 
@@ -424,6 +428,7 @@
 | 🟢 [Paxos 简述](./docs/03-distributed/01-theory/03-paxos.md) | 与 Raft 的对比、应用场景 |
 | 🟡 [一致性模型](./docs/03-distributed/01-theory/04-consistency.md) | 强一致 / 最终一致 / 线性一致性 |
 | 🔴 [容灾设计：单机房、双活与异地多活](./docs/03-distributed/01-theory/05-disaster-recovery.md) | RPO/RTO、同城双活、异地多活、流量切换、数据一致性 |
+| ⏳ 分布式基础高频题 | 分布式系统 3 大难题（时钟/网络/节点故障）、幂等设计通用方案、分布式 ID 生成方案对比 **待补充** |
 
 </details>
 
@@ -489,6 +494,8 @@
 | 🟡 [熔断与限流](./docs/04-microservices/01-rpc/02-circuit-breaker.md) | Hystrix/Sentinel、令牌桶/漏桶算法 |
 | 🟡 [服务治理](./docs/04-microservices/01-rpc/03-service-governance.md) | 超时/重试/负载均衡策略 |
 | 🟢 [IDL 设计规范](./docs/04-microservices/01-rpc/04-idl-design.md) | Protobuf 版本兼容、API 设计规范 |
+| ⏳ RPC 基础高频题 | RPC vs REST vs GraphQL 对比、Protobuf vs JSON 性能对比、gRPC 四种通信模式 **待补充** |
+| ⏳ 服务注册与发现 | 为什么需要注册中心、客户端发现 vs 服务端发现、健康检查机制 **待补充** |
 
 </details>
 
@@ -600,6 +607,8 @@
 | 🟡 [HTTPS 握手流程](./docs/06-network/02-http/02-https.md) | TLS 握手、证书链、性能优化 |
 | 🟡 [WebSocket](./docs/06-network/02-http/03-websocket.md) | 升级握手、与 HTTP 长轮询对比 |
 | 🟡 [gRPC 与 HTTP/2](./docs/06-network/02-http/04-grpc-http2.md) | 多路复用、流控 |
+| ⏳ 网络基础高频题 | TCP 和 UDP 区别及应用场景、HTTP 和 HTTPS 区别、DNS 解析流程、Cookie vs Session vs Token **待补充** |
+| ⏳ 输入 URL 到页面展示 | DNS→TCP→TLS→HTTP→渲染完整流程（后端视角：中间件/反向代理/负载均衡）**待补充** |
 
 </details>
 
@@ -842,6 +851,8 @@
 | 🔴 [I/O 模型与零拷贝](./docs/12-linux-os/03-io-model-zero-copy.md) | select/poll/epoll、sendfile、splice、Go netpoller |
 | 🔴 [cgroup、namespace 与容器资源隔离](./docs/12-linux-os/04-cgroup-namespace.md) | 容器资源限制、OOMKilled、GOMAXPROCS、K8s resource 控制 |
 | 🔴 [Linux 线上排障基础](./docs/12-linux-os/05-linux-troubleshooting.md) | load、CPU、内存、fd、IO、TIME_WAIT 排查 SOP |
+| ⏳ Linux 基础高频命令 | top/ps/netstat/ss/lsof/strace/tcpdump 用途、常见排障场景 **待补充** |
+| ⏳ 进程间通信方式 | 管道/消息队列/共享内存/信号量/socket 对比，Go 里的对应实现 **待补充** |
 
 </details>
 
