@@ -15,7 +15,7 @@
 | ✅ | `05-scheduler-source-code.md` | Go 调度器源码走读：schedule()/findRunnable()/sysmon |
 | ✅ | `09-io-multiplexing.md` | epoll/kqueue 与 Netpoller 原理、Go 网络 I/O 模型 |
 | ⏳ | `goroutine-lifecycle.md` | goroutine 创建/运行/阻塞/退出全生命周期、泄漏原因 **待补充** |
-| ⏳ | `gc-tuning.md` | GOGC/GOMEMLIMIT 调优、GC 触发时机、如何降低 GC 压力 **待补充** |
+| ✅ | `11-gc-tuning.md` | GOGC/GOMEMLIMIT 调优、Green Tea GC、生产问题排查 |
 
 ---
 

@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-296-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.54-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.55-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -231,7 +231,7 @@
 | 🟢 [容器感知 GOMAXPROCS](./docs/01-golang/01-runtime/08-go1.25-gomaxprocs.md) | Go 1.25 自动感知容器 CPU 配额 |
 | 🟢 [网络 I/O：epoll/kqueue 与 Netpoller](./docs/01-golang/01-runtime/09-io-multiplexing.md) | Go 网络层事件循环、与 goroutine 调度的整合 |
 | 🔴 [Goroutine 全生命周期](./docs/01-golang/01-runtime/11-goroutine-lifecycle.md) | G 状态机/创建流程/阻塞分类（channel/Mutex/syscall）/泄漏根因与 pprof 排查 ✅
-| ⏳ GC 调优实战 | GOGC/GOMEMLIMIT 调优、GC 触发时机、如何降低 GC 压力 **待补充** |
+| 🔴 [GC 调优实战](./docs/01-golang/01-runtime/11-gc-tuning.md) | GOGC/GOMEMLIMIT 调优、Green Tea GC、生产问题排查 |
 
 </details>
 
