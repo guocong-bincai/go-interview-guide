@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-293-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.53-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-296-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.54-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -230,7 +230,7 @@
 | 🟢 [Go 1.27 SIMD 与 Portable SIMD](./docs/01-golang/01-runtime/10-go1.27-simd-runtime.md) | SIMD 默认开启（amd64）、Portable SIMD 提案、链接器优化 |
 | 🟢 [容器感知 GOMAXPROCS](./docs/01-golang/01-runtime/08-go1.25-gomaxprocs.md) | Go 1.25 自动感知容器 CPU 配额 |
 | 🟢 [网络 I/O：epoll/kqueue 与 Netpoller](./docs/01-golang/01-runtime/09-io-multiplexing.md) | Go 网络层事件循环、与 goroutine 调度的整合 |
-| ⏳ goroutine 全生命周期 | 创建/运行/阻塞/退出流程、泄漏常见原因与排查 **待补充** |
+| 🔴 [Goroutine 全生命周期](./docs/01-golang/01-runtime/11-goroutine-lifecycle.md) | G 状态机/创建流程/阻塞分类（channel/Mutex/syscall）/泄漏根因与 pprof 排查 ✅
 | ⏳ GC 调优实战 | GOGC/GOMEMLIMIT 调优、GC 触发时机、如何降低 GC 压力 **待补充** |
 
 </details>
@@ -363,8 +363,8 @@
 | 🟡 [分布式锁](./docs/02-database/02-redis/05-distributed-lock.md) | Redlock 算法、Lua 脚本原子性、锁续期 |
 | 🟡 [热 key / 大 key](./docs/02-database/02-redis/06-hot-key.md) | 识别方法、拆分方案、本地缓存兜底 |
 | 🟡 [Pipeline 与 Lua 脚本](./docs/02-database/02-redis/07-pipeline-lua.md) | RTT 优化原理、Lua 原子性、MULTI/EXEC 对比、Cluster 限制 ✅
-| ⏳ Redis 基础高频题 | Redis 为什么快（单线程/IO多路复用/纯内存）、过期策略（惰性+定期删除）、内存淘汰策略 8 种对比 **待补充** |
-| ⏳ Redis 常见数据类型使用场景 | String/Hash/List/Set/ZSet 各自最佳应用场景，HyperLogLog/Bitmap/Geo 使用场景 **待补充** |
+| 🔴 [Redis 基础高频题](./docs/02-database/02-redis/08-redis-basics.md) | Redis 为什么快、过期策略、内存淘汰 8 种策略 ✅
+| 🔴 [数据类型使用场景](./docs/02-database/02-redis/09-data-types-use-cases.md) | String/Hash/List/Set/ZSet/HyperLogLog/Bitmap/Geo 场景与选型 ✅
 
 </details>
 
