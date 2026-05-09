@@ -230,6 +230,8 @@
 | 🟢 [Go 1.27 SIMD 与 Portable SIMD](./docs/01-golang/01-runtime/10-go1.27-simd-runtime.md) | SIMD 默认开启（amd64）、Portable SIMD 提案、链接器优化 |
 | 🟢 [容器感知 GOMAXPROCS](./docs/01-golang/01-runtime/08-go1.25-gomaxprocs.md) | Go 1.25 自动感知容器 CPU 配额 |
 | 🟢 [网络 I/O：epoll/kqueue 与 Netpoller](./docs/01-golang/01-runtime/09-io-multiplexing.md) | Go 网络层事件循环、与 goroutine 调度的整合 |
+| ⏳ goroutine 全生命周期 | 创建/运行/阻塞/退出流程、泄漏常见原因与排查 **待补充** |
+| ⏳ GC 调优实战 | GOGC/GOMEMLIMIT 调优、GC 触发时机、如何降低 GC 压力 **待补充** |
 
 </details>
 
@@ -245,6 +247,9 @@
 | 🟡 [并发模式](./docs/01-golang/02-concurrency/04-patterns.md) | Pipeline、Fan-out/Fan-in、errgroup、Worker Pool |
 | 🟡 [context 原理](./docs/01-golang/02-concurrency/05-context.md) | 取消传播、超时控制、底层实现 |
 | 🟡 [SingleFlight 请求合并](./docs/01-golang/02-concurrency/06-singleflight.md) | 请求合并、缓存击穿、并发去重、分布式穿透防护 |
+| ⏳ goroutine vs OS 线程 | 栈大小对比、调度开销、为什么 goroutine 轻量 **待补充** |
+| ⏳ 死锁：原理与排查 | 死锁四个必要条件、Go 里的死锁场景、工具排查 **待补充** |
+| ⏳ data race 与 -race 检测 | race condition 产生条件、map/slice/全局变量常见场景 **待补充** |
 
 </details>
 
@@ -261,16 +266,19 @@
 | 🟡 [内存模型](./docs/01-golang/03-language-deep/06-memory-model.md) | happens-before、内存对齐、false sharing |
 | 🟢 [循环与迭代器新特性](./docs/01-golang/03-language-deep/07-loop-iterators.md) | Go 1.22 循环变量语义变更、range-over-func |
 | 🟡 [编译器优化：内联与逃逸深度](./docs/01-golang/03-language-deep/08-compiler-optimize.md) | 内联决策（AST节点数阈值）、-gcflags="-m=2" 解读、BCE、常量折叠 ✅
-| 🟢 [内置函数 new：从基础到 Go 1.26 增强](./docs/01-golang/03-language-deep/08-new-function.md) | new() vs make()、逃逸分析、Go 1.26 new(expr) 表达式参数 |
+| 🟢 [内置函数 new：从基础到 Go 1.26 增强](./docs/01-golang/03-language-deep/09-new-function.md) | new() vs make()、逃逸分析、Go 1.26 new(expr) 表达式参数 |
 | 🟢 [Go 1.26 栈分配优化](./docs/01-golang/03-language-deep/09-go1.26-stack-alloc.md) | append 推测性栈缓冲、move2heap 机制 |
 | 🟢 [Go 1.24 Swiss Tables](./docs/01-golang/03-language-deep/10-go1.24-swiss-tables.md) | map 底层替换为 Swiss Table、性能提升原理 |
 | 🟡 [Go 1.24 weak 包：弱指针原理与缓存实战](./docs/01-golang/03-language-deep/16-go1.24-weak-package.md) | weak.Pointer、weak.New、缓存映射、GC 交互、生产实践 |
-| 🟢 [类型构造与循环检测](./docs/01-golang/03-language-deep/11-type-construction.md) | Go 1.26 类型检查器底层改进 |
-| 🔴 [CGO 原理与面试考点](./docs/01-golang/03-language-deep/12-cgo.md) | CGO 调用开销、LockOSThread、C 内存管理、CGO_ENABLED=0 |
+| 🟢 [类型构造与循环检测](./docs/01-golang/03-language-deep/12-type-construction.md) | Go 1.26 类型检查器底层改进 |
+| 🔴 [CGO 原理与面试考点](./docs/01-golang/03-language-deep/13-cgo.md) | CGO 调用开销、LockOSThread、C 内存管理、CGO_ENABLED=0 |
+| 🔴 [unsafe 包：原理、使用场景与风险](./docs/01-golang/03-language-deep/14-unsafe.md) | unsafe.Pointer 四条规则、uintptr 陷阱、零拷贝转换 |
 | 🔴 [iota 枚举：计数器原理与高频面试题](./docs/01-golang/03-language-deep/14-iota.md) | iota 重置规则、跳跃继承、位掩码、网球问题 |
 | 🔴 [init 函数：执行时机与顺序规则](./docs/01-golang/03-language-deep/15-init.md) | 包依赖图拓扑排序、const→var→init 三阶段、多文件执行顺序 |
-| 🔴 [unsafe 包：原理、使用场景与风险](./docs/01-golang/03-language-deep/13-unsafe.md) | unsafe.Pointer 四条规则、uintptr 陷阱、零拷贝转换 |
 | 🔴 [defer 底层原理与高频面试题](./docs/01-golang/03-language-deep/17-defer.md) | defer 栈、return 赋值顺序、参数预计算、panic 恢复 |
+| ⏳ string 与 []byte 深度解析 | string 底层结构、string↔[]byte 零拷贝、为什么不可变 **待补充** |
+| ⏳ 闭包原理与陷阱 | 闭包捕获变量、循环变量陷阱（Go 1.22 前后对比）**待补充** |
+| ⏳ make vs new 区别 | make/new 区别、零值初始化、适用类型 **待补充** |
 
 </details>
 
@@ -308,6 +316,9 @@
 | 🟡 [错误处理最佳实践](./docs/01-golang/05-stdlib/03-errors.md) | errors.Is/As/AsType/Join、%w 包装、panic/recover 边界 |
 | 🟢 [log/slog 结构化日志](./docs/01-golang/05-stdlib/04-slog.md) | slog.Handler 接口、结构化字段、生产最佳实践 |
 | 🟢 [embed 静态资源嵌入](./docs/01-golang/05-stdlib/05-embed.md) | //go:embed 用法、与 os.ReadFile 对比、发布单二进制 |
+| ⏳ io.Reader/Writer 设计模式 | io.Reader/Writer 接口设计、常见实现、流式处理最佳实践 **待补充** |
+| ⏳ time 包深度解析 | time.Timer/Ticker 正确用法与陷阱、精度问题、时区处理 **待补充** |
+| ⏳ strings.Builder vs bytes.Buffer | 字符串拼接性能对比、底层实现差异、选型建议 **待补充** |
 | 🟢 [Go 1.27 标准库新特性](./docs/01-golang/05-stdlib/06-go1.27-stdlib.md) | CutLast/Response File/HTTP Body Drain |
 | 🟢 [Go 1.26 密码学套件](./docs/01-golang/05-stdlib/07-go1.26-crypto.md) | crypto/mlkem、crypto/hpke、后量子加密 |
 | 🟢 [encoding/json v2](./docs/01-golang/05-stdlib/08-json-v2.md) | v2 与 v1 差异、性能提升、迁移指南 |
