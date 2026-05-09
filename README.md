@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-292-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.51-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-293-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.52-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -270,6 +270,7 @@
 | 🔴 [iota 枚举：计数器原理与高频面试题](./docs/01-golang/03-language-deep/14-iota.md) | iota 重置规则、跳跃继承、位掩码、网球问题 |
 | 🔴 [init 函数：执行时机与顺序规则](./docs/01-golang/03-language-deep/15-init.md) | 包依赖图拓扑排序、const→var→init 三阶段、多文件执行顺序 |
 | 🔴 [unsafe 包：原理、使用场景与风险](./docs/01-golang/03-language-deep/13-unsafe.md) | unsafe.Pointer 四条规则、uintptr 陷阱、零拷贝转换 |
+| 🔴 [defer 底层原理与高频面试题](./docs/01-golang/03-language-deep/17-defer.md) | defer 栈、return 赋值顺序、参数预计算、panic 恢复 |
 
 </details>
 
