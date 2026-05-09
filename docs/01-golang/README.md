@@ -30,7 +30,7 @@
 | ✅ | `05-context.md` | context 底层、取消传播、超时控制 |
 | ⏳ | `goroutine-vs-thread.md` | goroutine vs OS 线程：栈大小、调度开销、为什么轻量 **待补充** |
 | ⏳ | `deadlock.md` | 死锁四个条件、Go 里的死锁场景、排查方法 **待补充** |
-| ⏳ | `race-condition.md` | data race 产生条件、`-race` 检测、常见场景 **待补充** |
+| ✅ | `race-condition.md` | data race 产生条件、`-race` 检测、常见场景 |
 
 ---
 

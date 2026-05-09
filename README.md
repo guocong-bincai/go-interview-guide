@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-293-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.52-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.53-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -249,7 +249,7 @@
 | 🟡 [SingleFlight 请求合并](./docs/01-golang/02-concurrency/06-singleflight.md) | 请求合并、缓存击穿、并发去重、分布式穿透防护 |
 | ⏳ goroutine vs OS 线程 | 栈大小对比、调度开销、为什么 goroutine 轻量 **待补充** |
 | ⏳ 死锁：原理与排查 | 死锁四个必要条件、Go 里的死锁场景、工具排查 **待补充** |
-| ⏳ data race 与 -race 检测 | race condition 产生条件、map/slice/全局变量常见场景 **待补充** |
+| ✅ data race 与 -race 检测 | data race 产生条件、`-race` 检测、map/slice/全局变量常见场景 |
 
 </details>
 
