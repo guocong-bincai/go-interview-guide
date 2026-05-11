@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-300-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.59-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.60-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -181,6 +181,8 @@
 | ~~10-real-problems/06~~ | ~~并发编程实战问题~~ | ~~P0~~ | ✅ 已完成 |
 | ~~10-real-problems/07~~ | ~~面试高频场景题（开放性）~~ | ~~P0~~ | ✅ 已完成 |
 | ~~08-engineering/02-troubleshooting~~ | ~~goroutine 泄漏排查 SOP~~ | ~~P0~~ | ✅ 已完成 |
+| 01-golang/03-language-deep | constraints.Ordered：标准库类型约束 | P2 | ✅ 已完成 |
+| 02-database/01-mysql | Change Buffer：二级索引写性能优化 | P1 | ✅ 已完成 |
 
 ---
 
@@ -346,6 +348,7 @@
 | 🟡 [分库分表](./docs/02-database/01-mysql/05-sharding.md) | ShardingSphere、路由策略、数据迁移 |
 | 🟡 [主从复制](./docs/02-database/01-mysql/06-replication.md) | binlog、半同步复制、主从延迟处理 |
 | 🟡 [MySQL 8.0 新特性](./docs/02-database/01-mysql/09-mysql8-new-features.md) | 窗口函数、CTE、SKIP LOCKED/NOWAIT、Instant DDL、JSON_TABLE |
+| 🟡 [Change Buffer 原理](./docs/02-database/01-mysql/11-change-buffer.md) | 索引变更延迟合并、随机 I/O 优化、Redo Log 协作、为何不支持唯一索引 |
 | 🟡 [MySQL 基础高频题](./docs/02-database/01-mysql/10-mysql-basics.md) | char vs varchar 区别、NULL 的坑、count(*) vs count(1) vs count(col)、InnoDB vs MyISAM 选型、VARCHAR 长度陷阱 |
 | ⏳ 索引失效全场景 | 最左前缀、like %前缀、函数/隐式转换、OR 条件、数据量少全表扫描 **待补充** |
 
