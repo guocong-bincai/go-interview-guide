@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-301-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.8-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-302-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.9-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -324,6 +324,7 @@
 | ⏳ time 包深度解析 | time.Timer/Ticker 正确用法与陷阱、精度问题、时区处理 **待补充** |
 | ⏳ strings.Builder vs bytes.Buffer | 字符串拼接性能对比、底层实现差异、选型建议 **待补充** |
 | 🟢 [Go 1.27 标准库新特性](./docs/01-golang/05-stdlib/06-go1.27-stdlib.md) | CutLast/Response File/HTTP Body Drain |
+| 🟢 [Go 1.26 标准库新特性](./docs/01-golang/05-stdlib/12-go1.26-stdlib.md) | Buffer.Peek/Dialer.Context/AsType/strings.Join 零分配 |
 | 🟢 [Go 1.26 密码学套件](./docs/01-golang/05-stdlib/07-go1.26-crypto.md) | crypto/mlkem、crypto/hpke、后量子加密 |
 | 🟢 [encoding/json v2](./docs/01-golang/05-stdlib/08-json-v2.md) | v2 与 v1 差异、性能提升、迁移指南 |
 | 🟢 [Go 1.21 slices/maps/cmp](./docs/01-golang/05-stdlib/09-go1.21-slices-maps-cmp.md) | slices/maps/cmp 三大泛型标准库新包、排序/搜索/比较/克隆 |
