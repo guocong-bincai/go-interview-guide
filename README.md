@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-300-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.61-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.7-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -250,7 +250,7 @@
 | 🟡 [context 原理](./docs/01-golang/02-concurrency/05-context.md) | 取消传播、超时控制、底层实现 |
 | 🟡 [SingleFlight 请求合并](./docs/01-golang/02-concurrency/06-singleflight.md) | 请求合并、缓存击穿、并发去重、分布式穿透防护 |
 | 🟡 [goroutine vs OS 线程 vs 进程](./docs/01-golang/02-concurrency/08-goroutine-vs-thread.md) | 栈大小对比、上下文切换成本、动态栈增长、调度模型对比、GMP vs 内核调度、泄漏排查 |
-| ⏳ 死锁：原理与排查 | 死锁四个必要条件、Go 里的死锁场景、工具排查 **待补充** |
+| 🔴 [死锁：原理与排查](./docs/01-golang/02-concurrency/deadlock.md) | 死锁四个必要条件、Go 里的死锁场景、工具排查、sysmon 检测机制、pprof/go tool trace 排查 |
 | ✅ data race 与 -race 检测 | data race 产生条件、`-race` 检测、map/slice/全局变量常见场景 |
 
 </details>
@@ -318,7 +318,7 @@
 | 🟡 [错误处理最佳实践](./docs/01-golang/05-stdlib/03-errors.md) | errors.Is/As/AsType/Join、%w 包装、panic/recover 边界 |
 | 🟢 [log/slog 结构化日志](./docs/01-golang/05-stdlib/04-slog.md) | slog.Handler 接口、结构化字段、生产最佳实践 |
 | 🟢 [embed 静态资源嵌入](./docs/01-golang/05-stdlib/05-embed.md) | //go:embed 用法、与 os.ReadFile 对比、发布单二进制 |
-| ⏳ io.Reader/Writer 设计模式 | io.Reader/Writer 接口设计、常见实现、流式处理最佳实践 **待补充** |
+| 🟡 [io.Reader/Writer 设计模式](./docs/11-go-std-practice/io-reader-writer-deep.md) | 接口设计哲学、装饰器模式、流水线处理、bufio 性能优化、常见误用场景 |
 | ⏳ time 包深度解析 | time.Timer/Ticker 正确用法与陷阱、精度问题、时区处理 **待补充** |
 | ⏳ strings.Builder vs bytes.Buffer | 字符串拼接性能对比、底层实现差异、选型建议 **待补充** |
 | 🟢 [Go 1.27 标准库新特性](./docs/01-golang/05-stdlib/06-go1.27-stdlib.md) | CutLast/Response File/HTTP Body Drain |
