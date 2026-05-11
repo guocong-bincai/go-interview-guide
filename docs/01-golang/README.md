@@ -14,7 +14,7 @@
 | ✅ | `04-stack.md` | goroutine 栈增长、栈缩容、连续栈 vs 分段栈 |
 | ✅ | `05-scheduler-source-code.md` | Go 调度器源码走读：schedule()/findRunnable()/sysmon |
 | ✅ | `09-io-multiplexing.md` | epoll/kqueue 与 Netpoller 原理、Go 网络 I/O 模型 |
-| ⏳ | `goroutine-lifecycle.md` | goroutine 创建/运行/阻塞/退出全生命周期、泄漏原因 **待补充** |
+| ✅ | `11-goroutine-lifecycle.md` | goroutine 创建/运行/阻塞/退出全生命周期、泄漏原因、pprof/trace 排查 |
 | ✅ | `11-gc-tuning.md` | GOGC/GOMEMLIMIT 调优、Green Tea GC、生产问题排查 |
 
 ---
@@ -28,8 +28,8 @@
 | ✅ | `03-atomic.md` | atomic 原理、CAS、无锁数据结构 |
 | ✅ | `04-patterns.md` | 并发模式：Pipeline、Fan-out/Fan-in、errgroup |
 | ✅ | `05-context.md` | context 底层、取消传播、超时控制 |
-| ⏳ | `goroutine-vs-thread.md` | goroutine vs OS 线程：栈大小、调度开销、为什么轻量 **待补充** |
-| ⏳ | `deadlock.md` | 死锁四个条件、Go 里的死锁场景、排查方法 **待补充** |
+| ✅ | `08-goroutine-vs-thread.md` | goroutine vs OS 线程：栈大小、调度开销、为什么轻量 |
+| ✅ | `deadlock.md` | 死锁四个条件、Coffman 条件、channel/Mutex 死锁、活锁、go-deadlock 排查 |
 | ✅ | `race-condition.md` | data race 产生条件、`-race` 检测、常见场景 |
 
 ---
@@ -48,11 +48,11 @@
 | ✅ | `08-compiler-optimize.md` | 内联决策、逃逸深度、BCE、常量折叠 |
 | ✅ | `13-cgo.md` | CGO 调用链路、`CGO_ENABLED=0`、性能开销 |
 | ✅ | `14-unsafe.md` | unsafe.Pointer、uintptr 区别、正确使用姿势 |
-| ⏳ | `string-byte-slice.md` | string 底层结构、string↔[]byte 零拷贝、为什么不可变 **待补充** |
-| ⏳ | `defer.md` | defer 执行顺序、defer+panic+recover 组合、性能损耗 **待补充** |
-| ⏳ | `closure.md` | 闭包捕获变量原理、循环变量陷阱（Go 1.22 前后对比） **待补充** |
-| ⏳ | `make-vs-new.md` | make/new 区别、零值初始化、适用类型 **待补充** |
-| ⏳ | `init-function.md` | init 执行顺序、多包 init 依赖关系、init vs 全局变量 **待补充** |
+| ✅ | `18-string-byte.md` | string 底层结构、string↔[]byte 零拷贝、为什么不可变 |
+| ✅ | `17-defer.md` | defer 执行顺序、defer+panic+recover 组合、性能损耗 |
+| ✅ | `19-closure.md` | 闭包捕获变量原理、循环变量陷阱（Go 1.22 前后对比） |
+| ✅ | `20-make-new.md` | make/new 区别、零值初始化、适用类型 |
+| ✅ | `15-init.md` | init 执行顺序、多包 init 依赖关系、init vs 全局变量 |
 
 ---
 
@@ -76,9 +76,9 @@
 | ✅ | `03-errors.md` | errors.Is/As、错误链包装、自定义错误类型、panic/recover 边界 |
 | ✅ | `04-slog.md` | log/slog 结构化日志、Handler/Context 链路、与 zap 对比 |
 | ✅ | `05-embed.md` | go:embed 底层机制、内存布局、与构建标签联动 |
-| ⏳ | `io-reader-writer.md` | io.Reader/Writer 设计模式、常见实现、流式处理 **待补充** |
-| ⏳ | `time.md` | time.Timer/Ticker 正确用法、精度、时区处理 **待补充** |
-| ⏳ | `strings-bytes.md` | strings.Builder vs bytes.Buffer、字符串拼接性能对比 **待补充** |
+| ✅ | `io-reader-writer.md` | io.Reader/Writer 设计模式、流式处理、bufio、Decorator 模式 |
+| ✅ | `time.md` | time.Timer/Ticker 正确用法、Stop/Reset 陷阱、内存泄漏、时区处理 |
+| ✅ | `18-string-byte.md` | string 底层结构、string↔[]byte 零拷贝、为什么不可变（strings.Builder vs bytes.Buffer） |
 
 ---
 
@@ -86,8 +86,8 @@
 
 | 状态 | 文件 | 考点 |
 |---|---|---|
-| ⏳ | `01-go-module.md` | go.mod 核心语义、MVS 版本选择算法、私有模块、go.work **待补充** |
-| ⏳ | `02-build-tags.md` | Build Tags 语法、常用内置 Tag、自定义 Tag 实战 **待补充** |
+| ✅ | `01-go-module.md` | go.mod 核心语义、MVS 版本选择算法、私有模块、go.work |
+| ✅ | `02-build-tags.md` | Build Tags 语法、常用内置 Tag、自定义 Tag 实战 |
 
 ---
 
