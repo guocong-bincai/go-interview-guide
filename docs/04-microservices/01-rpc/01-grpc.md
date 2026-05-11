@@ -282,3 +282,68 @@ s := grpc.NewServer(
 ### Q：为什么 gRPC 推荐用 pb 包名？
 
 > 避免与 Go 标准库冲突，且明确标识这是 Protobuf 生成的代码。
+
+---
+
+## 附录：RPC 基础高频题
+
+> **Q：RPC vs REST vs GraphQL 对比？**
+
+| 维度 | RPC | REST | GraphQL |
+|------|-----|------|---------|
+| 设计理念 | 远程调用像本地函数 | 资源为导向，HTTP 语义 | 按需获取，客户端驱动 |
+| 协议 | 自定义（gRPC/Hessian） | HTTP/1.1~2 | HTTP |
+| 数据格式 | Protobuf/JSON | JSON/XML | JSON |
+| 性能 | 高（gRPC + Protobuf） | 中等 | 中等 |
+| 调试 | 困难（二进制） | 容易（JSON 明文）| 容易（JSON 明文）|
+| 类型安全 | 强（IDL 代码生成） | 弱（无契约）| 中等（Schema）|
+| 适用场景 | 微服务内部 | 微服务外部 API | 前端按需获取多资源 |
+
+**gRPC 适用场景**：高并发微服务内部通信，支持双向流。
+**REST 适用场景**：对外开放 API、Webhook、跨语言异构系统。
+**GraphQL 适用场景**：移动端/前端按需取字段，减少 over-fetching。
+
+---
+
+> **Q：Protobuf vs JSON 性能对比？**
+
+| 维度 | Protobuf | JSON |
+|------|----------|------|
+| 编码方式 | 二进制（字段编号）| 文本（字段名）|
+| 体积 | 小（1,2 等短数字 1 字节）| 大（字段名重复传输）|
+| 解析速度 | 快（内存直接映射，无需字符串解析）| 慢（字符串解析 + 类型转换）|
+| 可读性 | 差（需解码）| 好（人类可读）|
+| 跨语言 | 好（IDL 生成各语言代码）| 好（通用文本格式）|
+| 兼容性 | 好（字段可添加/废弃）| 好（天然兼容）|
+
+**性能数据（典型场景）**：
+- Protobuf 序列化速度比 JSON 快 **5~10 倍**
+- 序列化后体积比 JSON 小 **2~5 倍**（字段越多差距越大）
+
+---
+
+> **Q：gRPC 四种通信模式？**
+
+| 模式 | 名称 | 适用场景 |
+|------|------|----------|
+| **Unary RPC** | 一元调用 | 请求-响应型 API（大多数场景）|
+| **Server Streaming** | 服务端流 | 大数据响应、实时推送（聊天、监控）|
+| **Client Streaming** | 客户端流 | 文件上传、日志批量提交 |
+| **Bidirectional Streaming** | 双向流 | 实时交互（语音/视频协作、游戏）|
+
+```protobuf
+// Unary：客户端发一个请求，服务端返回一个响应
+rpc GetUser(GetUserRequest) returns (User);
+
+// Server Streaming：客户端发一个请求，服务端返回流
+rpc ListUsers(ListRequest) returns (stream User);
+
+// Client Streaming：客户端发送流，服务端返回一个响应
+rpc CreateUsers(stream CreateUserRequest) returns (CreateUsersResponse);
+
+// Bidirectional Streaming：双方都可发流
+rpc Chat(stream ChatMessage) returns (stream ChatMessage);
+```
+
+**实现复杂度排序**：Unary < Server Streaming < Client Streaming < Bidirectional Streaming。
+**生产使用建议**：双向流最难做，要处理乱序、重连、背压，生产中优先考虑 Unary 或 Server Streaming。

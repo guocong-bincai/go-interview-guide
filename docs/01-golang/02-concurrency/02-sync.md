@@ -704,3 +704,60 @@ WaitGroup 一旦计数器归零就不能重置使用。设计上，WaitGroup 用
 ---
 
 **[← 上一篇：Channel 底层原理](./01-channel.md)** · **[下一篇：atomic 与无锁 →](./03-atomic.md)**
+
+---
+
+## 附录：Go 1.24 sync.Mutex lock2 自旋优化（spinbit）
+
+> **Q：Go 1.24 runtime lock2 自旋优化（spinbit）是什么？**
+
+Go 1.24 引入了 runtime lock2 的自旋优化（spinbit），核心解决的是**高并发下 mutex 的性能悬崖**问题。
+
+**问题背景：**
+
+在 ChanContended 基准测试中，当 GOMAXPROCS 从 1 → 4 → 8 → 12 时，吞吐量每次都减半。在 GOMAXPROCS=20 时，20 个线程在 lock2 调用中总共消耗 27.74 秒 CPU 时间，其中 70% 消耗在 `procyield`（自旋）上。**所有等待线程都在自旋，导致严重的 CPU 浪费和性能退化。**
+
+**核心优化（spinbit 机制）：**
+
+原设计：所有等待线程同时自旋竞争 → CPU 严重浪费。
+
+```
+Go 1.24 之前的问题：
+线程1 ──自旋──> [争抢 mutex] ──> 线程2 ──自旋──> [争抢 mutex] ──> ...
+                    ↑ 20个线程同时自旋，CPU 争用严重
+```
+
+新设计：引入 `spinbit` 状态位，只有持 spinbit 的线程自旋，其他线程直接 park。
+
+```
+Go 1.24 spinbit 优化：
+                              ┌── 持有 spinbit 的线程自旋（只有1个）
+                              ↓
+解锁 ──→ 检测 spinbit ──→ 存在 → 避免唤醒，直接让自旋线程 CAS 抢锁
+                              ↓ 不存在
+                              唤醒等待线程（sema）
+```
+
+**设计要点：**
+- 扩展 mutex 状态字，加入 `spinning` 标志位
+- 只有持有 spinning 位的线程才能自旋重试，其他等待者直接进入睡眠
+- 解锁时发现有 spinning 线程存在 → 跳过 wakeup，直接让自旋线程抢锁
+- futex（Linux）和 Xchg8 两套实现，Linux 用 futex 性能更好
+- **向后兼容：导出 API 没有变化**，Go 1.24 默认开启
+
+**性能收益（官方基准测试）：**
+
+| 场景 | 优化效果 |
+|------|---------|
+| GOMAXPROCS=20，lock2 高并发 | 吞吐量提升最高可达 ~70%（减少无效自旋） |
+| CPU 争用 | lock2 调用中的 CPU 消耗从 27.74s → 大幅下降 |
+
+**面试加分点：**
+
+1. **不只是 mutex**：runtime lock2 优化影响所有使用 `runtime.Lock` 的场景，包括 channel 的 mutex
+2. **spinbit vs 无自旋**：不是简单的"有自旋 vs 无自旋"，而是"只有1个自旋 vs 所有线程都自旋"
+3. **与 Mutex 自旋的关系**：runtime lock2 是底层运行时锁，与 sync.Mutex 的用户态锁自旋机制不同，但都服务于减少 park 切换
+
+**延伸阅读：**
+- [Proposal: Improve scalability of runtime.lock2 (spinbit)](https://github.com/golang/go/issues/68312)（Go 1.24 lock2 优化提案）
+- [Go1.24 新特性：自旋互斥 lock2 优化，性能有一定提高！](https://blog.csdn.net/eddycjy/article/details/145272722)

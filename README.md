@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-300-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.60-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.61-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -497,7 +497,7 @@
 | 🟡 [熔断与限流](./docs/04-microservices/01-rpc/02-circuit-breaker.md) | Hystrix/Sentinel、令牌桶/漏桶算法 |
 | 🟡 [服务治理](./docs/04-microservices/01-rpc/03-service-governance.md) | 超时/重试/负载均衡策略 |
 | 🟢 [IDL 设计规范](./docs/04-microservices/01-rpc/04-idl-design.md) | Protobuf 版本兼容、API 设计规范 |
-| ⏳ RPC 基础高频题 | RPC vs REST vs GraphQL 对比、Protobuf vs JSON 性能对比、gRPC 四种通信模式 **待补充** |
+| ✅ RPC 基础高频题（见 01-grpc.md 附录）| RPC vs REST vs GraphQL 对比、Protobuf vs JSON 性能对比、gRPC 四种通信模式 ✅ |
 | ⏳ 服务注册与发现 | 为什么需要注册中心、客户端发现 vs 服务端发现、健康检查机制 **待补充** |
 
 </details>
