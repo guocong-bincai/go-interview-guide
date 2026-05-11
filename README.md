@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-312-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v3.0-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-315-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v3.1-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -167,7 +167,9 @@
 | 08-engineering/02-tech-planning | 降本增效实战 | P1 | ✅ 已完成 |
 | 08-engineering/01-project-design | Go 服务架构设计：分层、整洁架构与六边形架构 | P1 | ✅ 已完成 |
 | 08-engineering/02-troubleshooting | 混沌工程与故障演练 | P1 | ✅ 已完成 |
-| ~~01-golang/01-runtime~~ | ~~Go 调度器源码走读~~ | ~~P0~~ | ✅ 已完成 |
+| 01-golang/05-stdlib | time 包深度解析：Timer/Ticker/内存泄漏/精度 | P2 | ✅ 已完成 |
+| 01-golang/05-stdlib | strings.Builder vs bytes.Buffer：字符串拼接性能对比 | P2 | ✅ 已完成 |
+| 06-network | 网络基础高频题：TCP/UDP/DNS/Cookie/Session/Token | P1 | ✅ 已完成 |
 | ~~02-database/01-mysql~~ | ~~EXPLAIN 输出字段逐一解读~~ | ~~P0~~ | ✅ 已完成 |
 | ~~03-distributed/04-service-mesh~~ | ~~Service Mesh（Istio/Envoy）原理~~ | ~~P1~~ | ✅ 已完成 |
 | ~~01-golang/05-stdlib~~ | ~~net/http 深度解析~~ | ~~P1~~ | ✅ 已完成 |
@@ -321,8 +323,8 @@
 | 🟢 [log/slog 结构化日志](./docs/01-golang/05-stdlib/04-slog.md) | slog.Handler 接口、结构化字段、生产最佳实践 |
 | 🟢 [embed 静态资源嵌入](./docs/01-golang/05-stdlib/05-embed.md) | //go:embed 用法、与 os.ReadFile 对比、发布单二进制 |
 | 🟡 [io.Reader/Writer 设计模式](./docs/11-go-std-practice/io-reader-writer-deep.md) | 接口设计哲学、装饰器模式、流水线处理、bufio 性能优化、常见误用场景 |
-| ⏳ time 包深度解析 | time.Timer/Ticker 正确用法与陷阱、精度问题、时区处理 **待补充** |
-| ⏳ strings.Builder vs bytes.Buffer | 字符串拼接性能对比、底层实现差异、选型建议 **待补充** |
+| 🟡 [time 包深度解析](./docs/01-golang/05-stdlib/13-time.md) | time.Timer/Ticker 正确用法与陷阱、内存泄漏、Reset 时机、精度问题、时区处理 ✅ |
+| 🟡 [strings.Builder vs bytes.Buffer](./docs/01-golang/05-stdlib/13-strings-builder.md) | 字符串拼接性能对比、底层实现差异、零拷贝原理、选型建议 ✅ |
 | 🟢 [Go 1.27 标准库新特性](./docs/01-golang/05-stdlib/06-go1.27-stdlib.md) | CutLast/Response File/HTTP Body Drain |
 | 🟢 [Go 1.26 标准库新特性](./docs/01-golang/05-stdlib/12-go1.26-stdlib.md) | Buffer.Peek/Dialer.Context/AsType/strings.Join 零分配 |
 | 🟢 [Go 1.26 密码学套件](./docs/01-golang/05-stdlib/07-go1.26-crypto.md) | crypto/mlkem、crypto/hpke、后量子加密 |
@@ -613,7 +615,7 @@
 | 🟡 [HTTPS 握手流程](./docs/06-network/02-http/02-https.md) | TLS 握手、证书链、性能优化 |
 | 🟡 [WebSocket](./docs/06-network/02-http/03-websocket.md) | 升级握手、与 HTTP 长轮询对比 |
 | 🟡 [gRPC 与 HTTP/2](./docs/06-network/02-http/04-grpc-http2.md) | 多路复用、流控 |
-| ⏳ 网络基础高频题 | TCP 和 UDP 区别及应用场景、HTTP 和 HTTPS 区别、DNS 解析流程、Cookie vs Session vs Token **待补充** |
+| 🟡 [网络基础高频题](./docs/06-network/00-network-basics.md) | TCP vs UDP 三次握手四次挥手滑动窗口、HTTPS TLS、DNS 解析流程、Cookie vs Session vs Token ✅ |
 | ⏳ 输入 URL 到页面展示 | DNS→TCP→TLS→HTTP→渲染完整流程（后端视角：中间件/反向代理/负载均衡）**待补充** |
 
 </details>
