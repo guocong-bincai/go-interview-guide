@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-302-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.9-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-312-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v3.0-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -434,7 +434,7 @@
 | 🟢 [Paxos 简述](./docs/03-distributed/01-theory/03-paxos.md) | 与 Raft 的对比、应用场景 |
 | 🟡 [一致性模型](./docs/03-distributed/01-theory/04-consistency.md) | 强一致 / 最终一致 / 线性一致性 |
 | 🔴 [容灾设计：单机房、双活与异地多活](./docs/03-distributed/01-theory/05-disaster-recovery.md) | RPO/RTO、同城双活、异地多活、流量切换、数据一致性 |
-| ⏳ 分布式基础高频题 | 分布式系统 3 大难题（时钟/网络/节点故障）、幂等设计通用方案、分布式 ID 生成方案对比 **待补充** |
+| 🔴 [分布式基础高频题](./docs/03-distributed/01-theory/06-distributed-basics.md) | 三大难题（时钟漂移/网络分区/节点故障）、幂等设计（唯一键/状态机/去重表）、分布式 ID（Snowflake/Ulid/号段）|
 
 </details>
 
@@ -501,7 +501,7 @@
 | 🟡 [服务治理](./docs/04-microservices/01-rpc/03-service-governance.md) | 超时/重试/负载均衡策略 |
 | 🟢 [IDL 设计规范](./docs/04-microservices/01-rpc/04-idl-design.md) | Protobuf 版本兼容、API 设计规范 |
 | ✅ RPC 基础高频题（见 01-grpc.md 附录）| RPC vs REST vs GraphQL 对比、Protobuf vs JSON 性能对比、gRPC 四种通信模式 ✅ |
-| ⏳ 服务注册与发现 | 为什么需要注册中心、客户端发现 vs 服务端发现、健康检查机制 **待补充** |
+| ✅ [服务注册与发现](./docs/03-distributed/04-service-mesh/02-service-discovery.md) | 注册中心原理、客户端 vs 服务端发现、Consul/etcd/Nacos 选型、健康检查与优雅下线|
 
 </details>
 
