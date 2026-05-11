@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-297-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.57-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.58-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -277,8 +277,8 @@
 | 🔴 [init 函数：执行时机与顺序规则](./docs/01-golang/03-language-deep/15-init.md) | 包依赖图拓扑排序、const→var→init 三阶段、多文件执行顺序 |
 | 🔴 [defer 底层原理与高频面试题](./docs/01-golang/03-language-deep/17-defer.md) | defer 栈、return 赋值顺序、参数预计算、panic 恢复 |
 | 🔴 [string 与 []byte 深度解析](./docs/01-golang/03-language-deep/18-string-byte.md) | string 底层结构、string↔[]byte 零拷贝、为什么不可变 |
-| ⏳ 闭包原理与陷阱 | 闭包捕获变量、循环变量陷阱（Go 1.22 前后对比）**待补充** |
-| ⏳ make vs new 区别 | make/new 区别、零值初始化、适用类型 **待补充** |
+| ✅ 闭包原理与陷阱：循环变量捕获与 Go 1.22 修复 ✅
+| ✅ make vs new：底层原理与适用场景 ✅
 
 </details>
 
