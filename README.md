@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-297-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.56-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.57-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -247,7 +247,7 @@
 | 🟡 [并发模式](./docs/01-golang/02-concurrency/04-patterns.md) | Pipeline、Fan-out/Fan-in、errgroup、Worker Pool |
 | 🟡 [context 原理](./docs/01-golang/02-concurrency/05-context.md) | 取消传播、超时控制、底层实现 |
 | 🟡 [SingleFlight 请求合并](./docs/01-golang/02-concurrency/06-singleflight.md) | 请求合并、缓存击穿、并发去重、分布式穿透防护 |
-| ⏳ goroutine vs OS 线程 | 栈大小对比、调度开销、为什么 goroutine 轻量 **待补充** |
+| 🟡 [goroutine vs OS 线程 vs 进程](./docs/01-golang/02-concurrency/08-goroutine-vs-thread.md) | 栈大小对比、上下文切换成本、动态栈增长、调度模型对比、GMP vs 内核调度、泄漏排查 |
 | ⏳ 死锁：原理与排查 | 死锁四个必要条件、Go 里的死锁场景、工具排查 **待补充** |
 | ✅ data race 与 -race 检测 | data race 产生条件、`-race` 检测、map/slice/全局变量常见场景 |
 
@@ -346,7 +346,7 @@
 | 🟡 [分库分表](./docs/02-database/01-mysql/05-sharding.md) | ShardingSphere、路由策略、数据迁移 |
 | 🟡 [主从复制](./docs/02-database/01-mysql/06-replication.md) | binlog、半同步复制、主从延迟处理 |
 | 🟡 [MySQL 8.0 新特性](./docs/02-database/01-mysql/09-mysql8-new-features.md) | 窗口函数、CTE、SKIP LOCKED/NOWAIT、Instant DDL、JSON_TABLE |
-| ⏳ MySQL 基础高频题 | char vs varchar 区别、NULL 的坑、count(*) vs count(1)、存储引擎对比（InnoDB vs MyISAM）**待补充** |
+| 🟡 [MySQL 基础高频题](./docs/02-database/01-mysql/10-mysql-basics.md) | char vs varchar 区别、NULL 的坑、count(*) vs count(1) vs count(col)、InnoDB vs MyISAM 选型、VARCHAR 长度陷阱 |
 | ⏳ 索引失效全场景 | 最左前缀、like %前缀、函数/隐式转换、OR 条件、数据量少全表扫描 **待补充** |
 
 </details>

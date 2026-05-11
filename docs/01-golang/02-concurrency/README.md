@@ -12,3 +12,4 @@
 - [✅ `05-context.md` — context 底层、取消传播、超时控制](./05-context.md)
 - [✅ `06-singleflight.md` — SingleFlight 请求合并、缓存击穿、并发去重](./06-singleflight.md)
 - [✅ `07-select.md` — select 底层实现、selectgo 源码、阻塞唤醒机制、生产实践](./07-select.md)
+- [✅ `08-goroutine-vs-thread.md` — goroutine vs OS 线程 vs 进程：内存占用、上下文切换、动态栈、调度模型对比、泄漏排查](./08-goroutine-vs-thread.md)
