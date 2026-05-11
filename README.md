@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-300-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v2.7-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-301-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v2.8-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -134,6 +134,7 @@
 | 01-golang/03-language-deep | unsafe 包：原理、使用场景与风险 | P0 | ✅ 已完成 |
 | 01-golang/06-toolchain | Go Module 与 Workspace 工程实践 | P1 | ✅ 已完成 |
 | 01-golang/06-toolchain | Build Tags 与条件编译 | P1 | ✅ 已完成 |
+| 01-golang/06-toolchain | Go 1.26 工具链重磅更新 | P1 | ✅ 已完成 |
 | 02-database/02-redis | Pipeline 与 Lua 脚本 | P1 | ✅ 已完成 |
 | 02-database/05-connection-pool | 连接池原理与调优：database/sql、Redis、gRPC | P0 | ✅ 已完成 |
 | 02-database/06-mongodb | MongoDB 核心原理与 Go 实战 | P1 | ✅ 已完成 |
@@ -291,6 +292,7 @@
 |------|----------|
 | 🟡 [Go Module 与 Workspace 工程实践](./docs/01-golang/06-toolchain/01-go-module.md) | go.mod / replace / exclude / MVS / GOPRIVATE / go.work |
 | 🟡 [Build Tags 与条件编译](./docs/01-golang/06-toolchain/02-build-tags.md) | //go:build 语法、平台编译、集成测试 tag、与 embed 联动 |
+| 🟡 [Go 1.26 工具链重磅更新](./docs/01-golang/06-toolchain/03-go-fix-analysis-framework.md) | go fix 分析框架重写 / go.mod init 默认值争议 / 链接器并行化 |
 
 </details>
 
