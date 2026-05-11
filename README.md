@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-315-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v3.1-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v3.2-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -859,8 +859,8 @@
 | 🔴 [I/O 模型与零拷贝](./docs/12-linux-os/03-io-model-zero-copy.md) | select/poll/epoll、sendfile、splice、Go netpoller |
 | 🔴 [cgroup、namespace 与容器资源隔离](./docs/12-linux-os/04-cgroup-namespace.md) | 容器资源限制、OOMKilled、GOMAXPROCS、K8s resource 控制 |
 | 🔴 [Linux 线上排障基础](./docs/12-linux-os/05-linux-troubleshooting.md) | load、CPU、内存、fd、IO、TIME_WAIT 排查 SOP |
-| ⏳ Linux 基础高频命令 | top/ps/netstat/ss/lsof/strace/tcpdump 用途、常见排障场景 **待补充** |
-| ⏳ 进程间通信方式 | 管道/消息队列/共享内存/信号量/socket 对比，Go 里的对应实现 **待补充** |
+| 🔴 [Linux 基础高频命令](./docs/12-linux-os/06-linux-commands.md) | top/ps/ss/lsof/strace/tcpdump 排障工具链、Go 服务特殊关注点 |
+| 🔴 [进程间通信方式](./docs/12-linux-os/07-ipc.md) | 管道/消息队列/共享内存/信号量/socket 对比、Go 对应实现 |
 
 </details>
 
