@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-315-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v3.2-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v3.3-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -616,7 +616,7 @@
 | 🟡 [WebSocket](./docs/06-network/02-http/03-websocket.md) | 升级握手、与 HTTP 长轮询对比 |
 | 🟡 [gRPC 与 HTTP/2](./docs/06-network/02-http/04-grpc-http2.md) | 多路复用、流控 |
 | 🟡 [网络基础高频题](./docs/06-network/00-network-basics.md) | TCP vs UDP 三次握手四次挥手滑动窗口、HTTPS TLS、DNS 解析流程、Cookie vs Session vs Token ✅ |
-| ⏳ 输入 URL 到页面展示 | DNS→TCP→TLS→HTTP→渲染完整流程（后端视角：中间件/反向代理/负载均衡）**待补充** |
+| 🟡 [输入 URL 到页面展示](./docs/06-network/00-url-to-response.md) | DNS 递归查询、TCP/TLS 握手、负载均衡、Nginx 反向代理、Go net/http 链路、连接池 |
 
 </details>
 
