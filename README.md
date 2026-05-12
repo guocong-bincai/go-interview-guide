@@ -9,9 +9,18 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-323-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v3.7-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v3.8-blue?style=flat-square)](./docs)
 
 <br/>
+
+## 📝 自动更新记录
+
+| 日期 | 版本 | 更新内容 |
+|------|------|----------|
+| 2026-05-13 | v3.8 | 定期检查：所有P0/P1考点已覆盖，仓库已是最新 |
+| 2026-04-18 | v3.7 | 版本更新 v3.6 → v3.7，文章数量更新至 323 篇 |
+
+---
 
 > 不是入门教程，不是题目合集。
 > 每个知识点直击面试官考察意图，给出**能拿到 Offer 的回答**。
