@@ -52,6 +52,7 @@
 | ✅ | `17-defer.md` | defer 执行顺序、defer+panic+recover 组合、性能损耗 |
 | ✅ | `19-closure.md` | 闭包捕获变量原理、循环变量陷阱（Go 1.22 前后对比） |
 | ✅ | `20-make-new.md` | make/new 区别、零值初始化、适用类型 |
+| ✅ | `22-go1.27-generic-methods.md` | Go 1.27 泛型方法批准、设计哲学、与 Java/C++ 对比 |
 | ✅ | `15-init.md` | init 执行顺序、多包 init 依赖关系、init vs 全局变量 |
 
 ---
