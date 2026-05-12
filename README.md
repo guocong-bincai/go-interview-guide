@@ -356,7 +356,7 @@
 | 🟡 [MySQL 8.0 新特性](./docs/02-database/01-mysql/09-mysql8-new-features.md) | 窗口函数、CTE、SKIP LOCKED/NOWAIT、Instant DDL、JSON_TABLE |
 | 🟡 [Change Buffer 原理](./docs/02-database/01-mysql/11-change-buffer.md) | 索引变更延迟合并、随机 I/O 优化、Redo Log 协作、为何不支持唯一索引 |
 | 🟡 [MySQL 基础高频题](./docs/02-database/01-mysql/10-mysql-basics.md) | char vs varchar 区别、NULL 的坑、count(*) vs count(1) vs count(col)、InnoDB vs MyISAM 选型、VARCHAR 长度陷阱 |
-| ⏳ 索引失效全场景 | 最左前缀、like %前缀、函数/隐式转换、OR 条件、数据量少全表扫描 **待补充** |
+| ✅ [索引失效全场景](./docs/02-database/01-mysql/01-index.md) | 最左前缀、like %前缀、函数/隐式转换、OR 条件、数据量少全表扫描 ✅ 已完成 |
 
 </details>
 
