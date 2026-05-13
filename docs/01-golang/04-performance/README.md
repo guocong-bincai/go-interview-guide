@@ -11,4 +11,4 @@
 - [✅] `05-synctest.md` — 并发测试利器：testing/synctest bubble/Wait/fake time 机制
 - [✅] `06-go-fix-inline.md` — 编译器内联优化与禁止内联：逃逸分析、BCE、GOEXPERIMENT=noinline
 - [✅] `07-heap-profiler-mutation.md` — Go 1.26 Heap Mutation Profile / Goroutine Leak Profile / 堆基址随机化
-- [✅] `07-portable-simd.md` — Go SIMD 可移植化：simd/archsimd 到 Portable SIMD 的演进、AI 推理性能革命
+- [✅] `08-portable-simd.md` — Go SIMD 可移植化：simd/archsimd 到 Portable SIMD 的演进、AI 推理性能革命

@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-324-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v4.0-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-325-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v4.1-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -17,9 +17,8 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
+| 2026-05-14 | v4.1 | 新增《Portable SIMD》：Go SIMD 可移植化完整攻略（simd/archsimd + Portable SIMD + AI 推理实战，325篇）|
 | 2026-05-13 | v4.0 | 更新《sync.Map》：补充 Go 1.24 HashTrieMap 实现 vs 旧版读写分离双 map 原理与性能对比 |
-| 2026-05-13 | v3.9 | 新增《Go 1.27 Breaking Changes》：平台退出/GODEBUG移除/stdversion vet/Unicode17（324篇） |
-| 2026-05-13 | v3.8 | 定期检查：所有P0/P1考点已覆盖，仓库已是最新 |
 
 ---
 
