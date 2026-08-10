@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-337-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v4.8-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v4.9-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -17,7 +17,8 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
-| 2026-08-10 | v4.8 | Linux/OS 模块新增 5 题：CPU Throttling 深度排查（nr_throttled/throttled_usec + pprof 信号）、Go 运行时 M/P/G 生命周期与调度延迟、容器镜像安全优化（distroless/musl/glibc 对比 + Dockerfile 模板）、K8s Guaranteed QoS 最佳实践 + requests=limits 意义（337篇）|
+| 2026-08-10 | v4.9 | Linux/IPC 模块大更新 4 题：eventfd 现代事件通知机制（Go netpoller wakeup 原理）、fork() 后 COW 语义与 GOMAXPROCS 陷阱、seccomp profile 与容器安全（RuntimeDefault/sysbox）、futex 底层原理（Go sync.Mutex 核心依赖）（337篇）|
+| 2026-08-10 | v4.8 |
 | 2026-08-10 | v4.6 | 新增《nil slice vs empty slice》：JSON null vs []序列化差异、append零安全语义、生产规范指南（336篇）|
 | 2026-05-14 | v4.3 | 新增《GC Pacer》深度解析：GC 节奏控制原理、memory goal、gcpacertrace 生产诊断（327篇）|
 | 2026-05-13 | v4.0 | 更新《sync.Map》：补充 Go 1.24 HashTrieMap 实现 vs 旧版读写分离双 map 原理与性能对比 |

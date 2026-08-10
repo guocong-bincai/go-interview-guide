@@ -353,8 +353,351 @@ A：mmap 是创建共享内存的手段之一。mmap 将文件或匿名内存映
 
 ---
 
+## 7. eventfd — 现代 Linux 事件通知机制（2026 高频）
+
+### 7.1 为什么需要 eventfd
+
+在传统的 IPC 体系中，进程间的事件通知通常要用管道、信号量或 socket 来"打信号"。但这些都存在一个问题：**每次通知都需要传输数据**。
+
+eventfd（Linux 2.6.27+, 2009 年引入）是一种**纯计数型通知机制**——没有消息内容，只有一个 64 位计数器。它的设计初衷就是解决"我要告诉对方'某件事发生了'"这个场景，而不关心具体发生了什么。
+
+```bash
+# 创建 eventfd
+int fd = eventfd(0, EFD_NONBLOCK | EFD_SEMAPHORE);
+```
+
+### 7.2 eventfd vs 传统方案对比
+
+| 特性 | eventfd | 匿名管道 | 信号量 | Unix Socket |
+|------|---------|---------|--------|-------------|
+| 触发方式 | write(value) / read() | 写字符串 | semop | send() |
+| 数据类型 | 64 位整数 | 字节流 | 整数计数器 | 任意二进制 |
+| 内核态开销 | 极低（只改计数器） | 中等（缓冲区分配） | 中等（队列操作） | 高（完整 socket 栈） |
+| Go 适用场景 | runtime 内部调度通知 | goroutine 间通信 | — | HTTP/gRPC |
+
+**关键优势：零拷贝 + 低延迟。** eventfd 不复制任何数据，write/read 只是原子地对 64 位计数器加/减。这是 Linux 内核中最快的 IPC 机制之一。
+
+### 7.3 Go 中的实际使用
+
+Go 的 netpoller（epoll 实现）和 runtime 内部大量使用 eventfd 做"wakeup"信号：
+
+```go
+import (
+	"fmt"
+	"syscall"
+	"unsafe"
+)
+
+func main() {
+	// 创建 eventfd，EFD_SEMAPHORE 模式允许每次 read 返回并重置为 0
+efd, err := syscall.Eventfd(0, syscall.EFD_NONBLOCK|syscall.EFD_SEMAPHORE)
+	if err != nil {
+		panic(err)
+	}
+	defer syscall.Close(efd)
+
+	// 写入者
+	go func() {
+		val := uint64(1)
+		buf := (*[8]byte)(unsafe.Pointer(&val))[:]
+		syscall.Write(efd, buf)
+	}()
+
+	// 读取者
+	buf := make([]byte, 8)
+	syscall.Read(efd, buf)
+	fmt.Printf("Received: %d\n", *(*uint64)(unsafe.Pointer(&buf)))
+}
+```
+
+**注意：** 直接使用 `syscall.Eventfd()` 需要 unsafe 指针转换。更安全的做法是使用 [golang.org/x/sys/unix](https://pkg.go.dev/golang.org/x/sys/unix)：
+
+```go
+import (
+	"syscall"
+	"unsafe"
+	"golang.org/x/sys/unix"
+)
+
+func main() {
+efd, _ := unix.Eventfd(0, unix.EFD_NONBLOCK|unix.EFD_SEMAPHORE)
+	defer syscall.Close(efd)
+
+	val := unix.Eventfd_t(1)
+	unix.Write(int32(efd), (*byte)(unsafe.Pointer(&val)), unsafe.Sizeof(val))
+	var rVal unix.Eventfd_t
+	unix.Read(int32(efd), (*byte)(unsafe.Pointer(&rVal)), unsafe.Sizeof(rVal))
+}
+```
+
+### 7.4 与 Go runtime 的关系
+
+Go 1.5+ 的 netpoller 使用了一个经典的 wakeup 模式：
+1. 创建一个 epoll fd 和一个 eventfd
+2. goroutine 阻塞在 epoll 上等待网络事件
+3. 当有外部信号（如 timer 到期、runtime GC stop-the-world）需要唤醒 goroutine 时，往 eventfd 写一个值
+4. eventfd 的 write 会触发 epoll 返回，goroutine 被唤醒
+5. 从 eventfd 读一次消耗掉计数
+
+**这就是为什么你知道"Go netpoller 用 epoll 管理 socket"还不够 —— 你还需要知道它用 eventfd 处理"非 socket 事件的唤醒"。**
+
+---
+
+## 8. Copy-on-Write（COW）与 fork() —— Go 服务与容器镜像优化的根基（2026 高频）
+
+### 8.1 面试官到底想考什么
+
+这道题出现在面试中通常有两个背景：
+
+**背景 A：性能优化**
+> "你的 Go 服务 fork 子进程做任务分发，发现内存暴涨，怎么排查？"
+
+**背景 B：容器镜像优化**
+> "Docker/Containerd 镜像为什么很小？底层用了什么技术？"
+
+两个答案的根因都是同一个东西：**fork 之后的 Copy-on-Write 语义**。
+
+### 8.2 COW 的核心原理
+
+```
+父进程                          子进程 (fork 后瞬间)
+┌───────────────┐              ┌───────────────┐
+│ Page A (RW)   │ ◄─共享同一物理页──► │ Page A (RW)   │
+│ Page B (RO)   │ ◄─共享同一物理页──► │ Page B (RO)   │
+│ Page C (RW)   │ ◄─共享同一物理页──► │ Page C (RW)   │
+└───────────────┘              └───────────────┘
+       ↑ 物理内存还没翻倍！
+```
+
+1. **fork() 之后，父子进程共享同一块物理内存页面**，页表项标记为"Read-Only" + COW bit
+2. **任何一方试图写入某个页面时，CPU 触发缺页中断（Page Fault）**
+3. **内核为该页面分配一块新的物理页，将旧数据复制到新页，然后标记为新页为 RW**
+4. **只有"真正被修改过"的页面才会产生额外的内存消耗**
+
+### 8.3 对 Go 工程师的关键影响
+
+#### 问题一：fork 前一定要先调 GOMAXPROCS，再 fork
+
+```go
+func main() {
+	runtime.GOMAXPROCS(runtime.NumCPU()) // ⚠️ fork 前调！
+	
+	// ... 初始化 ...
+	
+	pid, _, err := syscall.ForkExec("./worker", nil, &syscall.ProcAttr{...})
+	// ⚠️ fork 后的子进程只继承了当前主线程！
+	// 其他 P（Processor）上的 goroutine 全部丢失！
+}
+```
+
+**GOMAXPROCS > 1 时未先 fork 就初始化多 P：** fork 后子进程只拿到主 OS 线程（P[0]），其余 M/G 全部丢失。这会导致**多核能力瞬间下降**。解决方案是在 fork 之前完成 GOMAXPROCS 设置（此时只有一个线程）。
+
+#### 问题二：Go 程序 fork 子进程的内存 footprint
+
+即使 COW 避免了即时翻倍，但如果父进程在 fork 前已经写入了很多堆数据，那么后续这些页面的 COW 复制可能非常巨大。
+
+```bash
+# 实际排查命令
+ps aux --sort=rss | head  # 看 RSS 列变化
+cat /proc/<pid>/smaps_rollup  # 查看各区域的内存统计
+```
+
+**容器镜像优化关联：** containerd/runc 使用 overlayfs 配合 COW 语义来实现轻量级容器快照。镜像层的每个 layer 是只读的，写操作走 COW 到上层 writable layer。这就是为什么 Docker 镜像可以复用、启动速度极快。
+
+### 8.4 面试经典追问
+
+**Q：Go 里 fork 之后只能调用 async-signal-safe 函数，哪些是？**
+A：只有少数几个：write、_exit、exec 等。Go 的 malloc、GC、channel 操作都不是 async-signal-safe 的。这也是为什么 Go 不建议在 goroutine 里直接 fork 的原因。如果需要异步执行子进程，用 os/exec 包代替 raw fork。
+
+**Q：为什么容器能秒级启动？**
+A：两层原因：① COW 让多个容器实例共享底层的只读镜像层物理页；② containerd/shim 模型把 runtime 分离，init 进程只需要解析配置、创建 namespace/cgroup 然后 exec 用户进程，不需要重新下载或解压整个应用。
+
+---
+
+## 9. seccomp —— Linux 系统调用过滤与容器安全（2026 重点）
+
+### 9.1 什么是 seccomp
+
+seccomp（Secure Computing Mode）是 Linux 2.6.12 引入的安全机制，允许进程**过滤自己可以发起的系统调用**。核心有三个模式：
+
+| 模式 | 编号 | 行为 |
+|------|------|------|
+| SECCOMP_MODE_STRICT | 1 | 仅允许 read/write/exit/sigreturn，其余一律 SIGKILL |
+| SECCOMP_MODE_FILTER | 2 | 加载 BPF 规则集，精细控制（**容器默认使用这个**） |
+| SECCOMP_MODE_NOTIFICATION | 3 | 拦截特定 syscall，交由用户空间处理（Go 生态热门） |
+
+### 9.2 Kubernetes 默认 seccomp profile
+
+```yaml
+# Pod 安全上下文配置
+securityContext:
+  seccompProfile:
+    type: RuntimeDefault  # 使用容器运行时提供的默认规则
+```
+
+**RuntimeDefault 做了什么？** 它会基于 Docker/seccomp.json 规则，禁止高风险 syscall（mount、reboot、swapon、ptrace 等），同时放行常用的文件 I/O、网络、信号相关调用。
+
+### 9.3 对 Go 服务的实际影响
+
+```go
+// 如果你的 Go 程序在受限容器中运行，以下代码可能会失败：
+func privilegedOperation() error {
+	// mount syscall 会被 seccomp 拒绝
+	_, err := syscall.Mount("tmpfs", "/mnt", "tmpfs", 0, "size=64m")
+	// err: operation not permitted
+	return err
+}
+
+// 如果你需要某些特权操作，有两种方案：
+// 方案 1：Pod securityContext 中添加 capabilities
+//   securityContext:
+//     capabilities:
+//       add: ["SYS_ADMIN"]
+// 方案 2：自定义 seccomp profile 白名单（推荐用于生产）
+```
+
+### 9.4 sysbox — seccomp 的现代替代方案
+
+传统 seccomp 的问题是"**要么严格到不能用，要么宽松到不安全**"。sysbox（由 Nestlabs/Stackpath 开源）提供了一种新思路：
+
+- 允许容器以"准虚拟机"级别运行（拥有完整的 PID 命名空间、完整的 /proc 访问等）
+- 但仍然隔离了宿主内核资源
+- **支持容器内运行 Docker-in-Docker（dinD）和 systemd**
+
+这对 Go 工程团队的意义是：**如果你需要在容器里编排容器（CI/CD 流水线、微服务测试），传统 seccomp 会让你痛苦，sysbox 是可选方案。**
+
+### 9.5 Go 与 seccomp 的结合
+
+```go
+// Go 的 syscall 包可以直接操作 seccomp（需要 CGO）
+// 更常见的用法是用 bpf（eBPF）方式分析容器的 seccomp 拦截效果
+// Cilium/Hubble 项目就是用 eBPF 来分析 seccomp 拦截情况
+
+import (
+	"github.com/cilium/ebpf/link"
+)
+
+// 利用 eBPF tracepoint 监控 seccomp 拦截的系统调用
+func monitorSeccompViolations() {
+	k, _ := link.OpenKernelTracepoint("syscalls", "sys_enter_execve")
+	defer k.Close()
+	// ... eBPF program 挂载到 tracepoint ...
+}
+```
+
+---
+
+## 10. futex（Fast Userspace Mutex）—— Go sync.Mutex 的底层基石（必考）
+
+### 10.1 一句话定义
+
+futex 是 Linux 内核提供的一个**"用户态快速路径 + 内核态慢速路径"混合同步原语**。**它是 pthread_mutex、Go sync.Mutex、C++ std::mutex 的共同底层依赖。**
+
+### 10.2 为什么需要 futex？
+
+先看不使用 futex 的传统锁实现：
+
+```
+锁竞争不激烈时：
+  spin lock → 忙等待 CPU 循环检查（浪费 CPU）
+
+不用 spin 的时候：
+  pthread_cond_wait → 每次都要陷入内核（系统调用开销大）
+
+futex 的方案：
+  用户态 atomic CAS 检查 → 失败了才 syscall 进入内核阻塞
+```
+
+### 10.3 futex 的工作流程
+
+```go
+// pseudocode，伪代码描述 futex 内部逻辑
+func mutex_Lock() {
+	// 用户态快速路径（无锁竞争时，几乎零开销）
+	if !atomicCAS(&mutexWord, 0, 1) {  // 尝试原子获得锁
+		// 锁已被持有，走到慢速路径
+		syscall FUTEX_WAIT_PRIVATE, &mutexWord, 0, nil
+		// 内核帮我们休眠在当前 futex 对象上
+	}
+}
+
+func mutex_Unlock() {
+	if atomicExchange(&mutexWord, 0) == 1 {
+		// 释放了锁
+		// 如果有人正在等待，通知一个
+		syscall FUTEX_WAKE_PRIVATE, &mutexWord, 1
+	}
+}
+```
+
+**关键点：**
+- **无锁竞争时**：futex 完全在用户态完成（2~3 条汇编指令），不需要陷入内核
+- **有锁竞争时**：等待方通过 `FUTEX_WAIT` 系统调用进入内核睡眠
+- **解锁方**通过 `FUTEX_WAKE` 系统调用唤醒等待方
+- Go 的 `sync.Mutex` 在无竞争时走的是**纯用户态的 CAS 循环**，只有在竞态时才使用 futex
+
+### 10.4 Go sync.Mutex 与 futex 的映射关系
+
+```go
+// Go sync.Mutex 的内部状态：
+type Mutex struct {
+	state int32  // 最低位 = locked 标志
+	              // 次低位 = sema 信号量（等待者的数量）
+}
+
+// Go 中 Mutex 的两种模式：
+// 1. 正常模式（饥饿模式之前的公平轮转）：
+//    - 锁被释放后直接交给最后一个等待的 goroutine
+//    - 依赖 runtime.sleeper（自旋策略）减少不必要的唤醒
+// 2. 饥饿模式：
+//    - 等待时间超过 1ms 的 goroutine 进入饥饿模式
+//    - 锁直接从最后一名等待者转移到新申请者（逆序传递）
+//    - 防止长尾延迟
+```
+
+### 10.5 面试高频追问
+
+**Q：futex 和 semaphore 有什么区别？**
+A：semaphore 是一个跨所有进程的全局计数器，每次增减都要走内核。futex 是用户态优先的——大部分操作在用户态通过 atomic CAS 完成，只有真正需要休眠/唤醒时才进内核。所以 futex 比 semaphore 快几个数量级，也是 Go sync.Mutex 选择它的原因。
+
+**Q：Go 1.23+ 的 sync.Mutex 有变化吗？**
+A：Go 1.23 引入了 WaitGroup 的性能改进和优化，但 Mutex 的核心设计（正常模式/饥饿模式+futex 后端）保持不变。Go 团队的思路始终是："够用就好，不要过度优化"。除非你在 benchmark 中证实 Mutex 确实成了瓶颈，否则不需要换锁。
+
+**Q：futex 有什么已知问题和边界情况？**
+A：最常见的 edge case 是"虚假唤醒"（spurious wakeup）——即使没有 WAKE 调用，等待的 goroutine 也可能被操作系统随机唤醒（例如因为 signal）。Go runtime 会自动重试 CAS 来处理这种情况。另一个问题是"优先级反转"（priority inversion），Go scheduler 的 P 调度在一定程度上缓解了这个问题。
+
+---
+
+## 横向对比补充：新增现代机制 vs 传统机制
+
+| 机制 | 类型 | 特点 | Go 生态地位 |
+|------|------|------|------------|
+| channel | Go 原生 | 协程间消息传递 | ★★★★★ 日常必备 |
+| eventfd | Linux 内核 | 纯计数通知，零拷贝 | ★★★☆☆ runtime 内部用 |
+| mmap + file lock | POSIX | 大块数据共享 | ★★★☆☆ 高性能存储引擎 |
+| Unix Socket | POSIX | 跨进程字节流 | ★★★★☆ gRPC 同机通信 |
+| seccomp | Linux 安全 | 系统调用过滤 | ★★★★☆ K8s/容器标配 |
+| futex | Linux 内核 | 用户态快速锁 | ★★★★★ 几乎所有锁都依赖它 |
+
+---
+
+## 高频追问（续）
+
+**Q：Go 的 runtime 是怎么利用 eventfd 的？**
+A：Go netpoller 使用一个 epoll fd 监听 socket 和网络事件，同时用一个 eventfd 作为 wakeup 通道。当有 timer 到期或 GC stop-the-world 发生时需要唤醒 goroutine，就往 eventfd 写一个值，触发 epoll 返回。这是经典的 epoll + eventfd self-pipe trick 模式，解决了 epoll 无法直接通知非 socket 事件的问题。
+
+**Q：为什么 fork 之后 Go 的 goroutine 变少了？**
+A：因为 fork() 只会复制当前执行的那个 OS 线程及其寄存器状态。如果 GOMAXPROCS > 1，其他 P 绑定的 M 和新创建的 goroutine 都不会被复制到子进程中。所以最佳实践是先调 GOMAXPROCS(1)，然后再 fork 子进程，子进程内部根据需要调整 GOMAXPROCS。
+
+**Q：containerd/shim 模式下，shim 进程死了会怎样？**
+A：shim 进程的作用是充当 containerd 和容器内进程之间的桥梁，处理容器内进程的 reaping 和 IO 重定向。如果 shim 死了，containerd 可以通过 checkpoint/restore（criu）恢复，或者简单地 kill 容器并重新启动一个新的 shim 实例。这就是为什么 containerd v2 架构强调"shim 是无状态的"——随时可以重建。
+
+---
+
 ## 延伸阅读
 
 - Linux man: `man 7 pipe`, `man 7 mq`, `man 7 shm`, `man 7 sem`
+- Linux man: `man 2 eventfd`, `man 2 futex`, `man 2 clone`, `man 7 seccomp`
 - Go syscall 包文档：`godoc.org/syscall`
-- 《Unix 环境高级编程》第 15 章"进程间通信"
+- Google Internals Blog: [The design and implementation of futexes](http://blog.packagecloud.io/eng/2016/05/13/the-design-and-implementation-of-futexes-on-linux/)
+- Brendan Gregg's book: [Systems Performance, Chapter 11](https://www.amazon.com/Systems-Performance-Enterprise-Brendan-Gregg/dp/0133390098) （CPU 调度和 Futex 篇）
