@@ -1,25 +1,26 @@
-# 06 · 网络协议
+# 06 Network 模块
 
-> 考察频率：★★★★☆  优先级：P1
+> 📌 共 14 道高频面试题 ｜ ✅ 已按面试频率排序（★★★★★ → ★☆☆☆）
 
-## 文章清单
+---
 
-### 01-tcp-ip · TCP/IP
-- [✅] `01-tcp-handshake.md` — 三次握手 / 四次挥手、TIME_WAIT 问题、滑动窗口
-- [✅] `02-tcp-flow.md` — 流量控制、拥塞控制（慢启动/CUBIC）
-- [✅] `03-tcp-sticky.md` — 粘包/拆包：原因与解决方案
-- [✅] `04-tcp-keepalive.md` — TCP Keepalive vs 应用层心跳
+## 📋 题目索引（点击直接跳转阅读）
 
-### 02-http · HTTP / HTTPS
-- [✅] `01-http-versions.md` — HTTP/1.1 vs HTTP/2 vs HTTP/3 核心差异、QUIC、队头阻塞
-- [✅] `02-https.md` — TLS 握手流程、证书链、HTTPS 性能优化
-- [✅] `03-websocket.md` — WebSocket 升级握手、与 HTTP 长轮询对比
-- [✅] `04-grpc-http2.md` — gRPC 基于 HTTP/2 的多路复用、流控
+| 序号 | 📄 文件名 | 🔥 频率 | 💡 考点 & 跳转 |
+|---|---|---|---|
+| 01 | `01-00-network-basics.md` | `★★★★★` | [网络基础高频题：TCP vs UDP / HTTP vs HTTPS / DNS / Cookie vs Session vs Token](./01-00-network-basics.md) |
+| 02 | `02-01-tcp-handshake.md` | `★★★★★` | [TCP 三次握手与四次挥手](./01-tcp-ip/02-01-tcp-handshake.md) |
+| 03 | `03-03-tcp-sticky.md` | `★★★★★` | [TCP 粘包与拆包](./01-tcp-ip/03-03-tcp-sticky.md) |
+| 04 | `04-01-http-versions.md` | `★★★★★` | [HTTP/1.1 vs HTTP/2 vs HTTP/3](./02-http/04-01-http-versions.md) |
+| 05 | `05-02-tcp-flow.md` | `★★★★☆` | [TCP 流量控制与拥塞控制](./01-tcp-ip/05-02-tcp-flow.md) |
+| 06 | `06-02-https.md` | `★★★★☆` | [HTTPS 原理、TLS 握手流程、证书链与性能优化](./02-http/06-02-https.md) |
+| 07 | `07-04-grpc-http2.md` | `★★★★☆` | [gRPC 基于 HTTP/2 的多路复用、流控与帧格式](./02-http/07-04-grpc-http2.md) |
+| 08 | `08-01-common-attacks.md` | `★★★★☆` | [Web 安全：常见攻击与防御](./03-security/08-01-common-attacks.md) |
+| 09 | `09-02-backend-security.md` | `★★★★☆` | [后端安全体系](./03-security/09-02-backend-security.md) |
+| 10 | `10-03-authz-rbac-abac.md` | `★★★★☆` | [RBAC、ABAC 与统一权限设计](./03-security/10-03-authz-rbac-abac.md) |
+| 11 | `11-00-url-to-response.md` | `★★★☆☆` | [输入 URL 到页面展示：后端视角完整链路](./11-00-url-to-response.md) |
+| 12 | `12-04-tcp-keepalive.md` | `★★★☆☆` | [TCP Keepalive vs 应用层心跳](./01-tcp-ip/12-04-tcp-keepalive.md) |
+| 13 | `13-03-websocket.md` | `★★★☆☆` | [WebSocket 原理、升级握手、与 HTTP 长轮询对比](./02-http/13-03-websocket.md) |
+| 14 | `14-01-http2-priority.md` | `★★★☆☆` | [HTTP/2 优先级调度：RFC 9218 优先级信号、Server 调度优化、与 Go 1.27 DisableClientPriority](./03-http2-priority/14-01-http2-priority.md) |
 
-### 03-security · 安全
-- [⏳] `01-common-attacks.md` — 常见攻击与防御：SQL 注入、XSS、CSRF、SSRF、JWT 安全
-- [⏳] `02-backend-security.md` — 后端安全体系：服务间认证、审计日志、敏感数据脱敏、密钥轮换
-- [⏳] `03-authz-rbac-abac.md` — RBAC、ABAC 与 OIDC：权限模型、多租户权限、统一鉴权
-
-### 03-http2-priority · HTTP/2 优先级调度
-- [✅] `01-http2-priority.md` — RFC 9218 优先级信号、Server 端调度优化、DisableClientPriority
+---

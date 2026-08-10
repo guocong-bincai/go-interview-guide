@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-337-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v4.9-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-338-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v4.10-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -17,6 +17,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
+| 2026-08-10 | v4.10 | 全仓库 README 格式化：所有题目改为可点击跳转链接（266 个链接），重建 06-network / 10-real-problems / 11-go-std-practice 索引，删除失效死链（338篇）|
 | 2026-08-10 | v4.9 | Linux/IPC 模块大更新 4 题：eventfd 现代事件通知机制（Go netpoller wakeup 原理）、fork() 后 COW 语义与 GOMAXPROCS 陷阱、seccomp profile 与容器安全（RuntimeDefault/sysbox）、futex 底层原理（Go sync.Mutex 核心依赖）（337篇）|
 | 2026-08-10 | v4.8 |
 | 2026-08-10 | v4.6 | 新增《nil slice vs empty slice》：JSON null vs []序列化差异、append零安全语义、生产规范指南（336篇）|
