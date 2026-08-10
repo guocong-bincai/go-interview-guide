@@ -525,6 +525,91 @@ spec:
 
 ---
 
+## 9. Kernel OOM Killer：为什么容器里你的 Go 服务突然消失？（2026 高频）
+
+### 9.1 典型症状
+
+```bash
+# 1. Pod 莫名其妙被重启（CrashLoopBackOff），但应用日志为空
+kubectl get pods -A | grep -i crashloop
+
+# 2. kubectl logs 没有输出，dmesg 里有 OOM 记录
+dmesg | tail -30
+# Out of memory: Killed process 12345 (your-app) total-vm:16384000kB, anon-rss:12582912kB
+
+# 3. 事件查看器确认
+kubectl describe pod your-app | grep -A 5 "Last State"
+# Last State:     Terminated:
+#   Reason:       OOMKilled           ← 关键！
+#   Exit Code:    137               ← SIGKILL = OOM
+```
+
+### 9.2 OOM Killer 的工作机制
+
+```bash
+# Linux 内核的 OOM Killer 评分机制（简化的伪代码）
+# score = base_score + oom_score_adj_penalty + children_bonus
+# 得分最高的进程会被杀死
+
+# 查看当前进程的 OOM 评分（0~1000）
+cat /proc/self/oom_score
+cat /proc/<PID>/oom_score
+
+# 调整优先级（值越小越不容易被杀）
+echo -1000 > /proc/self/oom_score_adj    # root 权限
+# 或者在 cgroup 中设置
+# cat /sys/fs/cgroup/memory/<cgroup>/memory.oom.control
+```
+
+**Go 工程师最容易踩的 OOM 场景：**
+
+| 场景 | 原因 | 排查方法 |
+|------|------|----------|
+| GOMEMLIMIT 未设置 + GC 回收慢 | heap 持续增长直到触发系统级 OOM | `go tool pprof heap` 看 largest_allocs |
+| Go 用 mmap 大量分配大文件映射 | 虚拟内存增长，RSS 超过 cgroup limit | `/proc/<pid>/smaps_rollup` 看 MAP_ANON |
+| CGO 分配的 C 内存不被 Go GC 管 | C 分配不走 runtime.mallocgc | CGO 调用栈分析 + valgrind |
+| Page Cache 吃光物理内存 | OS cache 被 OOM Killer 误判为可用 | `free -h` 看 available vs free |
+
+### 9.3 容器化部署的 OOM 防护三板斧
+
+```yaml
+# Kubernetes 资源请求与限制的正确姿势
+spec:
+  containers:
+  - name: app
+    # ① requests = 保证能启动的最小资源
+    resources:
+      requests:
+        memory: "512Mi"     # QoS = Burstable
+        cpu: "250m"
+      # ② limits = 硬上限，超限会被 OOM Kill
+      limits:
+        memory: "1Gi"       # 不能超过这个值
+        cpu: "1"
+    # ③ GOMEMLIMIT 设为略低于容器 limit
+    env:
+    - name: GOMEMLIMIT
+      value: "950MiB"       # 留 50MB 给内核态、stack、page cache
+    - name: GOGC
+      value: "75"            # 激进 GC（默认 100）
+```
+
+```bash
+# 本地复现 OOM（docker 模拟）
+docker run --rm -m 256m --memory-swap 256m alpine sh -c '
+  # 疯狂 malloc 直到触发 OOM
+  dd if=/dev/zero bs=1M count=300 2>&1 || echo "OOM triggered!"
+'
+# 观察 dmesg：
+# dmesg | grep -i oom | tail -5
+```
+
+### 9.4 面试话术
+
+> "容器里的 OOM 和裸机的 OOM 不同——容器有 memory limit，超过后内核直接 kill 最高分进程。Go 工程师要做三件事：第一，设置 GOMEMLIMIT 低于容器 memory limit；第二，监控 /sys/fs/cgroup/memory/memory.current vs memory.max；第三，定期 pprof heap 检查 largest_allocs，确保不是某个对象异常膨胀导致的 OOM。另外注意，Page Cache 不计入 cgroup 统计，所以看起来 available 很多但容器进程仍被 kill 的情况是正常的——那是内核在回收 cache 后再分配。"
+
+---
+
 ## 延伸阅读
 
 - [Netflix Linux Performance](https://www.brendangregg.com/linuxperf.html)

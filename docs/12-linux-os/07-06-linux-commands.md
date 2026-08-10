@@ -321,6 +321,24 @@ docker run --rm -v $(pwd):/src alpine /bin/sh -c '
 # 结论：纯 Go (CGO_ENABLED=0) 两者无差别；CGO 场景 glibc 更稳
 ```
 
+### B.5 TCP 调优参数与 netstat 分析
+
+```bash
+# 查看 TCP 调优参数（生产环境常用）
+sysctl net.ipv4.tcp_tw_reuse net.ipv4.tcp_fin_timeout \
+  net.ipv4.tcp_max_syn_backlog net.core.somaxconn \
+  net.ipv4.tcp_keepalive_time net.ipv4.tcp_keepalive_intvl
+
+# Go 服务推荐的 sysctl 配置（写入 /etc/sysctl.conf）
+net.ipv4.tcp_tw_reuse = 1         # 允许重用 TIME_WAIT socket
+net.ipv4.tcp_fin_timeout = 30     # FIN-WAIT-2 超时从 60s 降到 30s
+net.ipv4.tcp_max_syn_backlog = 8192  # SYN backlog
+net.core.somaxconn = 65535        # somaxconn ≥ TCP_MAX_SYN_BACKLOG
+net.ipv4.tcp_keepalive_time = 600    # keepalive 检测间隔（秒）
+net.ipv4.tcp_keepalive_intvl = 30
+net.ipv4.tcp_keepalive_probes = 5
+```
+
 ### B.4 生产部署安全检查清单
 
 ```bash
@@ -344,6 +362,197 @@ elfcheck /app 2>/dev/null || readelf -d /app | head -20
 
 ---
 
+## 高频追问
+
+### Q1：strace 追踪一个慢的系统调用很慢，有什么替代方案？
+答：`bcc-tools` 的 `funclatency` 比 strace 轻量得多；或者直接用 `perf record -e syscalls:sys_enter_* -p PID` 做采样分析。
+
+### Q2：ss 和 netstat 的输出有什么区别？
+答：ss 读取 `/proc/net/*` 内核数据结构直接输出，速度远快于 netstat 解析 `/proc/net/tcp`；而且 ss 支持 filter 语法如 `ss -tna '( dport = :80 or sport = :80 )'`。
+
+### Q3：tcpdump 抓到了 SYN 但没有 ACK，怎么判断问题在哪一层？
+答：SYN 发出无 ACK → 可能是防火墙 DROP、路由不可达或目标端口无监听。先用 `ss -tna | grep SYN-SENT` 看本端状态，再用 `tcpdump -i eth0 host target_ip and tcp[tcpflags] & tcp-syn != 0` 确认 SYN 是否真的出去了。
+
+---
+
+### 7. pstack / gstack：线程栈与 Goroutine 栈分析
+
+#### 7.1 背景：什么时候需要看栈？
+
+线上服务偶尔出现 **P99 延迟飙升** 或 **偶发卡顿**，但平均 CPU 不高。这时候你需要知道：**每个线程此刻在执行什么？**
+
+#### 7.2 pstack：查看内核线程调用栈
+
+```bash
+# 查看某个 PID 的完整线程栈（含内核态）
+pstack <PID>
+
+# 示例输出片段：
+# Thread 2 (pid: 12345):
+# #0  0x00007f1234567890 in __epoll_wait () from /lib64/libc.so.6
+# #1  0x000000000042eabc in runtime.epollevent () at ../../src/runtime/sys_linux_amd64.s:...
+# #2  ... runtime.netpoll () at src/runtime/netpoll_epoll.go:...
+```
+
+**Go 工程师重点解读：**
+| 函数名 | 含义 | 异常信号 |
+|--------|------|----------|
+| `__epoll_wait` | Go netpoller 在等 I/O | 正常 |
+| `runtime.gopark` | goroutine 被阻塞（锁、chan、timer） | 持续大量 → 可能有锁争用 |
+| `write()` | 系统调用写磁盘/网络 | 检查是否有 I/O 阻塞 |
+| `pthread_cond_timedwait` | 正在等条件变量超时 | 可能 timer 调度延迟 |
+
+#### 7.3 gstack：golang 专用 goroutine 栈查看器
+
+> gstack 是社区工具，比 pstack 更懂 Go 的 M/P/G 模型。
+
+```bash
+# 编译安装 gstack
+git clone https://github.com/chengrenz/gstack.git
+cd gstack && go build -o gstack .
+
+# 使用：直接传入 PID 即可
+./gstack <PID>
+
+# 只看活跃 goroutine（排除阻塞的）
+./gstack <PID> -active
+
+# 按包统计 goroutine 分布
+./gstack <PID> --summary
+```
+
+**关键区别——pstack vs gstack：**
+| 维度 | pstack | gstack |
+|------|--------|--------|
+| 看到的内容 | Linux 线程栈（M） | Go goroutine 栈（G）+ M |
+| 输出粒度 | 操作系统级 | 语言运行时级 |
+| 适合场景 | 排查 CGO、外部依赖卡住 | 排查 Go 并发死锁、goroutine 泄漏 |
+| 是否需要符号 | 需要 libunwind | 需要 DWARF 调试信息 |
+
+#### 7.4 实战：定位偶发 P99 飙升
+
+```bash
+# 第一步：pprof 确认问题类型
+wget http://localhost:6060/debug/pprof/trace?seconds=5 -o trace.out
+go tool trace trace.out   # 浏览器打开看 schedule 和 syscall 延迟
+
+# 第二步：pstack 看阻塞点（多轮采样对比）
+for i in $(seq 1 10); do
+    pstack <PID> > /tmp/stack_$i.txt
+    sleep 1
+done
+# 对比 10 次栈：如果大量线程停在同一个位置 → 找到根因
+
+grep -c 'runtime.gopark' /tmp/stack_*.txt   # 统计被阻塞的 goroutine
+```
+
+---
+
+### 8. ulimit / limits.conf：资源限制管理
+
+#### 8.1 为什么 Go 工程师也要关心这个？
+
+很多 Go 服务的 "诡异" 问题其实不是代码 bug，而是 **系统限制了资源**：
+
+| 现象 | 常见原因 | 解决方案 |
+|------|----------|----------|
+| `accept4: too many open files` | nofile 限制太低 | 调大 nofile |
+| `fork: retry: resource temporarily unavailable` | nproc 限制太低 | 调大 nproc |
+| `cannot allocate memory` | memlock 限制 | 检查 cgroup 还是 ulimit |
+| `setrlimit: operation not permitted` | 已触及 hard limit | 先改 limits.conf 再改 soft |
+
+#### 8.2 核心命令速查
+
+```bash
+# 查看当前 shell 的资源限制
+ulimit -a
+
+# 输出示例（重点看这一行）：
+# open files                      (-n) 1024        ← Go 常在这里踩坑！
+
+# 临时修改当前会话
+ulimit -n 65535     # 增大文件描述符上限
+ulimit -u 100000    # 增大最大进程数
+
+# ⚠️ 注意：-H（hard）和 -S（soft）的区别
+# S = soft limit（可以超过，但有警告）
+# H = hard limit（软限不能突破的值，只有 root 能提高）
+ulimit -SHn 65535    # 同时设置 soft + hard
+```
+
+#### 8.3 持久化配置：limits.conf
+
+```bash
+# /etc/security/limits.conf （重启生效）
+your-app-user   soft    nofile      65535
+your-app-user   hard    nofile      65535
+your-app-user   soft    nproc       100000
+your-app-user   hard    nproc       100000
+your-app-user   soft    memlock     unlimited
+your-app-user   hard    memlock     unlimited
+```
+
+#### 8.4 Go 容器中的陷阱
+
+```bash
+# Docker 容器默认的 nofile 通常是 1048576
+docker run --rm alpine sh -c 'ulimit -n'
+# 输出：1048576
+
+# 但是！Kubernetes Pod 如果不显式设置，kubelet 会覆盖为 1024！
+kubectl exec -n default pod-name -- ulimit -n
+# 输出可能是：1024  ← 这就是坑
+
+# K8s 解决方式：添加 SYS_RESOURCE capability
+spec:
+  containers:
+  - name: app
+    securityContext:
+      capabilities:
+        add: ["SYS_RESOURCE"]  # 允许提升 soft limit
+```
+
+---
+
+### 9. journalctl / syslog：日志分析与故障取证
+
+#### 9.1 为什么不只靠应用日志？
+
+系统层面的错误（OOM Killer 杀死进程、网络丢包、磁盘坏道）往往**只存在于系统日志中**。Go 应用无法捕获自己的 OOM，必须借助系统日志取证。
+
+```bash
+# 查看 kernel 消息
+journalctl -k -n 100
+
+# 查找 OOM Killer 记录（最常见的系统级 crash 原因）
+journalctl -k | grep -i oom
+# 典型输出：
+# Out of memory: Killed process 12345 (your-app) total-vm:16384000kB, anon-rss:12582912kB
+
+# 按时间范围查询
+journalctl --since "2 hours ago"
+
+# 查看特定服务的日志
+journalctl -u your-app.service -f
+
+# 跨主机排障：切换到上一次启动的 boot
+journalctl -b -1 | tail -50
+
+# 搜索所有 error 级别以上的日志
+journalctl -p err..emerg -n 200
+```
+
+#### 9.2 /var/log/syslog vs journalctl
+
+| 维度 | syslog 系列 | journalctl |
+|------|-------------|------------|
+| 存储格式 | 纯文本 | 二进制（压缩） |
+| 日志轮转 | cronolog / logrotate | journal 自带 rotation |
+| 结构化 | 无 | supports structured fields |
+| 适用 Go 场景 | 兼容性好（旧系统） | 推荐（现代 Linux） |
+
+---
+
 ## 延伸阅读
 
 - Linux man pages: `man tcpdump-filter`
@@ -351,3 +560,5 @@ elfcheck /app 2>/dev/null || readelf -d /app | head -20
 - Go pprof 官方文档：https://go.dev/pkg/net/http/pprof/
 - [Google Container Best Practices](https://cloud.google.com/architecture/best-practices-for-building-containers)
 - [Dockerfile Best Practices](https://docs.docker.com/build/building/best-practices/)
+- [gstack — Go-aware stack viewer](https://github.com/chengrenz/gstack)
+- [Understanding ulimit and /etc/security/limits.conf](https://linux.die.net/man/1/ulimit)

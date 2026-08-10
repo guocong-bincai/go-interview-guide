@@ -1,6 +1,6 @@
 # 12 Linux Os 模块
 
-> 📌 共 8 道高频面试题 ｜ ✅ 已按面试频率排序（★★★★★ → ★☆☆☆）
+> 📌 共 11 道高频面试题 ｜ ✅ 已按面试频率排序（★★★★★ → ★☆☆☆）
 
 ---
 
@@ -14,8 +14,10 @@
 | 04 | `04-03-io-model-zero-copy.md` | `★★★☆☆` | [I/O 模型与零拷贝](./04-03-io-model-zero-copy.md)
 | 05 | `05-04-cgroup-namespace.md` | `★★★☆☆` | [cgroup、namespace 与容器资源隔离](./05-04-cgroup-namespace.md)
 | 06 | `06-05-linux-troubleshooting.md` | `★★★☆☆` | [Linux 线上排障基础](./06-05-linux-troubleshooting.md)
-| 07 | `07-06-linux-commands.md` | `★★★☆☆` | [Linux 基础高频命令：线上排障必备工具链](./07-06-linux-commands.md)
+| 07 | `07-06-linux-commands.md` | `★★★★☆` | [Linux 基础高频命令：线上排障必备工具链](./07-06-linux-commands.md) · pstack/gstack、ulimit/resource limits、journalctl 日志取证、TCP 调优参数
+| 08 | `06-05-linux-troubleshooting.md` | `★★★★☆` | [Kernel OOM Killer 深度解析与防护](#) · container 化 Go 服务的 OOM 排查三板斧
+| 09 | `06-05-linux-troubleshooting.md` | `★★★☆☆` | [Linux 线上排障基础](./06-05-linux-troubleshooting.md)
 | 08 | `08-07-ipc.md` | `★★★☆☆` | [进程间通信：管道、消息队列、共享内存、信号量与 Socket](./08-07-ipc.md)
 
 ---
-_🔄 最后更新：2026-08-10 19:17_
+_🔄 最后更新：2026-08-11 03:00_
