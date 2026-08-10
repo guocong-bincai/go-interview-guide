@@ -359,6 +359,172 @@ go test -run=XXX -test.leak=false -leakck=false  # 跳过 leak 检测
 
 ---
 
+---
+
+## 8. CPU Throttling 实战排障：P99 飙升但 CPU 使用率不高的场景（2026 高频）
+
+> 考察频率：★★★★★  关键词：nr_throttled、throttled_usec、pprof schedule、Guaranteed QoS
+
+### 8.1 典型症状
+
+```
+P99 延迟从 15ms 飙到 200ms+
+CPU 使用率看起来正常（~70%）
+prometheus 显示容器没超 memory limit
+go tool pprof /profile → 看不出明显热点，所有函数都在 "running" 状态
+```
+
+### 8.2 快速定位三板斧
+
+```bash
+# 第一步：检查 cgroup 节流数据
+cat /sys/fs/cgroup/cpu.stat
+# nr_throttled 164        ← 非零！被节流过
+# throttled_usec 15383840 ← 总共节流了 ~15 秒
+
+# 第二步：对比 GOMAXPROCS 和容器限制
+# Go 中查看当前 GOMAXPROCS
+go version  # Go 版本（是否 >= 1.25）
+grep GOMAXPROCS /proc/self/environ 2>/dev/null || echo "未显式设置"
+
+# 如果是 Go < 1.25 且未设置，那默认就是物理核数
+# 假设节点 64 核，容器 limit = 2 核 → 64 个 P 抢 2 核 → 严重 Throttling
+
+# 第三步：在 kubectl exec 中看 K8s 事件
+kubectl get events --field-selector reason=Throttled -n namespace
+# 或查看 metrics-server
+kubectl top pods -n namespace | grep go-service
+```
+
+### 8.3 pprof 中的特殊信号
+
+```go
+// cpu profile 中出现以下特征，基本确认是 Throttling 而非代码问题：
+// 1. runtime.schedule 栈占大量时间
+// 2. goroutine 状态显示为 "running" 但实际吞吐量极低
+// 3. GC 相关栈占比异常（后台标记线程互相抢占）
+// 4. netpoll 栈占比低（网络本身不是瓶颈）
+
+// 验证命令
+curl http://localhost:6060/debug/pprof/profile?seconds=60 > cpuprof.prof
+go tool pprof -text cpuprof.prof | head -20
+# 如果 schedule 前 3 名 → Throttling 嫌疑大
+```
+
+### 8.4 Go 1.25 vs 旧版本的根因差异
+
+| 维度 | Go < 1.25（未设 GOMAXPROCS）| Go 1.25+（默认行为）|
+|------|------------------------------|---------------------||
+| 启动时 GOMAXPROCS | 物理核数（如 64）| min(物理核数, available, ceil(cgroup_limit)) |
+| P 数量 | 过多（远超配额）| 接近配额 |
+| GC worker 数量 | GOMAXPROCS × 25%（可能 16 个）| 按比例减少 |
+| Throttling 概率 | 极高（尤其 limit < 4 核时）| 大幅降低但仍存在 |
+| 动态调整 | ❌ | ✅ updatemaxprocs（适应 IPVS）|
+
+### 8.5 面试话术
+
+> 「排查 CPU Throttling 我一般先看 cgroup 的 cpu.stat，`nr_throttled` 非零就说明有节流。然后在 pprof 里看 `runtime.schedule` 是否占大头——如果是，说明线程在等调度而非做计算。根本解法是设 requests = limits 拿 Guaranteed QoS，Go 1.25 已经自动感知 cgroup 设 GOMAXPROCS，不需要 automaxprocs 了。」
+
+---
+
+## 附录：Go 容器镜像安全与体积优化（2026 趋势）
+
+> 考察频率：★★★☆☆  关键词：distroless、alpine/musl、多阶段构建、静态链接、攻击面
+
+### A.1 为什么镜像大小和安全很重要
+
+```dockerfile
+# ❌ 坏做法：用 ubuntu/fedora 作为基础镜像（臃肿且有 shell）
+FROM golang:1.25 AS builder
+RUN go build -o app .
+FROM ubuntu:24.04          # ~80MB，有 apt/dpkg/bash
+COPY --from=builder /app /usr/local/bin/app
+ENTRYPOINT ["/usr/local/bin/app"]
+
+# ✅ 推荐做法：Dockerfile 多阶段构建
+FROM golang:1.25-bookworm AS builder
+ARG TARGETOS TARGETARCH
+RUN --mount=type=cache,target=/root/.cache/go-build \
+    --mount=type=cache,target=/go/pkg/mod \
+    CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH \
+    go build -ldflags '-w -s' -o /app .
+
+# Distroless 镜像：无 shell、无包管理器、无多余库（~20MB）
+FROM gcr.io/distroless/static-debian12
+COPY --from=builder /app /app
+USER 65534:65534  # non-root user
+ENTRYPOINT ["/app"]
+# ⚠️ distroless/static 没有 libc → 必须 CGO_ENABLED=0
+```
+
+### A.2 Alpine (musl) vs Debian (glibc) vs Distroless 对比
+
+| 维度 | Alpine (musl) | Debian Slim (glibc) | Distroless static |
+|------|--------------|--------------------|--------------------||
+| 镜像大小 | ~7MB | ~70MB | ~20MB |
+| 安全性 | 好（最小攻击面）| 中（有包管理器）| 最好（无 shell/工具） |
+| CGO 支持 | ⚠️ musl libc 兼容性有限 | ✅ 完整支持 | ❌ 需静态链接 |
+| TLS/crypto | ⚠️ BoringSSL，部分 edge case | ✅ OpenSSL | ✅ boringssl (static) |
+| NSS/DNS | ⚠️ musl DNS 解析偶有差异 | ✅ glibc 标准兼容 | ✅ 通过 tdnf/boringssl |
+| Go 兼容性 | ✅ CGO_ENABLED=0 完美 | ✅ CGO_ENABLED=1 正常 | ✅ CGO_ENABLED=0 |
+| 适用场景 | 小内存边缘服务 | 需要 CGO 的场景 | 生产环境首选 |
+
+**关键细节：**
+- **musl 的性能影响**：纯 Go（CGO_ENABLED=0）下 musl vs glibc 性能差异极小；但如果用了 CGO 调用 C 库，musl 可能在 DNS 解析、多线程场景下有微妙差异
+- **distroless 的选择**：`distroless/static` 无运行时依赖（需静态编译），`distroless/base` 包含 glibc 但无 shell（适合 CGO 场景）
+
+### A.3 推荐的 Dockerfile 模板
+
+```dockerfile
+# === Build Stage ===
+FROM golang:1.25-bookworm AS builder
+WORKDIR /src
+
+# Cache dependencies layer
+COPY go.mod go.sum ./
+RUN --mount=type=cache=target=/root/.cache/go-build \
+    --mount=type=cache,target=/go/pkg/mod \
+    go mod download
+
+# Build with optimizations
+COPY . .
+ARG VERSION="dev"
+ARG COMMIT="unknown"
+ARG BUILD_TIME="unknown"
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -ldflags "-s -w -X main.version=${VERSION} -X main.commit=${COMMIT} -X main.buildTime=${BUILD_TIME}" \
+    -trimpath -o /app .
+
+# === Runtime Stage ===
+FROM gcr.io/distroless/static-debian12 AS runtime
+COPY --from=builder /app /app
+USER 65534:65534  # non-root user
+ENTRYPOINT ["/app"]
+```
+
+### A.4 安全检查清单
+
+```yaml
+# K8s Pod Security Standards (PSS) 配置
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    pod-security.kubernetes.io/enforce: restricted  # 最严格级别
+spec:
+  containers:
+  - image: your-app:v1
+    securityContext:
+      runAsNonRoot: true        # 强制非 root 运行
+      readOnlyRootFilesystem: true  # 只读根文件系统
+      allowPrivilegeEscalation: false  # 禁止提权
+      capabilities:
+        drop:
+          - ALL                 # 放弃所有能力
+```
+
+---
+
 ## 延伸阅读
 
 - [Netflix Linux Performance](https://www.brendangregg.com/linuxperf.html)

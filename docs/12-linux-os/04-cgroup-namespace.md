@@ -380,8 +380,149 @@ nproc
 
 ---
 
+## 7. CPU Throttling（CPU 节流）：容器环境下最隐蔽的性能杀手（2025~2026 超高频）
+
+> 考察频率：★★★★★（Go 工程师必考）  关键词：cpu.max、nr_throttled、throttled_usec、GODEBUG、Guaranteed QoS
+
+### 7.1 什么是 CPU Throttling
+
+当容器的实际 CPU 使用超过 `cpu.max` 限制时，内核调度器会**强行暂停该容器中所有线程的执行**——这就是 CPU Throttling。
+
+```bash
+# 查看容器 CPU 配额和节流数据
+cat /sys/fs/cgroup/cpu.max
+# 50000 100000 → quota=50ms, period=100ms → 0.5 核上限
+
+cat /sys/fs/cgroup/cpu.stat
+# usage_usec 2618589    ← 总使用时间
+# user_usec 2102728     ← 用户态时间
+# system_usec 515861    ← 内核态时间
+# nr_periods 309        ← 经历的周期数
+# nr_throttled 164      ← ⚠️ 被节流的次数！非零即有性能问题
+# throttled_usec 15383840 ← ⚠️ 总共被节流了 15 秒！
+```
+
+**关键指标解读：**
+
+| 指标 | 含义 | 正常值 | 告警值 |
+|------|------|--------|--------|
+| `nr_throttled` | 被节流的周期数 | 0 或极低 | 持续增长 → CPU 不够用 |
+| `throttled_usec` | 被节流总时长 | ≈ 0 | > usage_usec × 10% → 严重 |
+| `usage_usec` | 实际消耗 CPU | < quota × elapsed_seconds | > quota × elapsed → 超预算 |
+
+### 7.2 CPU Throttling 如何影响 Go 服务
+
+这是 Go 在 K8s 中最大的坑之一——尤其是**低 CPU limit（如 250m = 0.25 核）**的场景：
+
+**① goroutine 调度延迟飙升**
+```go
+// 0.25 核限制下，100 个 P 的竞争导致:
+// - 一个 goroutine 可能要等 100~500ms 才被调度到 M
+// - 这不是 gc pause，也不是网络延迟，而是纯调度延迟
+// pprof 表现：runtime.schedule 占大量时间，goroutine 栈卡在 "running"
+
+// Go 1.25 之前：GOMAXPROCS = 物理核数（比如 64），但只有 0.25 核可用
+// 结果：64 个 P 抢 0.25 核 → 疯狂 context switch → 几乎全时间花在调度上
+```
+
+**② GC 放大效应**
+```go
+// Go GC 目标是用 25% 的 P 做后台标记工作
+// 如果 GOMAXPROCS = 64，GC 尝试启动 16 个标记线程
+// 但在 0.25 核限制下，这些 GC 线程互相抢占 → GC 效率暴跌
+// → 堆增长更快 → GC 更频繁 → 形成恶性循环
+```
+
+**③ 请求 P99/P999 延迟暴增**
+```
+场景：Go 服务部署在 128 核节点上，CPU limit = 4 核
+没有设置 GOMAXPROCS 的情况下（Go 1.24 及之前）：
+  GOMAXPROCS = 128（宿主机核数）
+  GC worker = 32 个
+  结果：p99 从 15ms 飙升到 200ms+，QPS 下降 65%
+  
+设置 GOMAXPROCS = 4 后：
+  p99 回到 15ms，QPS 恢复正常
+```
+
+### 7.3 Go 1.25 的终极方案（面试必考）
+
+Go 1.25（2025年8月发布）内置了容器感知能力，无需 automaxprocs：
+
+```go
+// Go 1.25 启动时的默认行为：
+// 1. 检查环境变量 GOMAXPROCS 是否已设置（优先用户显式指定）
+// 2. 如果没有，读取 cgroup CPU 限制：
+//    - 遍历 cgroup hierarchy 每一层
+//    - 计算 adjusted_cgroup_limit = max(2, ceil(cpu_limit))
+//    - 最终 default = min(host_cores, available_cores, adjusted_cgroup_limit)
+// 3. 后台定期重新检查（适应 K8s IP VS 动态扩缩）
+
+// 兼容性开关（降级回旧行为）：
+// GODEBUG="containermaxprocs=0" 关闭容器感知
+// GODEBUG="updatemaxprocs=0" 关闭动态调整
+```
+
+### 7.4 Go 1.24 及之前的最佳实践
+
+```yaml
+# K8s Deployment 配置（推荐模式）
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-service
+spec:
+  template:
+    spec:
+      containers:
+      - name: app
+        env:
+        # 方式 1：通过 resourceFieldRef 注入
+        - name: GOMAXPROCS
+          valueFrom:
+            resourceFieldRef:
+              resource: limits.cpu
+        # 方式 2：手动指定（简单但不够灵活）
+        # - name: GOMAXPROCS
+        #   value: "4"
+        # 方式 3：使用 automaxprocs（Go 1.24 及以前推荐）
+        # import _ "go.uber.org/automaxprocs"
+        resources:
+          limits:
+            cpu: "4"
+            memory: "8Gi"
+          requests:
+            cpu: "4"        # ★ requests = limits 确保 Guaranteed QoS
+            memory: "8Gi"
+```
+
+### 7.5 监控与告警（生产必备）
+
+```bash
+# Prometheus 导出容器 CPU 节流指标
+# node-exporter 采集后推送到 Prometheus
+
+# 查询示例（PromQL）：
+# 每秒节流次数 > 0 持续 5 分钟
+rate(container_cpu_cfs_throttled_seconds_total{pod=~"go-service.*"}[5m]) > 0
+
+# 节流占比（throttled / total running time）
+rate(container_cpu_cfs_throttled_seconds_total[5m]) /
+rate(container_cpu_usage_seconds_total[5m]) * 100 > 10
+
+# K8s Events 监控 OOMKill 和 CPU Throttling
+kubectl get events --field-selector reason=OOMKilling -A
+```
+
+### 7.6 面试话术
+
+> 「Go 在 K8s 中最经典的性能问题是 CPU Throttling。核心原因是 Go 1.24 及之前默认 GOMAXPROCS = 宿主机核数，而容器 CPU 限制可能只有 0.5 核，导致几十上百个 P 争抢不到时间片。解决分两步：一是设 requests = limits 拿 Guaranteed QoS；二是设 GOMAXPROCS 匹配 CPU limit。Go 1.25 已经自动做了第一步（容器感知的 GOMAXPROCS），但 requests = limits 仍是 K8s 最佳实践。排查时用 `cat /sys/fs/cgroup/cpu.stat` 看 nr_throttled 是否非零。」
+
+---
+
 ## 延伸阅读
 
 - [cgroup v2 官方文档](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html)
 - [K8s 资源管理](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
 - [Go 1.25 GOMAXPROCS 自动检测](https://go.dev/doc/go1.25)
+- [Go Issue #73193 - CPU limit-aware GOMAXPROCS](https://github.com/golang/go/issues/73193)

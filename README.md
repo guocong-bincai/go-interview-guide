@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-336-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v4.7-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-337-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v4.8-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -17,7 +17,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
-| 2026-08-10 | v4.7 | Linux/OS 模块新增 4 题：io_uring 深度原理（SQ/CQ 环形队列 vs epoll）、Go 信号处理（SIGTERM/SIGURG/SIGPIPE）、NUMA 与 CPU 亲和性、大页内存 THP 陷阱（336篇）|
+| 2026-08-10 | v4.8 | Linux/OS 模块新增 5 题：CPU Throttling 深度排查（nr_throttled/throttled_usec + pprof 信号）、Go 运行时 M/P/G 生命周期与调度延迟、容器镜像安全优化（distroless/musl/glibc 对比 + Dockerfile 模板）、K8s Guaranteed QoS 最佳实践 + requests=limits 意义（337篇）|
 | 2026-08-10 | v4.6 | 新增《nil slice vs empty slice》：JSON null vs []序列化差异、append零安全语义、生产规范指南（336篇）|
 | 2026-05-14 | v4.3 | 新增《GC Pacer》深度解析：GC 节奏控制原理、memory goal、gcpacertrace 生产诊断（327篇）|
 | 2026-05-13 | v4.0 | 更新《sync.Map》：补充 Go 1.24 HashTrieMap 实现 vs 旧版读写分离双 map 原理与性能对比 |

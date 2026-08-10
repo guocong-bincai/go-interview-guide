@@ -350,6 +350,135 @@ taskset -c 0-3 ./your-app   # 只允许跑在 0~3 核
 
 ---
 
+## 7. Go 运行时线程生命周期与 CPU Throttling 影响（2025~2026 高频）
+
+> 考察频率：★★★★★  关键词：M/P/G 模型、CPU quota、throttling、sysmon、GC worker、runtime.schedule
+
+### 7.1 M/P/G 模型回顾
+
+```go
+// Go 运行时三实体关系：
+// G = Goroutine（协程，业务逻辑执行单元）
+// P = Processor（处理器，代表一个可用的 CPU 核心）
+// M = Machine（机器，实际的 OS 线程）
+
+// 核心约束：
+// 1. G → P：G 必须在某个 P 上运行（调度）
+// 2. M → P：每个 M 绑定一个 P，P 不能同时被多个 M 使用
+// 3. M ↔ G：M 从 P 的 runq 或 global queue 取 G 来运行
+// 4. 并行度上限 = GOMAXPROCS = P 的数量 = M 的最大活跃数
+
+// 图示：
+// M0[P0: G1→G2→G3]  M1[P1: G4→G5]  ...  M7[P7: G20]
+//   ↑活跃 goroutine     ↑活跃 goroutine      ↑活跃 goroutine
+```
+
+### 7.2 sysmon：后台监控线程（面试必问）
+
+`sysmon` 是 Go 运行时自带的**唯一非用户创建的 goroutine**，每 20μs~10ms 检查一次：
+
+```go
+// sysmon 负责的关键任务：
+// ① STW 检查：如果某段代码持续运行超过 10ms，触发异步抢占（SIGURG）
+// ② Network poller：调用 netpoll() 检查 epoll 是否有就绪连接
+// ③ GC scan：扫描泄漏的 heap arena
+// ④ Work stealing：空闲 M 从其他 P 偷 G
+// ⑤ Force GC cycle：当 GOGC 耗尽时强制触发 GC
+// ⑥ 检测被阻塞的 M：M 阻塞在 syscall 超过 10ms → 创建新 M 接管 P
+
+// sysmon 本身也是 goroutine，但它优先级极高（不受 GOMAXPROCS 限制）
+// 它不会抢占其他 goroutine，只在自己的时间片内工作
+```
+
+### 7.3 CPU Throttling 对 M/P/G 的影响
+
+这是 Go 工程师在 K8s 中最常踩的坑——尤其是 Go < 1.25 未设 GOMAXPROCS 的场景：
+
+```bash
+# 场景复现：128 核节点，容器 CPU limit = 2 核，未设置 GOMAXPROCS
+# Go 默认 GOMAXPROCS = 128（物理核数），创建了 128 个 P
+# 但 cgroup cpu.max = 200000 / 100000 → 每 100ms 只有 200ms CPU 配额
+# 结果：128 个 P 竞争 2 核时间片
+
+cat /sys/fs/cgroup/cpu.stat
+# usage_usec 8000000    ← 只用了 8 秒的配额
+# nr_periods 80         ← 经历了 80 个周期
+# nr_throttled 78       ← 其中 78 个周期被节流！
+# throttled_usec 7200000 ← 被剥夺了 7.2 秒的执行权
+```
+
+**具体表现：**
+
+| 问题 | 原因 | 症状 |
+|------|------|------|
+| 请求延迟飙升 | M 在等 P 分配，G 在等 M | P99 延迟 +300%~1000% |
+| GC 效率暴跌 | GC worker 过多互相抢占 | GC pause 变长，但 CPU 看起来不高 |
+| QPS 下降 | 有效吞吐量被 cgroup 硬性限制 | wrk/benchmark 结果比预期差 50%+ |
+| pprof 看 `schedule` 耗时高 | goroutine 频繁地在等 P/M | profile 顶部是 runtime.schedule |
+
+### 7.4 诊断命令组合
+
+```bash
+# ① 确认是否 Throttling
+cat /sys/fs/cgroup/cpu.stat | grep -E 'nr_throttled|throttled_usec'
+# nr_throttled > 0 → 存在 Throttling
+
+# ② 查看 Go 进程的 M 数量（OS 线程数）
+cat /proc/$(pidof app)/status | grep Threads
+# 正常值 ≈ GOMAXPROCS；过高 → 可能有 CGO 线程泄漏或被 syscall 卡住
+
+# ③ 查看 P 数量和 GOROUTINE 状态
+curl http://localhost:6060/debug/pprof/goroutine?debug=2 | head -100
+# 大量 "IO wait" + "chan receive" + "syscall" 说明 goroutine 在等
+
+# ④ Go 内置统计
+# curl http://localhost:6060/debug/stats?debug=1
+# 显示 numg（goroutine 总数）、ncg（当前活跃的 goroutine）、schedlatency 等
+
+# ⑤ Prometheus 指标（node-exporter 采集）
+container_cpu_cfs_throttled_seconds_total          # Throttling 总时长
+container_cpu_usage_seconds_total                   # 实际使用 CPU
+container_threads                                   # 线程数
+kube_pod_container_resource_limits{resource="cpu"}  # CPU 限额
+```
+
+### 7.5 解决方案演进
+
+```yaml
+# Go 1.24 及以前（手动方案）
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+      - env:
+        - name: GOMAXPROCS
+          valueFrom:
+            resourceFieldRef:
+              resource: limits.cpu
+        resources:
+          limits:
+            cpu: "4"
+          requests:
+            cpu: "4"  # ★ Guaranteed QoS 是关键
+---
+# import _ "go.uber.org/automaxprocs"  # init() 中自动设 GOMAXPROCS
+
+# Go 1.25+（内置方案）
+# 无需任何配置，运行时自动读取 cgroup limit
+# GODEBUG 开关：
+# containermaxprocs=0  → 回退到 NumCPU()
+# updatemaxprocs=0     → 关闭动态调整
+# 两者都设为 0 可以完全禁用容器感知
+```
+
+### 7.6 面试话术
+
+> 「Go 的 M/P/G 调度模型里，M 需要抢 P 才能运行 G。但在 K8s 容器中，cgroup 限制了实际可用的 CPU 时间片。Go 1.24 及之前默认 GOMAXPROCS = 物理核数，导致大量 M 抢不到 P → 被 cgroup throttle。解决关键是设 requests = limits 拿 Guaranteed QoS + 设 GOMAXPROCS 匹配 CPU limit。Go 1.25 已经内置了这个能力，启动时自动读 cgroup。」
+
+---
+
 ## 延伸阅读
 
 - [Go Runtime Scheduler 源码分析](https://github.com/golang/go/blob/master/src/runtime/proc.go)

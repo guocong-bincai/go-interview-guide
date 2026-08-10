@@ -251,8 +251,103 @@ A：正常。Socket 也是 FD，Go HTTP 服务每个请求对应一个 socket fd
 
 ---
 
+---
+
+## 附录：Go 容器镜像构建与优化命令（2026 趋势）
+
+> 考察频率：★★★☆☆  关键词：多阶段构建、distroless、musl/glibc、CGO_ENABLED、安全扫描
+
+### B.1 Dockerfile 常用命令速查
+
+```bash
+# === 构建阶段（编译）===
+FROM golang:1.25-bookworm AS builder    # 基础镜像选择
+WORKDIR /app                             # 工作目录
+COPY go.mod go.sum ./                    # 分层缓存：先复制依赖文件
+RUN --mount=type=cache,target=/go/pkg/mod go mod download  # BuildKit 缓存
+COPY . .                                 # 复制源代码
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -ldflags '-w -s' -trimpath -o /app .
+
+# === 运行阶段（最小化）===
+FROM gcr.io/distroless/static-debian12  # 无 shell、无包管理器
+COPY --from=builder /app /app
+USER 65534:65534                         # 非 root 运行
+ENTRYPOINT ["/app"]
+```
+
+### B.2 镜像大小对比
+
+```bash
+# 各基础镜像的实际大小（Go 服务场景）
+docker images | grep -E 'golang|debian|alpine|distroless'
+
+# 典型结果：
+# golang:1.25-bookworm        ~1.1GB  （编译用，不应作为运行时镜像）
+# debian:12-slim              ~70MB   （有 apt + glibc）
+# alpine:latest               ~7MB    （musl libc，无包管理时）
+# gcr.io/distroless/static    ~20MB   （boringssl，无 shell）
+# gcr.io/distroless/base      ~80MB   （含 glibc，可跑 CGO）
+
+# 计算压缩比
+# Ubuntu base → Distroless = 缩减约 95%
+# Alpine base → Distroless = 缩减约 70%
+```
+
+### B.3 musl vs glibc 兼容性排查命令
+
+```bash
+# 检查二进制使用的动态库
+$ ldd /app
+# musl 环境下的 Go 静态编译（CGO_ENABLED=0）：
+#     not a dynamic executable
+# glibc 环境下的 Go 静态编译：
+#     not a dynamic executable
+# 但如果有 CGO 链接了 C 库：
+#     libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6
+#     libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6
+
+# 在 Alpine (musl) 容器中测试：
+docker run --rm -v $(pwd):/src alpine /bin/sh -c '
+    apk add --no-cache musl-static
+    # 验证 musl 下 DNS 行为
+    nslookup google.com
+'
+
+# glibc vs musl 关键差异点：
+# 1. musl 的 getaddrinfo() 不使用 nsswitch.conf，只用 /etc/resolv.conf
+# 2. musl 的多线程分配器 (ptmalloc) 在高并发下有不同表现
+# 3. musl 不实现 posix_memalign() 在某些旧版本中
+# 结论：纯 Go (CGO_ENABLED=0) 两者无差别；CGO 场景 glibc 更稳
+```
+
+### B.4 生产部署安全检查清单
+
+```bash
+# ① 检查镜像是否有 root shell
+docker inspect your-image:tag --format='{{.Config.User}}'
+# 输出应为非空值（如 "65534"），不能为空（root）
+
+# ② 检查镜像层数（越多越慢，建议 <= 5 层）
+docker inspect your-image:tag --format='{{len .RootFS.Layers}}'
+# 推荐：< 10（理想 < 5）
+
+# ③ 扫描镜像漏洞
+trivy image your-image:tag --severity HIGH,CRITICAL
+# 或 grype your-image:tag
+
+# ④ 检查二进制是否静态链接（无运行时依赖）
+elfcheck /app 2>/dev/null || readelf -d /app | head -20
+# 如果没有 Dynamic section → 完全静态链接 ✅
+# 如果有 DT_NEEDED 条目 → 有动态依赖 ⚠️
+```
+
+---
+
 ## 延伸阅读
 
 - Linux man pages: `man tcpdump-filter`
 - Brendan Gregg《性能之殇》火焰图章节
 - Go pprof 官方文档：https://go.dev/pkg/net/http/pprof/
+- [Google Container Best Practices](https://cloud.google.com/architecture/best-practices-for-building-containers)
+- [Dockerfile Best Practices](https://docs.docker.com/build/building/best-practices/)
