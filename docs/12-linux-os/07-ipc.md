@@ -124,8 +124,8 @@ ipcrm -q <msgid>
 Go 标准库不直接支持 SysV 消息队列，通常用第三方库：
 
 ```go
-// 使用 go-msq MQ 库（封装了 SysV 消息队列）
-import "github.com/ActiveState/tail/blob/master/src/github.com/ActiveState/tail/winapi/child_process.go"
+// Go 标准库不直接支持 SysV 消息队列，需要 CGO 调用
+// 实际项目中推荐直接用外部消息队列中间件替代
 
 // 更常见的是使用外部消息队列中间件：
 // - NATS（Go 实现的轻量级消息队列）
@@ -192,10 +192,9 @@ mmapFile[0] = 42
 fmt.Println(mmapFile[0]) // 42
 ```
 
-**Go mmap 库推荐：**
+**Go mmap 推荐使用 syscall 标准库即可，无需额外依赖：**
 ```go
-import "github.com/torvalds/linux/blob/master/mm/mmap.go"
-// 或使用标准库 syscall（已演示）
+import "syscall" // Linux 下 syscall.Mmap / syscall.Munmap
 ```
 
 #### 3.4 共享内存 + 同步

@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-327-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v4.4-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v4.5-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -17,7 +17,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
-| 2026-08-10 | v4.4 | 更新《Go 1.26 运行时新特性》：补充 Faster cgo & syscalls（P.syscall 状态移除、cgo 开销 -30%）与 Size-Specialized Malloc 跳表分配优化（327篇）|
+| 2026-08-10 | v4.5 | 新增《Linux 文件系统与中断机制》：inode/硬链接/软链接、文件锁实现原理、VFS缓存机制、tmpfs生产应用、软硬中断/NAPI/eBPF/调度策略对比（335篇）|
 | 2026-05-14 | v4.3 | 新增《GC Pacer》深度解析：GC 节奏控制原理、memory goal、gcpacertrace 生产诊断（327篇）|
 | 2026-05-13 | v4.0 | 更新《sync.Map》：补充 Go 1.24 HashTrieMap 实现 vs 旧版读写分离双 map 原理与性能对比 |
 
@@ -872,6 +872,7 @@
 | 🔴 [Linux 线上排障基础](./docs/12-linux-os/05-linux-troubleshooting.md) | load、CPU、内存、fd、IO、TIME_WAIT 排查 SOP |
 | 🔴 [Linux 基础高频命令](./docs/12-linux-os/06-linux-commands.md) | top/ps/ss/lsof/strace/tcpdump 排障工具链、Go 服务特殊关注点 |
 | 🔴 [进程间通信方式](./docs/12-linux-os/07-ipc.md) | 管道/消息队列/共享内存/信号量/socket 对比、Go 对应实现 |
+| 🔴 [Linux 文件系统与中断机制](./docs/12-linux-os/08-linux-fs-and-interrupts.md) | inode/硬链接/软链接区别、POSIX文件锁/fcntl实现、VFS缓存机制、tmpfs vs ramfs、软硬中断/NAPI/eBPF/调度策略 |
 
 </details>
 

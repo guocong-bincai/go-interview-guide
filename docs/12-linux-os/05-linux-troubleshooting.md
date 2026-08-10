@@ -253,11 +253,11 @@ ulimit -n                           # 当前 shell 的 FD 上限
 # 1. HTTP 客户端未关闭 response body
 resp, _ := http.Get("http://example.com")
 defer resp.Body.Close()  // 必须！否则 FD 泄漏
-io.Copy(ioutil.Discard, resp.Body)  // 消费 body 避免连接池污染
+io.Copy(io.Discard, resp.Body)  // 消费 body 避免连接池污染（Go 1.16+ 用 io.Discard）
 
 # 2. 数据库连接未 Close
 rows, err := db.Query("SELECT ...")
-defer rows.Close()  // 必须！
+defer rows.Close()  // 必须！否则对应 socket FD 泄漏，积累后触发 EMFILE
 ```
 
 ---
@@ -297,7 +297,7 @@ ss -ant | awk '{print $1}' | sort | uniq -c | sort -rn
 resp, _ := client.Get("http://example.com")
 // ⚠️ 如果不读 body，连接不会被归还连接池
 // 高并发时会耗尽 MaxIdleConns
-io.Copy(ioutil.Discard, resp.Body) // 必须消费 body
+io.Copy(io.Discard, resp.Body) // 必须消费 body（Go 1.16+ 用 io.Discard）
 resp.Body.Close()
 ```
 
