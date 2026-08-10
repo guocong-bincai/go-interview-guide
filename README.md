@@ -9,7 +9,7 @@
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
 [![文章数量](https://img.shields.io/badge/文章-327-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v4.3-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v4.4-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -17,6 +17,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
+| 2026-08-10 | v4.4 | 更新《Go 1.26 运行时新特性》：补充 Faster cgo & syscalls（P.syscall 状态移除、cgo 开销 -30%）与 Size-Specialized Malloc 跳表分配优化（327篇）|
 | 2026-05-14 | v4.3 | 新增《GC Pacer》深度解析：GC 节奏控制原理、memory goal、gcpacertrace 生产诊断（327篇）|
 | 2026-05-13 | v4.0 | 更新《sync.Map》：补充 Go 1.24 HashTrieMap 实现 vs 旧版读写分离双 map 原理与性能对比 |
 
