@@ -223,7 +223,136 @@ func TestMain(m *testing.M) {
 
 ---
 
+## 5. 信号（Signal）：Go 服务优雅退出的底层机制（高频）
+
+> 考察频率：★★★★☆  关键词：SIGTERM/SIGINT/SIGQUIT、SIGURG、SIGPIPE、signal.Notify、优雅停机
+
+### 5.1 核心答案（30 秒版）
+
+信号是内核发给进程的**异步通知**，本质是进程控制机制：
+
+| 信号 | 默认行为 | Go 服务场景 |
+|------|---------|------------|
+| `SIGTERM` | 终止进程 | **K8s/Docker stop 时先发它**，应用应优雅退出 |
+| `SIGINT` | 终止进程 | Ctrl+C，本地调试 |
+| `SIGQUIT` | 终止+**core dump** | **Go 程序收到它默认打印所有 goroutine 栈**（排障利器！）|
+| `SIGHUP` | 终止 | 经典用法：重载配置（nginx -s reload）|
+| `SIGUSR1/2` | 终止 | 自定义：触发 GC dump、切换日志级别 |
+| `SIGPIPE` | 终止 | 写已关闭的管道/连接 |
+| `SIGKILL/SIGSTOP` | 终止/暂停 | **不可捕获**，OOMKilled 就是发 SIGKILL |
+| `SIGURG` | 忽略 | **Go 1.14+ 抢占调度用它**，应用不要捕获 |
+
+### 5.2 Go 中处理信号：signal.Notify
+
+```go
+// 标准优雅停机模式
+func main() {
+    ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
+    defer stop()
+
+    srv := &http.Server{Addr: ":8080"}
+    go func() {
+        if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+            log.Fatal(err)
+        }
+    }()
+
+    <-ctx.Done() // 阻塞直到收到 SIGTERM/SIGINT
+    log.Println("收到退出信号，开始优雅停机...")
+
+    // 给存量请求最多 10 秒完成
+    shutdownCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+    defer cancel()
+    if err := srv.Shutdown(shutdownCtx); err != nil {
+        log.Println("强制关闭:", err)
+    }
+    log.Println("服务已退出")
+}
+```
+
+### 5.3 Go 信号特性（面试加分点）
+
+**① SIGQUIT 打印 goroutine 栈**：生产环境发现服务卡死，直接 `kill -QUIT <pid>`，日志里会出现所有 goroutine 的堆栈——这是 Go 工程师最常用的「手动 heap 分析」手段，无需 pprof 端口。
+
+**② SIGURG 是 Go 的抢占信号**：Go 1.14 起，runtime 通过向运行中的 goroutine 发送 SIGURG 实现**异步抢占**（解决 GC 等待用户代码让出导致的 STW 过长）。所以用 `signal.Notify` 捕获 SIGURG 会**破坏调度器**，官方明确不建议捕获。
+
+**③ SIGPIPE 的特殊处理**：Go runtime 对写入 **stdout/stderr** 的 SIGPIPE 直接终止进程（符合 Unix 惯例），但对写入其他 fd（如网络连接）的 SIGPIPE 会**转为 EPIPE 错误返回**，不会杀死进程——所以 Go 服务写已关闭的 TCP 连接不会崩。
+
+**④ 信号与 goroutine**：`signal.Notify` 内部有专门 goroutine 接收信号转发到 channel，注意 channel 必须有消费者，否则信号处理 goroutine 阻塞。
+
+### 5.4 面试话术
+
+> 「Go 服务优雅停机我一般用 signal.NotifyContext 监听 SIGTERM/SIGINT，收到后给 http.Server.Shutdown 一个超时上下文，先摘流量、等存量请求完成、再关连接池。另外两个细节：生产排查卡死用 kill -QUIT 拿 goroutine 栈；SIGURG 是 Go 自己抢占用的，不能捕获。」
+
+---
+
+## 6. NUMA 与 CPU 亲和性：多路 CPU 下的 Go 服务优化（2026 升温）
+
+> 考察频率：★★★☆☆  关键词：NUMA node、本地/远端内存、numactl、CPU 绑定、GOMAXPROCS
+
+### 6.1 什么是 NUMA
+
+多路（多 CPU 插槽）服务器上，内存被划分到不同的 **NUMA node**，每个 CPU 访问「本地 node」内存快（几十 ns），访问「远端 node」内存慢（跨 QPI/UPI 总线，延迟可高 1.5~2 倍，带宽受限）：
+
+```
+┌──── Socket 0 ────┐        ┌──── Socket 1 ────┐
+│ CPU0  CPU1       │  QPI   │ CPU2  CPU3       │
+│   ↓    ↓         │◄──────►│   ↓    ↓         │
+│ 内存 node0       │ 总线   │ 内存 node1       │
+│ （本地访问快）    │        │ （本地访问快）    │
+└──────────────────┘        └──────────────────┘
+   CPU0 访问 node1 = 远端访问 = 慢
+```
+
+### 6.2 查看与绑定
+
+```bash
+# 查看 NUMA 拓扑
+numactl --hardware
+# available: 2 nodes (0-1)
+# node 0 cpus: 0 1 2 3 ... 15
+# node 0 size: 128 GB
+# node 1 cpus: 16 17 18 ... 31
+# node 1 size: 128 GB
+
+# 绑定进程到 node0 运行（numactl 执行）
+numactl --cpunodebind=0 --membind=0 ./your-app
+
+# 查看进程当前 NUMA 分配
+numastat -p <pid>
+# 查看是否有跨 node 分配（node1 列非 0 说明发生了远端访问）
+```
+
+### 6.3 对 Go 服务的影响（面试核心）
+
+**① 跨 node 内存访问拖慢性能**：Go 的 GC、对象分配可能把对象放在「离运行 CPU 很远」的 node，导致远端内存访问成为热点。典型症状：同样的 QPS，多路机器上性能不如单路，且 pprof 显示 `runtime.memmove`、`mallocgc` 耗时异常。
+
+**② GOMAXPROCS 必须感知容器配额**：Go 1.19 起默认根据 **cgroup CPU quota** 自动设置 GOMAXPROCS（而不是物理核数）。在 64 核宿主机上给容器 4 核 quota，如果不感知会把 GOMAXPROCS 设为 64，导致大量线程争抢、上下文切换爆炸。
+
+```go
+// 手动查看/设置（一般不用，runtime 已自动）
+fmt.Println("GOMAXPROCS =", runtime.GOMAXPROCS(0))
+// 容器场景可用 automaxprocs 库兜底
+// import _ "go.uber.org/automaxprocs"
+```
+
+**③ CPU 亲和性（taskset）**：把 CPU 密集型服务绑定到固定 CPU 核，减少 cache 失效和调度迁移：
+
+```bash
+taskset -c 0-3 ./your-app   # 只允许跑在 0~3 核
+```
+
+**④ 网卡中断绑定**：高吞吐网络服务把网卡 IRQ 绑定到与业务 CPU 同一 node，否则中断处理与业务跨 node 通信，吞吐明显下降（`/proc/irq/<irq>/smp_affinity`）。
+
+### 6.4 面试话术
+
+> 「NUMA 的核心是内存访问延迟不对称，本地快远端慢。Go 服务在多路机器上我主要注意三点：一是 GOMAXPROCS 要感知 cgroup quota，Go 1.19+ 已自动做；二是 CPU 密集服务用 taskset 绑定核；三是高吞吐场景把网卡中断和业务 CPU 绑到同一 node。排查跨 node 访问用 numastat 看 node 分布。」
+
+---
+
 ## 延伸阅读
 
 - [Go Runtime Scheduler 源码分析](https://github.com/golang/go/blob/master/src/runtime/proc.go)
 - [Linux Context Switch 性能测试](https://blog.fluentbit.io/context-switching-overhead/)
+- [Go 官方 os/signal 文档](https://pkg.go.dev/os/signal)
+- [Linux NUMA 架构详解](https://www.kernel.org/doc/html/latest/vm/numa.html)

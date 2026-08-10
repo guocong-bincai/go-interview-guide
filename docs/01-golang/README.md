@@ -54,6 +54,7 @@
 | ✅ | `20-make-new.md` | make/new 区别、零值初始化、适用类型 |
 | ✅ | `22-go1.27-generic-methods.md` | Go 1.27 泛型方法批准、设计哲学、与 Java/C++ 对比 |
 | ✅ | `15-init.md` | init 执行顺序、多包 init 依赖关系、init vs 全局变量 |
+| ✅ | `23-nil-vs-empty-slice.md` | nil slice vs empty slice：JSON 序列化差异、append 行为、零值语义（新增）|
 
 ---
 

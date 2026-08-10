@@ -312,8 +312,91 @@ conn, err := net.Dial("tcp", "localhost:8080")
 
 ---
 
+## 6. io_uring：为什么它被称为"革命性"的 I/O 接口（2026 高频）
+
+> 考察频率：★★★☆☆（2026 年热度上升）  关键词：SQ/CQ 环形队列、免系统调用、libaio vs io_uring、Go 生态现状
+
+### 6.1 面试官考察意图
+
+面试官看到简历上写过「高性能存储 / 消息中间件 / 网络框架」时，极大概率追问 io_uring。初级只会背「io_uring 快」，高级要讲清楚：**为什么快（环形队列免 syscall）**、**和 epoll 解决的不是同一个问题**、**为什么 Go 官方 netpoller 至今没用它**。
+
+### 6.2 核心答案（30 秒版）
+
+| 维度 | epoll | io_uring |
+|------|-------|----------|
+| 解决的问题 | **就绪通知**（告诉我哪个 fd 可读可写）| **整条 I/O 链路异步化**（提交+完成都免阻塞）|
+| 系统调用 | 每次读写仍需 read/write syscall | `io_uring_enter` 批量提交，读写由内核异步执行 |
+| 用户态/内核态交互 | 通过回调/就绪队列 | **共享内存环形队列（SQ/CQ）**，mmap 映射，无数据拷贝 |
+| 数据拷贝 | 传统拷贝 | 支持固定缓冲区（registered buffers）零拷贝 |
+| 适用 | 高并发网络连接管理（Go netpoller 正是如此）| 磁盘 I/O、存储引擎、数据库、网络收发一体 |
+
+**一句话记忆：epoll 解决「等」的问题，io_uring 解决「做」的问题。**
+
+### 6.3 原理：两个环形队列 + 三段系统调用
+
+```
+用户态                                       内核态
+┌─────────────────────┐         ┌──────────────────────┐
+│  SQ（Submission）    │  mmap   │  内核线程/IRQ 处理     │
+│  提交队列（环形）     │◄───────►│  从 SQ 取请求执行      │
+│  ┌──┬──┬──┬──┐      │  共享    │                      │
+│  │S1│S2│S3│  │      │  内存    │  执行 read/write/     │
+│  └──┴──┴──┴──┘      │         │  open/fsync/...       │
+│                     │         │                      │
+│  CQ（Completion）    │◄───────►│  完成后写回结果        │
+│  完成队列（环形）     │         │                      │
+│  ┌──┬──┬──┬──┐      │         │                      │
+│  │C1│C2│  │  │      │         │                      │
+│  └──┴──┴──┴──┘      │         └──────────────────────┘
+└─────────────────────┘
+```
+
+**三段接口：**
+
+```c
+// 1. io_uring_setup：创建 ring，返回 fd，内核把 SQ/CQ 映射到用户态地址空间
+struct io_uring_params params;
+int ring_fd = io_uring_setup(256, &params);   // 队列深度 256
+
+// 2. 用户态直接往 SQ 写 SQE（Submission Queue Entry），无需每次 syscall
+//    一次 io_uring_enter 可以批量提交多个请求，减少上下文切换
+io_uring_enter(ring_fd, to_submit=128, min_complete=1, 0);
+
+// 3. 完成后内核把结果写入 CQ，用户态轮询 CQ 即可（甚至可配合 IOPOLL 免中断）
+```
+
+**性能关键点：**
+1. **免 syscall 风暴**：万级 QPS 的传统 read/write = 每秒数万次系统调用；io_uring 一次 enter 批量提交，系统调用次数降低 2~3 个数量级
+2. **真正异步**：libaio 对 buffered I/O 经常退化为同步阻塞；io_uring 从设计上就是异步的
+3. **固定缓冲区**：`IORING_REGISTER_BUFFERS` 预注册缓冲区，内核直接操作，省去页表遍历与引用计数
+4. **IOPOLL**：NVMe 场景下内核轮询硬件完成队列，延迟可到微秒级
+
+### 6.4 高频追问
+
+**Q1：epoll + 线程池 和 io_uring 差在哪？**
+
+epoll 只告诉你「fd 就绪了」，真正的 read/write 还是要应用层发起系统调用并阻塞在读写上（除非用非阻塞 + 用户态拷贝）。io_uring 把「提交→执行→完成」整条链路由内核异步处理，应用层只碰两个环形队列。所以 io_uring 尤其适合**磁盘 I/O 密集**场景（存储、数据库、日志），而网络场景 epoll 已经够好。
+
+**Q2：为什么 Go 官方 netpoller 不用 io_uring？**
+
+Go 的 goroutine 模型天然便宜，一个 goroutine 阻塞在一个 epoll 事件上几乎零成本，epoll 已经能让 Go 支撑百万连接。io_uring 的收益主要在高频磁盘 I/O 和极致延迟场景；Go 官方在 net 层引入 io_uring 的收益有限，复杂度却很高（ring 的并发访问、内存模型），目前（Go 1.26）netpoller 仍基于 epoll。
+
+**Q3：Go 生态里哪里用到了 io_uring？**
+
+- **go-nitro**（字节跳动开源）：Go 的 io_uring 库，主打低延迟网络
+- **uring-go**：更完整的 Go io_uring 绑定
+- 存储/数据库类 C 项目直接用 liburing；Kafka 等 JVM 项目通过 JNI 使用
+- 如果只是写业务 API，**不要为了炫技引入 io_uring**——epoll + goroutine 在绝大多数场景足够
+
+### 6.5 面试话术（30 秒说完）
+
+> 「io_uring 的核心是把提交队列和完成队列通过 mmap 共享给内核，应用层批量提交请求后可以继续做别的，内核异步执行完写回完成队列。相比 epoll 只解决就绪通知、读写还得自己调 syscall，io_uring 把整条 I/O 链路异步化了，特别适合磁盘 I/O 密集场景。Go 官方 netpoller 没用它，是因为 goroutine + epoll 已经能把网络并发做得很好，io_uring 的收益在存储引擎这类场景更明显。」
+
+---
+
 ## 延伸阅读
 
 - [The Secret of epoll Performance](https://idea.popcount.org/2017-02-20-epoll-the-api-is-os-agnostic-but-the-implementation-is-not/)
 - [io_uring vs epoll](https://www.scylladb.com/2021/01/28/how-io_uring-will-change-how-we-write-software/)
+- [io_uring(7) man page](https://man7.org/linux/man-pages/man7/io_uring.7.html)
 - [Go netpoller 源码分析](https://github.com/golang/go/blob/master/src/runtime/netpoll_epoll.go)

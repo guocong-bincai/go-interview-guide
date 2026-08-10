@@ -8,8 +8,8 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/guocong-bincai/go-interview-guide/pulls)
-[![文章数量](https://img.shields.io/badge/文章-327-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v4.5-blue?style=flat-square)](./docs)
+[![文章数量](https://img.shields.io/badge/文章-336-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v4.7-blue?style=flat-square)](./docs)
 
 <br/>
 
@@ -17,7 +17,8 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
-| 2026-08-10 | v4.5 | 新增《Linux 文件系统与中断机制》：inode/硬链接/软链接、文件锁实现原理、VFS缓存机制、tmpfs生产应用、软硬中断/NAPI/eBPF/调度策略对比（335篇）|
+| 2026-08-10 | v4.7 | Linux/OS 模块新增 4 题：io_uring 深度原理（SQ/CQ 环形队列 vs epoll）、Go 信号处理（SIGTERM/SIGURG/SIGPIPE）、NUMA 与 CPU 亲和性、大页内存 THP 陷阱（336篇）|
+| 2026-08-10 | v4.6 | 新增《nil slice vs empty slice》：JSON null vs []序列化差异、append零安全语义、生产规范指南（336篇）|
 | 2026-05-14 | v4.3 | 新增《GC Pacer》深度解析：GC 节奏控制原理、memory goal、gcpacertrace 生产诊断（327篇）|
 | 2026-05-13 | v4.0 | 更新《sync.Map》：补充 Go 1.24 HashTrieMap 实现 vs 旧版读写分离双 map 原理与性能对比 |
 
@@ -140,6 +141,7 @@
 | 模块 | 缺少的文章 | 优先级 | 状态 |
 |------|----------|--------|------|
 | 01-golang/03-language-deep | 编译器优化：内联决策与逃逸深度 | P1 | ✅ 已完成 |
+| 01-golang/03-language-deep | nil slice vs empty slice：JSON null vs []序列化差异、append行为 | P2 | ✅ 已完成 |
 | 01-golang/03-language-deep | CGO 原理与面试考点 | P0 | ✅ 已完成 |
 | 01-golang/03-language-deep | unsafe 包：原理、使用场景与风险 | P0 | ✅ 已完成 |
 | 01-golang/06-toolchain | Go Module 与 Workspace 工程实践 | P1 | ✅ 已完成 |

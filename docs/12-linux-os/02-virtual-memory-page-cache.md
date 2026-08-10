@@ -277,8 +277,90 @@ sysctl vm.swappiness=1  # 内存不足时才用 Swap
 
 ---
 
+## 5. 大页内存（Huge Pages / THP）：TLB 命中率的杀手锏（2026 高频）
+
+> 考察频率：★★★☆☆  关键词：4KB vs 2MB/1GB、TLB miss、THP、数据库优化、khugepaged
+
+### 5.1 为什么需要大页
+
+x86-64 默认页大小 **4KB**，而 CPU 的 TLB（页表缓存）条目只有几十到几百个。**4KB 页意味着 TLB 只能覆盖几 MB 内存**，大内存应用频繁 TLB miss → 每次都要走多级页表 → 内存访问变慢。
+
+大页（Huge Pages）把页大小提升到 **2MB / 1GB**，同样的 TLB 条目数可覆盖的内存扩大 512 倍：
+
+| 页大小 | 256 条 TLB 覆盖 | 适用场景 |
+|--------|----------------|----------|
+| 4KB（默认）| ~1MB | 普通应用 |
+| 2MB（HugePages/THP）| ~512MB | 数据库、缓存、搜索引擎 |
+| 1GB（GB 页）| ~256GB | 大内存数据库、HPC |
+
+### 5.2 两种实现：HugePages 与 THP
+
+**① 显式 HugePages（传统）**：启动前预留，应用需要显式支持（`MAP_HUGETLB`）：
+
+```bash
+# 预留 64 个 2MB 大页（共 128MB）
+echo 64 > /proc/sys/vm/nr_hugepages
+# 查看
+cat /proc/meminfo | grep -i huge
+# HugePages_Total: 64
+# HugePages_Free:  64
+# Hugepagesize:    2048 kB
+```
+
+**② THP（Transparent Huge Pages，透明大页）**：内核自动把「连续且热」的内存合并成大页，应用无感知：
+
+```bash
+# 查看 THP 状态
+cat /sys/kernel/mm/transparent_hugepage/enabled
+# [always] madvise never   ← 三种模式
+# always: 自动合并（默认）
+# madvise: 只有应用调用 madvise(MADV_HUGEPAGE) 才合并
+# never: 关闭
+```
+
+### 5.3 生产陷阱：数据库为何要关 THP（高频追问）
+
+THP 看起来美好，但有著名坑：
+
+1. **khugepaged 线程抖动**：内核后台线程扫描并合并大页，会**间歇性占用 CPU** 并持有锁，导致数据库出现**延迟尖刺（latency spike）**
+2. **内存碎片**：合并失败时反而增加碎片
+3. **分配延迟**：大页分配（contiguous allocation）比 4KB 慢，GC/重分配时卡顿
+
+所以 **MySQL / PostgreSQL / Redis 官方部署文档几乎都建议关闭 THP**：
+
+```bash
+# 关闭 THP（数据库机器标配）
+echo never > /sys/kernel/mm/transparent_hugepage/enabled
+echo never > /sys/kernel/mm/transparent_hugepage/defrag
+```
+
+### 5.4 Go 服务需要大页吗？
+
+**一般不需要。** Go 的堆由 runtime 按 8KB 左右的 span 管理，内存布局碎片化，天然不适合大页；而且 THP 的 khugepaged 抖动对低延迟 Go 服务同样有风险（线上偶发 P99 尖刺时可怀疑它）。
+
+需要大页的典型场景：
+- 大内存缓存/搜索引擎（直接 mmap 大文件）
+- 数据库共享缓冲区
+- 巨型 map/slice 连续内存（可用 `madvise(MADV_HUGEPAGE)` 提示）
+
+```go
+// Go 中 mmap 大块内存并提示内核用大页（Linux）
+// 需要 golang.org/x/sys/unix
+m, _ := unix.Mmap(-1, 0, 512*1024*1024,
+    unix.PROT_READ|unix.PROT_WRITE,
+    unix.MAP_PRIVATE|unix.MAP_ANONYMOUS)
+unix.Madvise(m, unix.MADV_HUGEPAGE) // 提示合并大页（需 madvise 模式）
+```
+
+### 5.5 面试话术
+
+> 「大页的核心价值是提高 TLB 命中率——页从 4KB 变 2MB，同样数量的 TLB 条目覆盖的内存扩大 512 倍，大内存应用能明显降低访问延迟。但生产上要注意 THP 的坑：khugepaged 合并会造成延迟尖刺，所以数据库机器一般显式关闭 THP；Go 服务堆内存碎片化，通常也用不上大页。」
+
+---
+
 ## 延伸阅读
 
 - [Linux 内存管理文档](https://www.kernel.org/doc/html/latest/vm/)
 - [Go 内存分配器 tcmalloc 原理](https://github.com/golang/go/blob/master/src/runtime/mheap.go)
 - [mmap 性能分析](https://www.flamingspork.com/blog/2022/01/04/mmap-vs-read/)
+- [Red Hat: Transparent Huge Pages 说明](https://access.redhat.com/solutions/46111)
