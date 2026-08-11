@@ -34,7 +34,9 @@
 | ✅ | `77-channel-vs-mutex.md` | [Channel vs Mutex：何时用哪个？Go Proverbs 实战解读](02-concurrency/77-channel-vs-mutex.md) |
 | ✅ | `78-panic-recover.md` | [Panic / Recover 正确姿势：异常处理边界、HTTP Handler 兜底、goroutine 保护](02-concurrency/78-panic-recover.md) |
 | ✅ | `79-context-value-pitfalls.md` | [Context Value 传递陷阱：key 类型、超时管理、反模式与最佳实践](02-concurrency/79-context-value-pitfalls.md) |
+| ✅ | `79-08-waitgroup.md` | [WaitGroup：协程同步计数器，Add/Done/Wait 机制与常见陷阱](02-concurrency/79-08-waitgroup.md) |
 | ✅ | `80-functional-options.md` | [函数选项模式（Functional Options）：API 优雅设计、Option 接口实现](02-concurrency/80-functional-options.md) |
+| ✅ | `80-pool-best-practices.md` | [sync.Pool 最佳实践与误区：对象池设计哲学、New回调、Get/Put生命周期](02-concurrency/80-pool-best-practices.md) |
 
 ---
 
@@ -59,6 +61,8 @@
 | ✅ | `18-22-go1.27-generic-methods.md` | [Go 1.27 泛型方法批准、设计哲学、与 Java/C++ 对比](03-language-deep/18-22-go1.27-generic-methods.md) |
 | ✅ | `58-15-init.md` | [init 执行顺序、多包 init 依赖关系、init vs 全局变量](03-language-deep/58-15-init.md) |
 | ✅ | `19-23-nil-vs-empty-slice.md` | [nil slice vs empty slice：JSON 序列化差异、append 行为、零值语义（新增）](03-language-deep/19-23-nil-vs-empty-slice.md) |
+| ✅ | `78-nil-vs-closed-channel.md` | [nil Channel vs Closed Channel：发送接收行为差异、select default 检测、goroutine 泄漏防护](03-language-deep/78-nil-vs-closed-channel.md) |
+| ✅ | `80-interface-composition-vs-embedding.md` | [Interface 组合 vs 嵌入：Method Set 规则、隐式实现、依赖注入最佳实践](03-language-deep/80-interface-composition-vs-embedding.md) |
 
 ---
 
@@ -69,6 +73,7 @@
 | ✅ | `05-01-pprof.md` | [pprof 使用、CPU/内存/goroutine 火焰图分析](04-performance/05-01-pprof.md) |
 | ✅ | `65-02-memory-leak.md` | [内存泄漏排查：goroutine 泄漏、全局变量、缓存失控](04-performance/65-02-memory-leak.md) |
 | ✅ | `66-03-benchmark.md` | [基准测试规范、避免编译器优化干扰](04-performance/66-03-benchmark.md) |
+| ✅ | `79-false-sharing.md` | [False Sharing（伪共享）：CPU 缓存行对齐、padding 技巧与多核性能优化](04-performance/79-false-sharing.md) |
 | ✅ | `20-04-tuning-cases.md` | [真实调优案例：JSON 解析、字符串拼接、sync.Pool 实战](04-performance/20-04-tuning-cases.md) |
 
 ---
@@ -85,6 +90,7 @@
 | ✅ | `63-io-reader-writer.md` | [io.Reader/Writer 设计模式、流式处理、bufio、Decorator 模式](03-language-deep/63-io-reader-writer.md) |
 | ✅ | `30-13-time.md` | [time.Timer/Ticker 正确用法、Stop/Reset 陷阱、内存泄漏、时区处理](05-stdlib/30-13-time.md) |
 | ✅ | `60-18-string-byte.md` | [string 底层结构、string↔[]byte 零拷贝、为什么不可变（strings.Builder vs bytes.Buffer）](03-language-deep/60-18-string-byte.md) |
+| ✅ | `79-graceful-shutdown.md` | [Graceful Shutdown：http.Server.Shutdown、信号处理、draining、K8s 配合](05-stdlib/79-graceful-shutdown.md) |
 
 ---
 

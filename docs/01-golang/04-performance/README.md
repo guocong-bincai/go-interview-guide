@@ -1,6 +1,6 @@
 # 04 Performance 模块
 
-> 📌 共 8 道高频面试题 ｜ ✅ 已按面试频率排序（★★★★★ → ★☆☆☆）
+> 📌 共 9 道高频面试题 ｜ ✅ 已按面试频率排序（★★★★★ → ★☆☆☆）
 
 ---
 
@@ -15,7 +15,8 @@
 | 05 | `21-07-heap-profiler-mutation.md` | `★★★★☆` | [Go 1.26 heap mutations / goroutine leak Profile：堆异常检测与泄漏定位](./21-07-heap-profiler-mutation.md) · 键词：heap mutations、pprof mutation profile、goroutine
 | 06 | `65-02-memory-leak.md` | `★★★☆☆` | [内存泄漏排查：goroutine 泄漏、map 泄漏、timer 泄漏、sync.Pool 陷阱](./65-02-memory-leak.md)
 | 07 | `66-03-benchmark.md` | `★★★☆☆` | [基准测试规范：benchmark 写法、避免编译器优化干扰、性能对比模板](./66-03-benchmark.md)
-| 08 | `67-05-synctest.md` | `★★★☆☆` | [Go 并发测试利器：testing/synctest 包的原理与面试要点](./67-05-synctest.md) · 察角度：并发测试可靠性、synctest 设计哲学、与传统测试方法的对比
+| 08 | `79-false-sharing.md` | `★★★★☆` | [False Sharing（伪共享）：CPU 缓存行对齐、padding 优化技巧与 perf 检测](./79-false-sharing.md) · 关键词：cache line、伪共享、结构体 padding、多核性能
+| 09 | `67-05-synctest.md` | `★★★☆☆` | [Go 并发测试利器：testing/synctest 包的原理与面试要点](./67-05-synctest.md) · 察角度：并发测试可靠性、synctest 设计哲学、与传统测试方法的对比
 
 ---
-_🔄 最后更新：2026-08-10 19:17_
+_🔄 最后更新：2026-08-12 03:02_
