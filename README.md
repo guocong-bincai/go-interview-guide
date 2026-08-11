@@ -7,10 +7,8 @@
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
-[![题目数量](https://img.shields.io/badge/题目-309-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v5.0-blue?style=flat-square)](./docs)
-
-**不是入门教程，不是题目合集。每个知识点直击面试官考察意图，给出能拿到 Offer 的回答。**
+[![题目数量](https://img.shields.io/badge/题目-313-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v5.1-blue?style=flat-square)](./docs)
 
 [📚 模块导航](#-模块导航) · [🗺️ 学习路线](#️-学习路线) · [📝 更新记录](#-更新记录) · [🤝 贡献指南](#-贡献指南)
 
@@ -20,11 +18,11 @@
 
 ## 📚 模块导航
 
-> 共 **309** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
+> 共 **313** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
 
 | 序号 | 模块 | 题数 | 频率 | 优先级 | 覆盖内容 |
 |:----:|------|:----:|:----:|:------:|----------|
-| 01 | [**Go 语言深度**](docs/01-golang/README.md) | **76** | ★★★★★ | P0 | GMP/GC/内存分配/channel/sync/interface/泛型/逃逸分析/pprof |
+| 01 | [**Go 语言深度**](docs/01-golang/README.md) | **80** | ★★★★★ | P0 | GMP/GC/内存分配/channel/sync/interface/泛型/逃逸分析/pprof |
 | 02 | [**数据库**](docs/02-database/README.md) | **25** | ★★★★★ | P0 | MySQL 索引/MVCC/锁/Redis 持久化/缓存三大问题/分库分表 |
 | 03 | [**分布式系统**](docs/03-distributed/README.md) | **24** | ★★★★☆ | P1 | CAP/BASE/Raft/2PC/TCC/Saga/Kafka/分布式锁/服务发现 |
 | 04 | [**微服务工程**](docs/04-microservices/README.md) | **16** | ★★★★☆ | P1 | gRPC/Protobuf/网关/限流/可观测性/K8s/CI-CD |
@@ -67,6 +65,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
+| 2026-08-12 | v5.1 | Go 语言深度模块新增 4 题：Channel vs Mutex、Panic/Recover、Context Value 陷阱、函数选项模式 |
 | 2026-08-10 | v5.0 | 全仓库 README 重构：模块导航表格化、链接全部修复、按高赞项目结构重写 |
 | 2026-08-10 | v4.10 | 全仓库 README 格式化：所有题目改为可点击跳转链接（266 个链接），重建 06-network / 10-real-problems / 11-go-std-practice 索引 |
 | 2026-08-10 | v4.9 | Linux/IPC 模块大更新 4 题：eventfd、fork COW、seccomp、futex |

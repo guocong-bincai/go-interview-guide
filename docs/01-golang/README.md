@@ -31,6 +31,10 @@
 | ✅ | `44-08-goroutine-vs-thread.md` | [goroutine vs OS 线程：栈大小、调度开销、为什么轻量](02-concurrency/44-08-goroutine-vs-thread.md) |
 | ✅ | `45-deadlock.md` | [死锁四个条件、Coffman 条件、channel/Mutex 死锁、活锁、go-deadlock 排查](02-concurrency/45-deadlock.md) |
 | ✅ | `46-race-condition.md` | [data race 产生条件、`-race` 检测、常见场景](02-concurrency/46-race-condition.md) |
+| ✅ | `77-channel-vs-mutex.md` | [Channel vs Mutex：何时用哪个？Go Proverbs 实战解读](02-concurrency/77-channel-vs-mutex.md) |
+| ✅ | `78-panic-recover.md` | [Panic / Recover 正确姿势：异常处理边界、HTTP Handler 兜底、goroutine 保护](02-concurrency/78-panic-recover.md) |
+| ✅ | `79-context-value-pitfalls.md` | [Context Value 传递陷阱：key 类型、超时管理、反模式与最佳实践](02-concurrency/79-context-value-pitfalls.md) |
+| ✅ | `80-functional-options.md` | [函数选项模式（Functional Options）：API 优雅设计、Option 接口实现](02-concurrency/80-functional-options.md) |
 
 ---
 
