@@ -27,3 +27,11 @@
 ### 04-service-mesh · 服务治理
 - [✅] [注册中心（Consul/etcd/Nacos）原理与选型](04-service-mesh/23-01-service-discovery.md)
 - [✅] [链路追踪（Jaeger/Zipkin）、TraceID 传播、采样策略](04-service-mesh/16-03-tracing.md)
+- [✅] [限流算法 / 熔断器 / 重试策略：令牌桶 vs 漏桶 vs 滑动窗口 + 三态机熔断 + 指数退避](04-service-mesh/17-04-rate-limiter-circuit-breaker.md)
+- [✅] [gRPC 基础与原理：HTTP/2 多路复用、Protobuf、四种流式 RPC、拦截器、负载均衡](04-service-mesh/18-05-grpc-fundamentals.md)
+
+### 05-coordination · 协调服务
+- [✅] [Redis vs etcd vs ZooKeeper 分布式锁横向对比](05-coordination/05-03-distributed-lock-comparison.md)
+- [✅] [etcd 原理与实战](05-coordination/17-01-etcd.md)
+- [✅] [配置中心选型与实践](05-coordination/24-02-config-center.md)
+- [✅] [ZooKeeper 原理与实战：ZAB 协议、Session、EPHEMERAL 节点、Watch 机制](05-coordination/06-01-zookeeper-fundamentals.md)
