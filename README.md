@@ -7,8 +7,8 @@
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
-[![题目数量](https://img.shields.io/badge/题目-328-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v5.4-blue?style=flat-square)](./docs)
+[![题目数量](https://img.shields.io/badge/题目-334-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v5.5-blue?style=flat-square)](./docs)
 
 [📚 模块导航](#-模块导航) · [🗺️ 学习路线](#️-学习路线) · [📝 更新记录](#-更新记录) · [🤝 贡献指南](#-贡献指南)
 
@@ -18,14 +18,14 @@
 
 ## 📚 模块导航
 
-> 共 **313** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
+> 共 **334** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
 
 | 序号 | 模块 | 题数 | 频率 | 优先级 | 覆盖内容 |
 |:----:|------|:----:|:----:|:------:|----------|
 | 01 | [**Go 语言深度**](docs/01-golang/README.md) | **84** | ★★★★★ | P0 | GMP/GC/内存分配/channel/sync/interface/泛型/逃逸分析/pprof/false sharing
 | 02 | [**数据库**](docs/02-database/README.md) | **30** | ★★★★★ | P0 | MySQL 索引/MVCC/锁/Redis 持久化/缓存三大问题/分库分表/主从复制/Buffer Pool |
 | 03 | [**分布式系统**](docs/03-distributed/README.md) | **30** | ★★★★☆ | P1 | CAP/BASE/Raft/2PC/TCC/Saga/Kafka/gRPC/限流熔断/ZK/分布式锁 |
-| 04 | [**微服务工程**](docs/04-microservices/README.md) | **16** | ★★★★☆ | P1 | gRPC/Protobuf/网关/限流/可观测性/K8s/CI-CD |
+| 04 | [**微服务工程**](docs/04-microservices/README.md) | **22** | ★★★★☆ | P1 | gRPC/Protobuf/网关/限流/可观测性/K8s/CI-CD/无损发布/服务降级/BFF |
 | 05 | [**系统设计**](docs/05-system-design/README.md) | **19** | ★★★★★ | P0 | 秒杀/短链/IM/Feed流/支付/分布式ID/限流/CQRS |
 | 06 | [**网络协议**](docs/06-network/README.md) | **14** | ★★★★☆ | P1 | TCP 三次握手/HTTP1.1-2-3/HTTPS/gRPC/WebSocket/安全 |
 | 07 | [**高频算法**](docs/07-algorithms/README.md) | **90** | ★★★★☆ | P2 | 滑动窗口/二分/回溯/DP/链表/树/单调栈/堆/TopK |
@@ -65,6 +65,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
+| 2026-08-14 | v5.5 | 微服务工程模块新增 6 篇：服务降级与舱壁隔离（降级开关/线程池 vs 信号量隔离）、无损发布（readiness 摘流 + preStop + SIGTERM 优雅关闭 + 长连接摘流）、微服务拆分原则（DDD 限界上下文/康威定律/绞杀者模式）、接口幂等设计（唯一约束/去重表/Token/状态机）、可观测性三支柱整合（OpenTelemetry + TraceID 贯穿 + eBPF 零侵入）、BFF 模式（聚合/裁剪/多端适配）；并修正根 README 总题数统计错误（313 → 328） |
 | 2026-08-13 | v5.4 | 分布式系统模块新增 3 篇：限流算法/熔断器/重试策略（令牌桶 vs 漏桶 vs 滑动窗口 + 三态机熔断 + 指数退避）、gRPC 基础（HTTP/2 多路复用 + Protobuf + 四种 RPC 流式模式 + interceptor）、ZooKeeper 原理（ZAB 协议 + Session + Watch + EPHEMERAL 节点），共新增 6 题 |
 | 2026-08-12 | v5.3 | 数据库模块新增 5 题：MySQL 三大日志与两阶段提交、一条 SQL 执行流程、InnoDB Buffer Pool、主键选择（自增 vs UUID vs 雪花）、Redis 主从复制 psync 原理 |
 | 2026-08-12 | v5.2 | Go 语言深度模块新增 4 题：False Sharing（CPU 缓存行对齐与 padding）、nil vs Closed Channel 行为差异、sync.Pool 最佳实践、Interface 组合 vs 嵌入（Method Set / 隐式实现） |
