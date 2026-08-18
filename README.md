@@ -7,8 +7,8 @@
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
-[![题目数量](https://img.shields.io/badge/题目-334-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v5.5-blue?style=flat-square)](./docs)
+[![题目数量](https://img.shields.io/badge/题目-339-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v5.6-blue?style=flat-square)](./docs)
 
 [📚 模块导航](#-模块导航) · [🗺️ 学习路线](#️-学习路线) · [📝 更新记录](#-更新记录) · [🤝 贡献指南](#-贡献指南)
 
@@ -18,7 +18,7 @@
 
 ## 📚 模块导航
 
-> 共 **334** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
+> 共 **339** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
 
 | 序号 | 模块 | 题数 | 频率 | 优先级 | 覆盖内容 |
 |:----:|------|:----:|:----:|:------:|----------|
@@ -29,7 +29,7 @@
 | 05 | [**系统设计**](docs/05-system-design/README.md) | **19** | ★★★★★ | P0 | 秒杀/短链/IM/Feed流/支付/分布式ID/限流/CQRS |
 | 06 | [**网络协议**](docs/06-network/README.md) | **14** | ★★★★☆ | P1 | TCP 三次握手/HTTP1.1-2-3/HTTPS/gRPC/WebSocket/安全 |
 | 07 | [**高频算法**](docs/07-algorithms/README.md) | **90** | ★★★★☆ | P2 | 滑动窗口/二分/回溯/DP/链表/树/单调栈/堆/TopK |
-| 08 | [**工程素养**](docs/08-engineering/README.md) | **23** | ★★★★★ | P1 | 技术选型/架构演进/OOM排查/Code Review/技术领导力 |
+| 08 | [**工程素养**](docs/08-engineering/README.md) | **28** | ★★★★★ | P1 | 技术选型/架构演进/OOM排查/Race Detector/Benchmark/内存分析/trace/error handling/技术领导力 |
 | 09 | [**面试策略**](docs/09-interview-strategy/README.md) | **5** | ★★★☆☆ | P1 | STAR法则/行为面试/晋升答辩/薪资谈判 |
 | 10 | [**项目实战问题**](docs/10-real-problems/README.md) | **7** | ★★★★★ | P0 | 业务方案/性能问题/数据一致性/可用性/并发 |
 | 11 | [**Go 标准库生产实践**](docs/11-go-std-practice/README.md) | **2** | ★★★☆☆ | P2 | io/encoding/Reader-Writer 深度 |
@@ -65,6 +65,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
+| 2026-08-19 | v5.6 | 工程素养模块新增 5 篇：Race Detector（go test -race 原理/HLC 算法/CI 门禁/Uber 真实数据）、内存深度分析（alloc_space vs inuse_space/pprof 进阶对比技巧）、Benchmark 最佳实践（StopTimer 防止编译器优化/并行 benchmark/microbenchmark 陷阱）、错误处理策略（errors.Is/As/Wrap/Sentinel Error/分层错误架构体系）、Go tool trace 运行时事件追踪（Scheduler Timeline/GC Timeline/自定义 Event 标记）
 | 2026-08-14 | v5.5 | 微服务工程模块新增 6 篇：服务降级与舱壁隔离（降级开关/线程池 vs 信号量隔离）、无损发布（readiness 摘流 + preStop + SIGTERM 优雅关闭 + 长连接摘流）、微服务拆分原则（DDD 限界上下文/康威定律/绞杀者模式）、接口幂等设计（唯一约束/去重表/Token/状态机）、可观测性三支柱整合（OpenTelemetry + TraceID 贯穿 + eBPF 零侵入）、BFF 模式（聚合/裁剪/多端适配）；并修正根 README 总题数统计错误（313 → 328） |
 | 2026-08-13 | v5.4 | 分布式系统模块新增 3 篇：限流算法/熔断器/重试策略（令牌桶 vs 漏桶 vs 滑动窗口 + 三态机熔断 + 指数退避）、gRPC 基础（HTTP/2 多路复用 + Protobuf + 四种 RPC 流式模式 + interceptor）、ZooKeeper 原理（ZAB 协议 + Session + Watch + EPHEMERAL 节点），共新增 6 题 |
 | 2026-08-12 | v5.3 | 数据库模块新增 5 题：MySQL 三大日志与两阶段提交、一条 SQL 执行流程、InnoDB Buffer Pool、主键选择（自增 vs UUID vs 雪花）、Redis 主从复制 psync 原理 |

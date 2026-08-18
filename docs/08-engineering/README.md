@@ -28,3 +28,10 @@
 - [⏳] [工程质量体系落地：质量门禁、lint、测试覆盖率、CI](03-leadership/12-04-engineering-quality.md)
 - [⏳] [跨团队协作：目标对齐、资源冲突、复杂项目推进](03-leadership/13-05-cross-team-collaboration.md)
 - [⏳] [招聘与面试：高级工程师如何识别候选人](03-leadership/21-06-hiring-interviewing.md)
+
+### 06-race-detector · 并发安全与性能诊断
+- [✅] [Race Detector：go test -race 原理与 CI 集成](06-race-detector/24-01-race-detector.md)
+- [✅] [内存深度分析：alloc_space vs inuse_space](06-race-detector/24-02-memory-profiling.md)
+- [✅] [Benchmark 最佳实践：基准测试方法论](06-race-detector/24-03-benchmark-best-practices.md)
+- [✅] [错误处理策略：errors.Is/As/Wrap 体系设计](06-race-detector/24-04-error-handling-strategy.md)
+- [✅] [Go tool trace：运行时事件追踪与性能分析](06-race-detector/24-05-go-tool-trace.md)
