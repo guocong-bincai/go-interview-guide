@@ -7,8 +7,8 @@
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
-[![题目数量](https://img.shields.io/badge/题目-345-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v5.7-blue?style=flat-square)](./docs)
+[![题目数量](https://img.shields.io/badge/题目-352-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v5.8-blue?style=flat-square)](./docs)
 
 [📚 模块导航](#-模块导航) · [🗺️ 学习路线](#️-学习路线) · [📝 更新记录](#-更新记录) · [🤝 贡献指南](#-贡献指南)
 
@@ -32,7 +32,7 @@
 | 08 | [**工程素养**](docs/08-engineering/README.md) | **28** | ★★★★★ | P1 | 技术选型/架构演进/OOM排查/Race Detector/Benchmark/内存分析/trace/error handling/技术领导力 |
 | 09 | [**面试策略**](docs/09-interview-strategy/README.md) | **11** | ★★★☆☆ | P1 | STAR法则/行为面试/简历写法/自我介绍/系统设计面试/Live Coding/薪资谈判/晋升答辩/全流程节奏控制 |
 | 10 | [**项目实战问题**](docs/10-real-problems/README.md) | **7** | ★★★★★ | P0 | 业务方案/性能问题/数据一致性/可用性/并发 |
-| 11 | [**Go 标准库生产实践**](docs/11-go-std-practice/README.md) | **2** | ★★★☆☆ | P2 | io/encoding/Reader-Writer 深度 |
+| 11 | [**Go 标准库生产实践**](docs/11-go-std-practice/README.md) | **9** | ★★★★☆ | P1 | io/encoding/json/time/testing + sync单飞/Context/net/http 进阶 |
 | 12 | [**Linux / 操作系统**](docs/12-linux-os/README.md) | **8** | ★★★★☆ | P1 | 文件系统/进程线程/虚拟内存/零拷贝/cgroup/IPC |
 
 ---
@@ -65,6 +65,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
+| 2026-08-21 | v5.8 | Go 标准库模块新增 1 篇：sync.SingleFlight 缓存击穿解决方案、nil vs closed channel 语义差异（goroutine 阻塞根源）、defer + named return 执行顺序细节、context.Context 传播与超时控制最佳实践、errors.Is/As 错误链处理、strings.Builder 零拷贝构建、http.Client 连接池与超时配置，共新增 7 题
 | 2026-08-20 | v5.7 | 面试策略模块新增 4 篇：自我介绍（三段式万能模板+Go社招/校招差异化写法+埋钩子引导提问+反问环节高质量清单）、系统设计面试（五步法框架+短链/限流器/秒杀真题Go实现）、Live Coding应对策略（解题五步法+Go并发常见坑题goroutine泄漏/goroutine闭包/defer顺序）、面试全流程节奏控制（多面连面策略+每日复盘表+目标公司分类管理+Offer评估评分卡），共新增 6 题
 | 2026-08-14 | v5.5 | 微服务工程模块新增 6 篇：服务降级与舱壁隔离（降级开关/线程池 vs 信号量隔离）、无损发布（readiness 摘流 + preStop + SIGTERM 优雅关闭 + 长连接摘流）、微服务拆分原则（DDD 限界上下文/康威定律/绞杀者模式）、接口幂等设计（唯一约束/去重表/Token/状态机）、可观测性三支柱整合（OpenTelemetry + TraceID 贯穿 + eBPF 零侵入）、BFF 模式（聚合/裁剪/多端适配）；并修正根 README 总题数统计错误（313 → 328） |
 | 2026-08-13 | v5.4 | 分布式系统模块新增 3 篇：限流算法/熔断器/重试策略（令牌桶 vs 漏桶 vs 滑动窗口 + 三态机熔断 + 指数退避）、gRPC 基础（HTTP/2 多路复用 + Protobuf + 四种 RPC 流式模式 + interceptor）、ZooKeeper 原理（ZAB 协议 + Session + Watch + EPHEMERAL 节点），共新增 6 题 |

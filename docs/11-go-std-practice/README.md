@@ -1,6 +1,6 @@
 # 11 Go Std Practice 模块
 
-> 📌 共 2 道高频面试题 ｜ ✅ 已按面试频率排序（★★★★★ → ★☆☆☆）
+> 📌 共 3 道高频面试题 ｜ ✅ 已按面试频率排序（★★★★★ → ★☆☆☆）
 
 ---
 
@@ -10,5 +10,6 @@
 |---|---|---|---|
 | 01 | `01-01-io-encoding.md` | `★★★☆☆` | [Go 标准库生产实践：io / encoding / time / testing](./01-01-io-encoding.md) |
 | 02 | `02-02-io-reader-writer-deep.md` | `★★★☆☆` | [io.Reader/Writer 设计模式与深度解析](./02-02-io-reader-writer-deep.md) |
+| 03 | `03-03-sync-context-net-http.md` | `★★★★★` | [sync包 + Context + net/http 进阶实践](./03-03-sync-context-net-http.md) |
 
 ---
