@@ -7,8 +7,8 @@
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
-[![题目数量](https://img.shields.io/badge/题目-352-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v5.8-blue?style=flat-square)](./docs)
+[![题目数量](https://img.shields.io/badge/题目-356-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v5.9-blue?style=flat-square)](./docs)
 
 [📚 模块导航](#-模块导航) · [🗺️ 学习路线](#️-学习路线) · [📝 更新记录](#-更新记录) · [🤝 贡献指南](#-贡献指南)
 
@@ -18,11 +18,11 @@
 
 ## 📚 模块导航
 
-> 共 **339** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
+> 共 **356** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
 
 | 序号 | 模块 | 题数 | 频率 | 优先级 | 覆盖内容 |
 |:----:|------|:----:|:----:|:------:|----------|
-| 01 | [**Go 语言深度**](docs/01-golang/README.md) | **84** | ★★★★★ | P0 | GMP/GC/内存分配/channel/sync/interface/泛型/逃逸分析/pprof/false sharing
+| 01 | [**Go 语言深度**](docs/01-golang/README.md) | **88** | ★★★★★ | P0 | GMP/GC/内存分配/channel/sync/interface/泛型/逃逸分析/pprof/false sharing/block profile/race detector
 | 02 | [**数据库**](docs/02-database/README.md) | **30** | ★★★★★ | P0 | MySQL 索引/MVCC/锁/Redis 持久化/缓存三大问题/分库分表/主从复制/Buffer Pool |
 | 03 | [**分布式系统**](docs/03-distributed/README.md) | **30** | ★★★★☆ | P1 | CAP/BASE/Raft/2PC/TCC/Saga/Kafka/gRPC/限流熔断/ZK/分布式锁 |
 | 04 | [**微服务工程**](docs/04-microservices/README.md) | **22** | ★★★★☆ | P1 | gRPC/Protobuf/网关/限流/可观测性/K8s/CI-CD/无损发布/服务降级/BFF |
@@ -65,7 +65,8 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
-| 2026-08-21 | v5.8 | Go 标准库模块新增 1 篇：sync.SingleFlight 缓存击穿解决方案、nil vs closed channel 语义差异（goroutine 阻塞根源）、defer + named return 执行顺序细节、context.Context 传播与超时控制最佳实践、errors.Is/As 错误链处理、strings.Builder 零拷贝构建、http.Client 连接池与超时配置，共新增 7 题
+| 2026-08-25 | v5.9 | Go 语言深度模块新增 4 篇：Race Detector 内部原理（编译期插桩/Clock Vector/Happens-Before 算法实现）、Channel 安全排空模式（for range vs select+default/goroutine 泄漏防护/完整 Worker Pool 示例）、值接收者 vs 指针接收者（Method Set 规则/一致性原则/接口满足条件）、Interface Nil 陷阱（typed nil vs untyped nil/interface 内存布局/返回技巧），共新增 4 题
+| 2026-08-21 | v5.8 | Go 语言深度模块新增 7 题：sync.SingleFlight 缓存击穿解决方案、nil vs closed channel 语义差异（goroutine 阻塞根源）、defer + named return 执行顺序细节、context.Context 传播与超时控制最佳实践、errors.Is/As 错误链处理、strings.Builder 零拷贝构建、http.Client 连接池与超时配置
 | 2026-08-20 | v5.7 | 面试策略模块新增 4 篇：自我介绍（三段式万能模板+Go社招/校招差异化写法+埋钩子引导提问+反问环节高质量清单）、系统设计面试（五步法框架+短链/限流器/秒杀真题Go实现）、Live Coding应对策略（解题五步法+Go并发常见坑题goroutine泄漏/goroutine闭包/defer顺序）、面试全流程节奏控制（多面连面策略+每日复盘表+目标公司分类管理+Offer评估评分卡），共新增 6 题
 | 2026-08-14 | v5.5 | 微服务工程模块新增 6 篇：服务降级与舱壁隔离（降级开关/线程池 vs 信号量隔离）、无损发布（readiness 摘流 + preStop + SIGTERM 优雅关闭 + 长连接摘流）、微服务拆分原则（DDD 限界上下文/康威定律/绞杀者模式）、接口幂等设计（唯一约束/去重表/Token/状态机）、可观测性三支柱整合（OpenTelemetry + TraceID 贯穿 + eBPF 零侵入）、BFF 模式（聚合/裁剪/多端适配）；并修正根 README 总题数统计错误（313 → 328） |
 | 2026-08-13 | v5.4 | 分布式系统模块新增 3 篇：限流算法/熔断器/重试策略（令牌桶 vs 漏桶 vs 滑动窗口 + 三态机熔断 + 指数退避）、gRPC 基础（HTTP/2 多路复用 + Protobuf + 四种 RPC 流式模式 + interceptor）、ZooKeeper 原理（ZAB 协议 + Session + Watch + EPHEMERAL 节点），共新增 6 题 |

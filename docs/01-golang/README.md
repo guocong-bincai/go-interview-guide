@@ -16,6 +16,8 @@
 | ✅ | `10-09-io-multiplexing.md` | [epoll/kqueue 与 Netpoller 原理、Go 网络 I/O 模型](01-runtime/10-09-io-multiplexing.md) |
 | ✅ | `11-11-goroutine-lifecycle.md` | [goroutine 创建/运行/阻塞/退出全生命周期、泄漏原因、pprof/trace 排查](01-runtime/11-11-goroutine-lifecycle.md) |
 | ✅ | `37-11-gc-tuning.md` | [GOGC/GOMEMLIMIT 调优、Green Tea GC、生产问题排查](01-runtime/37-11-gc-tuning.md) |
+| ✅ | `12-12-runtime-free.md` | [runtime.free 内存回收机制、stack free vs heap free](01-runtime/12-12-runtime-free.md) |
+| ✅ | `36-07-flight-recorder.md` | [Go 1.25 trace.FlightRecorder 生产级 trace 采集](01-runtime/36-07-flight-recorder.md) |
 
 ---
 
@@ -37,6 +39,8 @@
 | ✅ | `79-08-waitgroup.md` | [WaitGroup：协程同步计数器，Add/Done/Wait 机制与常见陷阱](02-concurrency/79-08-waitgroup.md) |
 | ✅ | `80-functional-options.md` | [函数选项模式（Functional Options）：API 优雅设计、Option 接口实现](02-concurrency/80-functional-options.md) |
 | ✅ | `80-pool-best-practices.md` | [sync.Pool 最佳实践与误区：对象池设计哲学、New回调、Get/Put生命周期](02-concurrency/80-pool-best-practices.md) |
+| ✅ | `84-channel-drain-pattern.md` | [Channel 安全排空模式：for range vs select+default、goroutine 泄漏防护、完整 Worker Pool 示例](02-concurrency/84-channel-drain-pattern.md) |
+| ✅ | `85-race-detector-internals.md` | [Race Detector 内部原理：编译期插桩、Clock Vector、Happens-Before 算法实现](02-concurrency/85-race-detector-internals.md) |
 
 ---
 
@@ -63,6 +67,8 @@
 | ✅ | `19-23-nil-vs-empty-slice.md` | [nil slice vs empty slice：JSON 序列化差异、append 行为、零值语义（新增）](03-language-deep/19-23-nil-vs-empty-slice.md) |
 | ✅ | `78-nil-vs-closed-channel.md` | [nil Channel vs Closed Channel：发送接收行为差异、select default 检测、goroutine 泄漏防护](03-language-deep/78-nil-vs-closed-channel.md) |
 | ✅ | `80-interface-composition-vs-embedding.md` | [Interface 组合 vs 嵌入：Method Set 规则、隐式实现、依赖注入最佳实践](03-language-deep/80-interface-composition-vs-embedding.md) |
+| ✅ | `82-value-vs-pointer-receiver.md` | [值接收者 vs 指针接收者：Method Set 规则、一致性原则、接口满足条件](03-language-deep/82-value-vs-pointer-receiver.md) |
+| ✅ | `83-interface-nil-trap.md` | [Interface Nil 陷阱：typed nil vs untyped nil、interface 内存布局、返回技巧](03-language-deep/83-interface-nil-trap.md) |
 
 ---
 
@@ -75,6 +81,7 @@
 | ✅ | `66-03-benchmark.md` | [基准测试规范、避免编译器优化干扰](04-performance/66-03-benchmark.md) |
 | ✅ | `79-false-sharing.md` | [False Sharing（伪共享）：CPU 缓存行对齐、padding 技巧与多核性能优化](04-performance/79-false-sharing.md) |
 | ✅ | `20-04-tuning-cases.md` | [真实调优案例：JSON 解析、字符串拼接、sync.Pool 实战](04-performance/20-04-tuning-cases.md) |
+| ✅ | `80-blocking-profile-analysis.md` | [Blocking Profile 阻塞分析：定位 goroutine 锁竞争瓶颈、从 profile 到优化决策](04-performance/80-blocking-profile-analysis.md) |
 
 ---
 
