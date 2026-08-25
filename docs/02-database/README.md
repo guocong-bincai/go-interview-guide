@@ -24,6 +24,7 @@
 - [✅] [Redlock 算法、单机锁、Lua 脚本原子性](02-redis/03-05-distributed-lock.md)
 - [✅] [热 key 识别、大 key 处理、本地缓存方案](02-redis/20-06-hot-key.md)
 - [✅] [主从复制原理：psync 全量同步/增量同步、repl_backlog、复制偏移量](02-redis/30-05-replication.md)
+- [✅] [内存碎片管理 / MULTI 回滚 / PubSub vs Stream / Pipeline 性能优化](02-redis/31-06-memory-mgmt.md)
 
 ### 03-elasticsearch · Elasticsearch（可选）
 - [✅] [倒排索引原理、分词、相关性评分](03-elasticsearch/22-01-inverted-index.md)

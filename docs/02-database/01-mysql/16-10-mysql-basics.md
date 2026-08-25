@@ -235,11 +235,215 @@ func GenerateSnowflake() ID {
 2. **内存浪费**：InnoDB 内存页（16KB）中能容纳的行数更少
 3. **语义不清**：255 字符 = 约 85 个中文 = 一段短文本，不适合所有场景
 
+---
+
 ### Q4：MyISAM 还在生产用吗？
 
 **基本不用了**。MySQL 8.0 直接**移除了 MyISAM**（`ALTER TABLE ... ENGINE=MyISAM` 在 8.0 中会报错）。
 
 唯一保留价值：**崩溃后快速恢复**（`.MYI` 索引文件 + `.frm` 表定义文件结构简单）。但 InnoDB 的崩溃恢复已经非常可靠，MyISAM 的这个优势也消失了。
+
+---
+
+### Q5：utf8 vs utf8mb4 — 为什么现在一律用 utf8mb4？
+
+MySQL 里 `utf8` 不是标准 UTF-8！它是一个 **最多只支持 3 字节** 的编码，根本存不了 Emoji。
+
+```sql
+-- MySQL 的 "utf8" 实际是 utf8mb3
+SHOW CHARACTER SET LIKE 'utf%';
++---------+---------------+--------------------+--------+
+| Charset | Description   | Max Len | Default |
++---------+---------------+----------+--------+
+| utf8    | UTF-8 Unicode | 3        | utf8_general_ci |
+| utf8mb4 | UTF-8MB4      | 4        | utf8mb4_0900_ai_ci |
++---------+---------------+----------+--------+
+```
+
+| 对比项 | utf8 (utf8mb3) | utf8mb4 |
+|--------|-------------|---------|
+| 最大字符长度 | 3 字节 | **4 字节** |
+| Emoji 支持 | ❌ 存不进去 | ✅ 正常存储 |
+| 索引最大长度 | 767 字节 | 3072 字节（4.0+）|
+| 生产推荐度 | ❌ 已废弃警告 | ✅ 标准 |
+
+**Emoji 存入失败报错示例：**
+```sql
+INSERT INTO users (nickname) VALUES ('🐕');
+-- ERROR 1366: Incorrect string value: '\xF0\x9F\x90\x95'
+-- 因为 \xF0\x9F\x90\x95 是 4 字节，utf8 只支持 3 字节
+```
+
+**正确配置（my.cnf + Go DSN）：**
+```ini
+# my.cnf
+[mysqld]
+default-character-set = utf8mb4
+collation-server = utf8mb4_0900_ai_ci
+
+[client]
+default-character-set = utf8mb4
+```
+
+```go
+// Go 连接字符串中指定 charset
+dsn := "user:pass@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
+```
+
+---
+
+### Q6：COLLATION 是什么？utf8mb4_general_ci vs utf8mb4_unicode_ci vs utf8mb4_0900_ai_ci 怎么选？
+
+COLLATION（排序规则）定义了字符集的**比较和排序规则**。相同字符集可以有多种 Collation。
+
+```sql
+-- 查看 utf8mb4 的所有排序规则
+SHOW COLLATION WHERE Charset = 'utf8mb4' LIMIT 10;
+```
+
+三大常见 Collation 对比：
+
+| Collation | 版本 | 对齐方式 | 排序准确性 | 性能 |
+|-----------|------|---------|-----------|------|
+| `utf8mb4_general_ci` | 老版本 | 简单逐字符比较 | ❌ 有偏差（如 ß ≠ ss）| ⚡ 最快 |
+| `utf8mb4_unicode_ci` | 4.1+ | Unicode 标准对齐 | ✅ 准确 | 🐢 中等 |
+| `utf8mb4_0900_ai_ci` | 8.0+ | ICU Unicode 9.0 对齐 | ✅✅ 最准 | 🐢 稍慢 |
+
+**核心区别示例：**
+```sql
+-- 德语：ß 在 general_ci 下等于 s，但在 unicode_ci 下不等于
+SELECT 'ß' = 'ss' COLLATE utf8mb4_general_ci;   -- 1（错误匹配）
+SELECT 'ß' = 'ss' COLLATE utf8mb4_unicode_ci;    -- 0（正确）
+
+-- 中文拼音排序：general_ci 完全靠不住
+SELECT '张' > '李' COLLATE utf8mb4_general_ci;   -- 无意义（按码位比）
+SELECT '张' > '李' COLLATE utf8mb4_zh_0900_as_cs; -- 按拼音比
+```
+
+**⚠️ Collation 不一致是线上最常见隐性问题！**
+
+```sql
+-- 场景：两表 JOIN 时 Collation 不同导致全表扫描
+CREATE TABLE t1 (name VARCHAR(50)) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE TABLE t2 (name VARCHAR(50)) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 这两个表的 name 列 COLLATION 不同！
+-- 做 JOIN 时无法使用索引 → Extra: Using where; Using join buffer
+SELECT * FROM t1 JOIN t2 ON t1.name = t2.name;
+```
+
+**解决原则**：建库建表时统一指定 `COLLATE`。
+
+**面试建议**：生产环境用 `utf8mb4_0900_ai_ci`（MySQL 8.0 默认），如需区分大小写再加 `_cs` 后缀。---
+
+### Q7：事务回滚到底是怎么做到的？UNDO LOG 的作用
+
+面试官问完隔离级别和 MVCC 之后，经常追问一个深层问题：**「你说 RR 隔离级别能看到快照数据，那 UNDO LOG 具体是怎么配合 MVCC 实现快照读的？」**
+
+```sql
+START TRANSACTION;
+UPDATE orders SET status = 'paid' WHERE id = 1;  -- version 2
+ROLLBACK;  -- 回到 version 1 的状态
+```
+
+**UNDO LOG 是 InnoDB 保证原子性的关键——没有它，事务就只是"看起来能提交"。**
+
+核心机制：
+
+```
+执行 UPDATE 之前，先把旧值写入 UNDO LOG：
+
+原始数据（page）：id=1, status='pending', trx_id=100, version=1
+
+1. BEGIN → trx_id=100
+2. UPDATE status='paid'：
+   ├─ 将旧值 {status='pending'} 写入 UNDO LOG
+   ├─ 修改页内数据为 {status='paid'}, trx_id=100, version=2
+   └─ TRX_ID=100 记录此事务
+
+3. COMMIT → 标记 tx_commit=100，UNDO LOG 标记为可清理
+4. 或 ROLLBACK → 读取 UNDO LOG 中的旧值覆盖当前数据
+```
+
+**关键概念**：
+
+| 概念 | 说明 |
+|------|------|
+| **Undo Log** | 逆操作日志：记录数据被修改前的值，用于回滚 |
+| **Read View** | MVCC 的核心：创建事务时的可见性判断依据 |
+| **Hidden Columns** | 每行数据有两个隐藏字段：`trx_id`(最后修改事务ID)、`roll_pointer`(指向 undo log 的指针) |
+
+```sql
+-- 演示 MVCC + Undo Log 协同工作
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+START TRANSACTION;
+
+-- 快照读：此时读到的是 version=1 的数据（通过 undo log 链回溯）
+SELECT * FROM orders WHERE id = 1;  -- 返回 pending
+
+UPDATE orders SET status = 'paid' WHERE id = 1;  -- 生成 v2，undo 记录 v1
+
+-- 同一事务内再次查询，依然看到 v1（RR 隔离级别的快照一致性）
+SELECT * FROM orders WHERE id = 1;  -- 仍然返回 pending！
+
+COMMIT;  -- 不可见回滚了
+```
+
+**面试官想要的深度回答**：
+1. UNDO Log 有两种：Insert Undo（仅 CREATE 时产生，提交后可立即删）和 Update Undo（UPDATE/DELETE 产生，需等到无事务引用后才清理）
+2. Undo Log 存在 Undo Space（逻辑上的段空间），不是物理磁盘文件，可以通过 `innodb_undo_directory` / `innodb_undo_tablespaces` 配置
+3. ROLLBACK 的本质：沿着 undo chain 从最新版本往回遍历，把每个版本的旧值重新写回数据页
+4. 大批量 ROLLBACK 会很慢：因为是逐条反向执行 undo log 里的操作
+
+---
+
+### Q8：如何强制 MySQL 使用某个索引？OPTIMIZER HINT 实战
+
+优化器有时会选错索引，这时候需要人为干预。MySQL 8.0 引入了 **Optimizer Hint**，可以精确告诉优化器「请用这个索引」。
+
+```sql
+-- 传统方式：FORCE INDEX（有效但粗糙）
+SELECT * FROM orders FORCE INDEX(idx_user_id)
+WHERE user_id = 100 AND status = 'active';
+
+-- MySQL 8.0+ 推荐：INDEX HINT（更精准）
+SELECT * FROM orders USE INDEX FOR SCAN (idx_user_id)
+WHERE user_id = 100 AND status = 'active';
+```
+
+三种 Hint 用法：
+
+```sql
+-- 1. 强制用某索引
+SELECT /*+ INDEX(t idx_user_id) */ * FROM orders t 
+WHERE user_id = 100;
+
+-- 2. 忽略某索引
+SELECT /*+ IGNORE_INDEX(t idx_status) */ * FROM orders t 
+WHERE status = 'active';
+
+-- 3. 设置优化目标
+SELECT /*+ OPT_PARAM('max_execution_time','1000') */ *
+FROM orders WHERE created_at > '2024-01-01';
+```
+
+**但更好的做法不是加 Hint，而是排查优化器为什么选错**：
+
+```sql
+-- 用 OPTIMIZER_TRACE 看优化器的决策过程
+SET optimizer_trace="enabled=on";
+SELECT * FROM orders WHERE user_id = 100 AND status = 'active';
+SELECT * FROM information_schema.OPTIMIZER_TRACE;
+SET optimizer_trace="enabled=off";
+```
+
+典型 trace 输出展示优化器考虑了多少个候选索引、每个索引的成本评估，以及最终为何选择 A 而不是 B。
+
+**生产最佳实践**：
+1. 优先用 `ANALYZE TABLE` 更新统计信息（optimizer 靠它评估成本）
+2. 用 OPTIMIZER_TRACE 定位优化器误判原因
+3. Hint 作为最后手段，不建议日常使用
+4. 联合索引顺序很重要：等值查询在前，范围查询在后（左前缀原则）
 
 ---
 
@@ -249,3 +453,8 @@ func GenerateSnowflake() ID {
 - [MySQL VARCHAR 索引长度限制](https://dev.mysql.com/doc/refman/8.0/en/innodb-limits.html)
 - [COUNT(*) vs COUNT(1) 性能测试](https://www.percona.com/blog/count-vs-count1/)
 - [NULL 的五个坑（官方文档）](https://dev.mysql.com/doc/refman/8.0/en/working-with-null.html)
+- [MySQL Character Sets Documentation](https://dev.mysql.com/doc/refman/8.0/en/charset-unicode.html)
+- [MySQL Collations Overview](https://dev.mysql.com/doc/refman/8.0/en/charset-mysql.html)
+- [InnoDB Rollback Mechanism](https://dev.mysql.com/doc/refman/8.0/en/rollback.html)
+- [Optimizer Trace Feature](https://dev.mysql.com/doc/refman/8.0/en/optimizer-tracing.html)
+- [MySQL Optimizer Hints](https://dev.mysql.com/doc/refman/8.0/en/optimizer-hints.html)

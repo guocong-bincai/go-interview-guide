@@ -7,8 +7,8 @@
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
-[![题目数量](https://img.shields.io/badge/题目-356-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v5.9-blue?style=flat-square)](./docs)
+[![题目数量](https://img.shields.io/badge/题目-364-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v5.10-blue?style=flat-square)](./docs)
 
 [📚 模块导航](#-模块导航) · [🗺️ 学习路线](#️-学习路线) · [📝 更新记录](#-更新记录) · [🤝 贡献指南](#-贡献指南)
 
@@ -65,6 +65,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
+| 2026-08-26 | v5.10 | 数据库模块新增 2 篇：MySQL 字符集 utf8mb4 + COLLATION / 事务回滚机制（UNDO LOG）+ 强制索引优化器 HINT；Redis 内存管理专题（碎片率监控与 Active Defrag / MULTI 不支持回滚 / PubSub vs Stream 可靠性对比 / Pipeline 性能优化），共新增 10 题
 | 2026-08-25 | v5.9 | Go 语言深度模块新增 4 篇：Race Detector 内部原理（编译期插桩/Clock Vector/Happens-Before 算法实现）、Channel 安全排空模式（for range vs select+default/goroutine 泄漏防护/完整 Worker Pool 示例）、值接收者 vs 指针接收者（Method Set 规则/一致性原则/接口满足条件）、Interface Nil 陷阱（typed nil vs untyped nil/interface 内存布局/返回技巧），共新增 4 题
 | 2026-08-21 | v5.8 | Go 语言深度模块新增 7 题：sync.SingleFlight 缓存击穿解决方案、nil vs closed channel 语义差异（goroutine 阻塞根源）、defer + named return 执行顺序细节、context.Context 传播与超时控制最佳实践、errors.Is/As 错误链处理、strings.Builder 零拷贝构建、http.Client 连接池与超时配置
 | 2026-08-20 | v5.7 | 面试策略模块新增 4 篇：自我介绍（三段式万能模板+Go社招/校招差异化写法+埋钩子引导提问+反问环节高质量清单）、系统设计面试（五步法框架+短链/限流器/秒杀真题Go实现）、Live Coding应对策略（解题五步法+Go并发常见坑题goroutine泄漏/goroutine闭包/defer顺序）、面试全流程节奏控制（多面连面策略+每日复盘表+目标公司分类管理+Offer评估评分卡），共新增 6 题
