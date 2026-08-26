@@ -7,8 +7,8 @@
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
-[![题目数量](https://img.shields.io/badge/题目-364-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v5.10-blue?style=flat-square)](./docs)
+[![题目数量](https://img.shields.io/badge/题目-386-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v5.11-blue?style=flat-square)](./docs)
 
 [📚 模块导航](#-模块导航) · [🗺️ 学习路线](#️-学习路线) · [📝 更新记录](#-更新记录) · [🤝 贡献指南](#-贡献指南)
 
@@ -18,15 +18,15 @@
 
 ## 📚 模块导航
 
-> 共 **356** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
+> 共 **390** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
 
 | 序号 | 模块 | 题数 | 频率 | 优先级 | 覆盖内容 |
 |:----:|------|:----:|:----:|:------:|----------|
 | 01 | [**Go 语言深度**](docs/01-golang/README.md) | **88** | ★★★★★ | P0 | GMP/GC/内存分配/channel/sync/interface/泛型/逃逸分析/pprof/false sharing/block profile/race detector
 | 02 | [**数据库**](docs/02-database/README.md) | **30** | ★★★★★ | P0 | MySQL 索引/MVCC/锁/Redis 持久化/缓存三大问题/分库分表/主从复制/Buffer Pool |
-| 03 | [**分布式系统**](docs/03-distributed/README.md) | **30** | ★★★★☆ | P1 | CAP/BASE/Raft/2PC/TCC/Saga/Kafka/gRPC/限流熔断/ZK/分布式锁 |
-| 04 | [**微服务工程**](docs/04-microservices/README.md) | **22** | ★★★★☆ | P1 | gRPC/Protobuf/网关/限流/可观测性/K8s/CI-CD/无损发布/服务降级/BFF |
-| 05 | [**系统设计**](docs/05-system-design/README.md) | **19** | ★★★★★ | P0 | 秒杀/短链/IM/Feed流/支付/分布式ID/限流/CQRS |
+| 03 | [**分布式系统**](docs/03-distributed/README.md) | **54** | ★★★★☆ | P1 | CAP/BASE/Raft/2PC/TCC/Saga/Kafka/gRPC/限流熔断/Gossip/ConsistentHash/负载均衡/SentinelCluster
+| 04 | [**微服务工程**](docs/04-microservices/README.md) | **25** | ★★★★☆ | P1 | gRPC/Protobuf/网关/限流/可观测性/K8s/CI-CD/无损发布/服务降级/BFF/负载均衡选型
+| 05 | [**系统设计**](docs/05-system-design/README.md) | **22** | ★★★★★ | P0 | 秒杀/短链/IM/Feed流/支付/分布式ID/限流/CQRS/Redis哨兵vs集群
 | 06 | [**网络协议**](docs/06-network/README.md) | **14** | ★★★★☆ | P1 | TCP 三次握手/HTTP1.1-2-3/HTTPS/gRPC/WebSocket/安全 |
 | 07 | [**高频算法**](docs/07-algorithms/README.md) | **90** | ★★★★☆ | P2 | 滑动窗口/二分/回溯/DP/链表/树/单调栈/堆/TopK |
 | 08 | [**工程素养**](docs/08-engineering/README.md) | **28** | ★★★★★ | P1 | 技术选型/架构演进/OOM排查/Race Detector/Benchmark/内存分析/trace/error handling/技术领导力 |
@@ -65,7 +65,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
-| 2026-08-26 | v5.10 | 数据库模块新增 2 篇：MySQL 字符集 utf8mb4 + COLLATION / 事务回滚机制（UNDO LOG）+ 强制索引优化器 HINT；Redis 内存管理专题（碎片率监控与 Active Defrag / MULTI 不支持回滚 / PubSub vs Stream 可靠性对比 / Pipeline 性能优化），共新增 10 题
+| 2026-08-27 | v5.11 | 分布式系统模块新增 4 篇：一致性哈希（hash环/虚拟节点/Go实现）、Gossip协议（故障检测/Anti-Entropy/Merkle Tree/Go实战）、Kafka生产者调优（batch.size/linger.ms/压缩策略/分区器）、负载均衡选型（Nginx/HAProxy/Envoy/Traefik对比）以及 Redis Sentinel vs Cluster 架构对比，共新增 ~26 题
 | 2026-08-25 | v5.9 | Go 语言深度模块新增 4 篇：Race Detector 内部原理（编译期插桩/Clock Vector/Happens-Before 算法实现）、Channel 安全排空模式（for range vs select+default/goroutine 泄漏防护/完整 Worker Pool 示例）、值接收者 vs 指针接收者（Method Set 规则/一致性原则/接口满足条件）、Interface Nil 陷阱（typed nil vs untyped nil/interface 内存布局/返回技巧），共新增 4 题
 | 2026-08-21 | v5.8 | Go 语言深度模块新增 7 题：sync.SingleFlight 缓存击穿解决方案、nil vs closed channel 语义差异（goroutine 阻塞根源）、defer + named return 执行顺序细节、context.Context 传播与超时控制最佳实践、errors.Is/As 错误链处理、strings.Builder 零拷贝构建、http.Client 连接池与超时配置
 | 2026-08-20 | v5.7 | 面试策略模块新增 4 篇：自我介绍（三段式万能模板+Go社招/校招差异化写法+埋钩子引导提问+反问环节高质量清单）、系统设计面试（五步法框架+短链/限流器/秒杀真题Go实现）、Live Coding应对策略（解题五步法+Go并发常见坑题goroutine泄漏/goroutine闭包/defer顺序）、面试全流程节奏控制（多面连面策略+每日复盘表+目标公司分类管理+Offer评估评分卡），共新增 6 题
