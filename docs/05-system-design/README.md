@@ -22,6 +22,24 @@
 - [✅] [搜索系统：分词、倒排索引、搜索建议](07-search/15-07-search.md)
 - [✅] [支付系统：幂等、对账、资金安全](08-payment/16-08-payment.md)
 
+### 03-cache · 缓存架构
+- [✅] [缓存与数据库一致性策略 + 多级缓存架构（Cache-Aside/Write-Through/延迟双删）](01-cache-consistency/01-01-cache-consistency.md)
+
+### 04-cdn · CDN 架构
+- [✅] [CDN 架构设计：回源策略、缓存失效与热点分发（PULL/PUSH/预热/BFCache）](04-cdn/01-01-cdn-architecture.md)
+
+### 06-api-gateway · API 网关
+- [✅] [API 网关设计：鉴权/路由/限流/熔断一体化（JWT/动态路由/灰度发布）](06-api-gateway/01-01-api-gateway.md)
+
+### 07-websocket · 长连接架构
+- [✅] [WebSocket 长连接架构：百万级并发在线用户实战（心跳/水平扩展/离线消息）](07-websocket/01-01-websocket-scale.md)
+
+### 08-file-upload · 文件传输
+- [✅] [大文件上传/下载系统设计：分片/断点续传/秒传（MD5指纹/Ranger Header）](08-file-upload/01-01-large-file-upload.md)
+
+### 09-deep-pagination · 分页优化
+- [✅] [深度分页优化：MySQL OFFSET 瓶颈与替代方案（游标分页/延迟关联/覆盖索引）](09-deep-pagination/01-01-deep-pagination.md)
+
 ### 03-capacity · 容量估算
 - [✅] [信封估算法：QPS / 存储 / 带宽快速估算](03-capacity/11-01-back-of-envelope.md)
 - [✅] [性能指标体系：P99/P999、可用性 SLA](03-capacity/12-02-performance-indicators.md)
