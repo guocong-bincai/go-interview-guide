@@ -29,6 +29,26 @@
 - [⏳] [跨团队协作：目标对齐、资源冲突、复杂项目推进](03-leadership/13-05-cross-team-collaboration.md)
 - [⏳] [招聘与面试：高级工程师如何识别候选人](03-leadership/21-06-hiring-interviewing.md)
 
+### 03-leadership · 技术领导力（工程落地）
+- [✅] [Code Review 规范：Block vs Suggestion、Go 项目检查清单、Review 流程](03-leadership/20-01-code-review.md)
+- [✅] [技术规划：季度 / 年度技术 OKR 制定](02-tech-planning/10-02-tech-planning.md)
+- [✅] [带新人：技术传承、文档文化、知识管理](03-mentoring/22-03-mentoring.md)
+- [✅] [CI/CD 流水线设计：GitLab CI/Jenkins + 质量门禁 + 灰度发布](03-leadership/25-01-ci-cd-pipeline.md)
+- [✅] [可观测性：日志/指标/链路追踪落地实践](03-leadership/25-02-observability.md)
+- [✅] [Module Workspace 与依赖管理：Monorepo 大项目最佳实践](03-leadership/25-03-dependency-management.md)
+- [⏳] [工程质量体系落地：质量门禁、lint、测试覆盖率、CI](03-leadership/12-04-engineering-quality.md)
+- [⏳] [跨团队协作：目标对齐、资源冲突、复杂项目推进](03-leadership/13-05-cross-team-collaboration.md)
+- [⏳] [招聘与面试：高级工程师如何识别候选人](03-leadership/21-06-hiring-interviewing.md)
+
+### 04-performance-governance · 质量治理与交付
+- [✅] [压测方法论：从单接口到全链路](04-performance-governance/04-01-load-testing.md)
+- [✅] [全链路压测实战：影子流量与数据隔离](04-performance-governance/05-02-full-link-stress-testing.md)
+- [✅] [测试策略：单测、集成测试、契约测试](04-performance-governance/14-03-testing-strategy.md)
+- [✅] [测试覆盖率提升：Table-Driven Test + Mock + 覆盖率盲区消除](04-performance-governance/25-02-test-coverage-strategy.md)
+- [✅] [数据库迁移：零停机 Schema 变更五步法](04-performance-governance/25-03-db-migration-strategy.md)
+- [✅] [容器镜像优化：多阶段构建 + scratch + BuildKit 缓存](04-performance-governance/25-04-docker-image-optimization.md)
+- [✅] [金丝雀发布：K8s 灰度部署 + 优雅关闭 + 快速回滚](04-performance-governance/25-05-canary-release.md)
+
 ### 06-race-detector · 并发安全与性能诊断
 - [✅] [Race Detector：go test -race 原理与 CI 集成](06-race-detector/24-01-race-detector.md)
 - [✅] [内存深度分析：alloc_space vs inuse_space](06-race-detector/24-02-memory-profiling.md)
