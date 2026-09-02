@@ -1,6 +1,6 @@
 # 10 Real Problems 模块
 
-> 📌 共 7 道高频面试题 ｜ ✅ 已按面试频率排序（★★★★★ → ★☆☆☆）
+> 📌 共 8 个子文件 ｜ ✅ 已按面试频率排序（★★★★★ → ★☆☆☆）
 
 ---
 
@@ -15,5 +15,6 @@
 | 05 | `05-06-concurrency-problems.md` | `★★★★★` | [并发编程实战问题](./05-06-concurrency-problems.md) |
 | 06 | `06-07-interview-scenarios.md` | `★★★★★` | [面试高频场景题（开放性问题）](./06-07-interview-scenarios.md) |
 | 07 | `07-05-migration-problems.md` | `★★★★☆` | [数据迁移与重构问题](./07-05-migration-problems.md) |
+| 08 | `08-08-resource-and-safety.md` | `★★★★★` | [资源泄漏与安全问题分析](./08-08-resource-and-safety.md) |
 
 ---
