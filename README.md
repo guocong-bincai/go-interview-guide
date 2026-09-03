@@ -7,8 +7,8 @@
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
-[![题目数量](https://img.shields.io/badge/题目-402-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v5.15-blue?style=flat-square)](./docs)
+[![题目数量](https://img.shields.io/badge/题目-410-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v5.16-blue?style=flat-square)](./docs)
 
 [📚 模块导航](#-模块导航) · [🗺️ 学习路线](#️-学习路线) · [📝 更新记录](#-更新记录) · [🤝 贡献指南](#-贡献指南)
 
@@ -32,7 +32,7 @@
 | 08 | [**工程素养**](docs/08-engineering/README.md) | **35** | ★★★★★ | P1 | 技术选型/架构演进/OOM排查/CIDC流水线/可观测性/测试覆盖率/DB迁移/Docker优化/金丝雀发布/依赖管理 |
 | 09 | [**面试策略**](docs/09-interview-strategy/README.md) | **14** | ★★★☆☆ | P1 | STAR法则/行为面试/简历写法/自我介绍/系统设计面试/Live Coding/薪资谈判/晋升答辩/全流程节奏控制/技术深挖应对/HR面全攻略/反问环节攻略 |
 | 10 | [**项目实战问题**](docs/10-real-problems/README.md) | **8** | ★★★★★ | P0 | 业务方案/性能问题/数据一致性/可用性/并发/资源泄漏与安全问题 |
-| 11 | [**Go 标准库生产实践**](docs/11-go-std-practice/README.md) | **9** | ★★★★☆ | P1 | io/encoding/json/time/testing + sync单飞/Context/net/http 进阶 |
+| 11 | [**Go 标准库生产实践**](docs/11-go-std-practice/README.md) | **17** | ★★★★★ | P1 | reflect反射/core | regexp编译缓存/http中间件链/filepath路径安全/sync.Map适用场景 + sync单飞/nil-closed channel/defer+named return/context/errors/is/As/http.Client |
 | 12 | [**Linux / 操作系统**](docs/12-linux-os/README.md) | **8** | ★★★★☆ | P1 | 文件系统/进程线程/虚拟内存/零拷贝/cgroup/IPC |
 
 ---
@@ -65,6 +65,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
+| 2026-09-04 | v5.16 | Go 标准库实践模块新增 8 题：reflect核心机制(TypeOf vs ValueOf/CanSet/Tag解析)、reflect.DeepEqual原理与替代方案、regexp编译缓存陷阱(Compile一次Match万次/贪婪vs非贪婪性能差异)、net/http中间件洋葱模型(CORS/Logger/Auth链式组装)、filepath.Join vs Clean路径安全防线(sync.Once预编译/CORS预检顺序)、flag命令行参数(Parse修改值/子命令/分组解析)、crypto/tls证书加载与安全配置(TLS 1.2最低版/AEAD cipher suites)、sync.Map适用场景(读多写少专用/内部read-dirty双map升级),共新增 8 题
 | 2026-09-03 | v5.15 | 项目实战问题模块新增 6 题：goroutine 泄漏排查与根治（pprof goroutine profile + select+ctx.Done 退出条件 + Timer 未 Stop 隐蔽泄漏）、HTTP Response.Body 泄漏导致连接耗尽（resp.Body.Close() 标准模板 + http.Client Transport 配置）、文件句柄泄漏导致 EMFILE 崩溃（defer close 规范 + os.ReadFile 替代手动 open/close）、Data Race 竞态条件（go test -race + atomic.RWMutex + sync.Map 选型决策树）、panic/recover 误用分析（初始化 panic vs error 返回规范 + Sentry 监控集成）、TCP TIME_WAIT 过多导致端口耗尽（http.Transport 连接复用 + Keep-Alive + sysctl 调优）
 | 2026-08-29 | v5.12 | 系统设计模块新增 6 篇：缓存与数据库一致性策略（Cache-Aside/Write-Through/延迟双删/Canal实时同步）+ CDN 架构设计（PUSH/PULL模式/回源穿透防护/缓存失效）+ API 网关设计（JWT鉴权/动态路由/灰度发布/响应聚合）+ WebSocket 长连接架构（心跳保活/百万并发水平扩展/离线消息）+ 大文件上传系统（分片上传/秒传/断点续传/预签名URL）+ 深度分页优化（游标分页/延迟关联/覆盖索引），共新增 6 题
 | 2026-08-25 | v5.9 | Go 语言深度模块新增 4 篇：Race Detector 内部原理（编译期插桩/Clock Vector/Happens-Before 算法实现）、Channel 安全排空模式（for range vs select+default/goroutine 泄漏防护/完整 Worker Pool 示例）、值接收者 vs 指针接收者（Method Set 规则/一致性原则/接口满足条件）、Interface Nil 陷阱（typed nil vs untyped nil/interface 内存布局/返回技巧），共新增 4 题
