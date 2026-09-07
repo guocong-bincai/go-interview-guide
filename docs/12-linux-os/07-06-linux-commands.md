@@ -553,6 +553,83 @@ journalctl -p err..emerg -n 200
 
 ---
 
+### 10. /proc 与 /sys 文件系统：内核状态的实时窗口（高频）
+
+#### 10.1 /proc：进程信息之王
+
+```
+/proc/[pid]/     每个进程的运行时状态
+├── status       进程基本信息（Thread、VmRSS、VmSize 等）
+├── maps         内存映射段（堆/栈/mmap 地址范围）
+├── smaps        详细的内存分段统计（含 Swap/Pss/Rss）
+├── fd/          打开的文件描述符链接
+├── stack        内核态调用栈（需 CONFIG_STACKTRACE）
+└── syscall      当前执行的系统调用
+
+/proc/sys/       内核参数调优
+├── net/         网络相关参数
+│   ├── ipv4/tcp_syncookies    # SYN Cookie
+│   ├── ipv4/tcp_tw_reuse      # TIME_WAIT 重用
+│   └── core/somaxconn         # 全局 backlog
+├── vm/
+│   ├── swappiness             # 换页倾向 (0~100)
+│   ├── dirty_ratio            # 脏页写回触发阈值
+│   └── overcommit_memory      # 内存分配策略
+└── kernel/
+    ├── oom_kill_allocating_task # OOM Kill 是否杀当前进程
+    └── core_pattern             # Core dump 路径模板
+```
+
+**Go 工程师高频查询组合：**
+```bash
+# ① 查看 Go 进程堆增长趋势（每 5 秒一次，共 10 次采样）
+for i in $(seq 1 10); do echo "$(date +%H:%M:%S) R=$(cat /proc/$(pidof app)/status | grep VmRSS | awk '{print $2}')"; sleep 5; done
+
+# ② 查看 mmap 区域分布（判断是否有异常 mmap）
+cat /proc/$(pidof app)/smaps_rollup | head -20
+# 重点关注: Anonymous（未映射的匿名内存）、Mapped（文件映射大小）
+
+# ③ 查看当前正在执行的系统调用
+watch -n1 'grep "^State:" /proc/$(pidof app)/status; grep "^voluntary_ctxt_switches" /proc/$(pidof app)/status'
+```
+
+#### 10.2 /sys/kernel/mm/transparent_hugepage — THP 状态监控
+
+```bash
+# 查看当前 THP 配置
+cat /sys/kernel/mm/transparent_hugepage/enabled
+# [always] madvise never
+
+# 动态调整（热生效）
+echo madvise > /sys/kernel/mm/transparent_hugepage/enabled
+# madvise = 只有调用 madvise(MADV_HUGEPAGE) 时才合并大页
+# never = 完全关闭
+
+# Go 服务建议：默认 never 或 madvise
+# 数据库场景：生产环境推荐 never（避免 khugepaged 延迟尖刺）
+```
+
+#### 10.3 cpuset cgroup：精细控制 CPU 亲和性
+
+除了之前提到的 taskset，cpuset 是更细粒度的 CPU 绑定方式：
+
+```bash
+# cpuset 层级结构示例
+cat /sys/fs/cgroup/cpuset/cpuset.cpus
+# 0-31                    # 允许使用的 CPU 核列表
+
+cat /sys/fs/cgroup/cpuset/cpuset.mems
+# 0-1                     # 允许访问的 NUMA node
+
+cat /sys/fs/cgroup/cpuset/cpuset.memory_migrate
+# 1                       # 页面迁移时跟随进程
+
+# K8s 中的 cpuset 使用（通过 annotations 指定独占核）
+# containerd.shim -cpus=4-7 --membind=1  # 指定 4~7 核 + node 1
+```
+
+---
+
 ## 延伸阅读
 
 - Linux man pages: `man tcpdump-filter`

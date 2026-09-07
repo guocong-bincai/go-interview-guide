@@ -610,6 +610,114 @@ docker run --rm -m 256m --memory-swap 256m alpine sh -c '
 
 ---
 
+## 10. Core Dump 排障：Crash 现场保全（高频）
+
+### 10.1 为什么 Go 工程师也需要会 core dump？
+
+虽然 Go 有 pprof、trace 等工具可以在线排查，但以下场景 **core dump 不可替代**：
+
+| 场景 | pprof 能做什么 | Core Dump 能做什么 |
+|------|---------------|-------------------|
+| goroutine 死锁 | 能看到阻塞位置，但看不到调用链全貌 | gdb + symbol 看完整栈帧 |
+| SIGSEGV (段错误) | 无法采集（进程已崩溃） | 分析崩溃时内存状态 |
+| CGO 导致的 coredump | 无法采集 | 通过 coredump + golang-x-tools 看 Go+C 混合栈 |
+| 系统级资源耗尽 | 无法登录 pprof | 通过 core 中的 mmap 信息判断哪些区域占用了内存 |
+
+### 10.2 Core Dump 配置
+
+```bash
+# 查看当前配置
+coredumpctl list          # systemd 管理的 core dump
+coredump info <pid>       # 查看特定 core dump 详情
+
+# 临时启用 core dump
+ulimit -c unlimited       # soft limit 设为无限
+
+# /proc/sys/kernel/core_pattern 控制 core dump 文件路径
+# 默认: core
+# 常用配置: /tmp/core.%e.%p   （按文件名+PID命名）
+echo "/tmp/core.%e.%p" > /proc/sys/kernel/core_pattern
+
+# 开启 vm.core_uses_pid 让 core 文件名包含 PID
+echo 1 > /proc/sys/vm/core_uses_pid
+```
+
+### 10.3 用 gdb + go-delve 分析 Go coredump
+
+Go 编译时带 DWARF 调试信息的话，可以直接用 gdb 分析：
+
+```bash
+# 方法1：gdb + Go 符号解析
+gdb -c /tmp/core.your-app.12345
+(gdb) source $GOROOT/src/runtime/symtab.go   # 加载 Go 运行时符号表
+(gdb) bt                                      # 查看崩溃时的调用栈
+
+# 方法2：利用 Go 1.18+ 的内置支持
+gbt -c /tmp/core.your-app.12345              # github.com/cosnicolaou/gbt 更友好的工具
+
+# 关键命令：
+(gdb) info goroutines                         # 列出所有 goroutine
+(gdb) goroutine 1234 bt                       # 看某个 GOROUTINE 的栈
+(gdb) goroutine 1234 apply print x            # 查看某个变量值
+```
+
+### 10.4 实战：从 crash log 到定位根因
+
+```
+现场：线上服务偶发 crash，无应用日志输出
+
+# Step 1: 确认发生了 core dump
+coredumpctl list --no-pager | grep your-app
+# output:
+#    Thu 2026-09-04  03:00:01 CST     12345 1000   11 SIGSEGV      /app/bin/your-app
+
+# Step 2: 获取核心转储文件
+coredumpctl dump 12345 > /tmp/your-app.core
+
+# Step 3: 分析崩溃栈
+gdb -batch -ex "bt full" -ex "info registers" -c /tmp/your-app.core > /tmp/stack.txt
+
+# Step 4: 提取关键信息
+grep -E "runtime\.|panic|mallocgc|epoll_wait|netpoll" /tmp/stack.txt
+# 如果看到 mallocgc → 堆分配问题
+# 如果看到 netpoll → 网络轮询异常
+
+# Step 5: 关联应用日志
+tail -100 /var/log/your-app/app.log | grep "$(date -d '1 hour ago' '+%Y-%m-%d %H:%M')"
+# 找到 crash 前最后一条应用日志作为线索
+```
+
+### 10.5 Go 程序的信号与 core dump
+
+```go
+// Go 程序对信号的处理决定了是否会触发 core dump
+// 默认行为：SIGQUIT 打印 goroutine 栈并退出（不带 core dump）
+// 需要额外开启才生成 core dump
+
+import (
+    "os"
+    "os/signal"
+    "syscall"
+)
+
+func setupSignalHandler() {
+    sigCh := make(chan os.Signal, 1)
+    signal.Notify(sigCh, syscall.SIGQUIT, syscall.SIGABRT)
+    go func() {
+        for sig := range sigCh {
+            if sig == syscall.SIGABRT {
+                // abort() 会触发 core dump（如果 ulimit -c unlimited）
+                // Go 1.19+ 同时打印 panic stack trace + goroutine stacks
+                panic("manual abort")
+            }
+            // SIGQUIT 默认行为已由 runtime 处理
+        }
+    }()
+}
+```
+
+---
+
 ## 延伸阅读
 
 - [Netflix Linux Performance](https://www.brendangregg.com/linuxperf.html)

@@ -358,6 +358,103 @@ unix.Madvise(m, unix.MADV_HUGEPAGE) // 提示合并大页（需 madvise 模式�
 
 ---
 
+## 6. Swap 空间、OOM Killer 评分与 Go 服务（高频）
+
+### 6.1 Swap 是什么？为什么 Go 服务应该关闭它
+
+Swap 是当物理内存不足时，内核将**不活跃的页面交换到磁盘**的机制。对 Go 服务来说，Swap 几乎是灾难性的：
+
+```
+正常情况（无 Swap）：
+  内存不足 → GC STW（几十毫秒）→ 回收对象 → 继续运行
+
+有 Swap 时的地狱路径：
+  内存不足 → 开始 swap out → 触发 GC
+  → GC 需要扫描被 swap out 的对象 → 产生大量 Page Fault Hard Fault
+  → 每个 page fault ~ms 级延迟 → GC 耗时从 ms 飙升到秒级
+  → 更多 goroutine 等待 → 雪崩式 P99 飙升
+```
+
+**生产建议：**
+```bash
+# 生产服务器一律关闭 Swap
+swapoff -a
+# 永久生效写入 /etc/fstab，注释掉 swap 行
+# vm.swappiness=1 作为兜底（几乎不用 Swap）
+sysctl -w vm.swappiness=1
+```
+
+### 6.2 OOM Killer 评分机制深度解析
+
+内核 OOM Killer 为每个进程打分（0~1000），**得分最高的会被优先杀死**。
+
+**评分公式（简化版）：**
+```
+score = base_score × (rss / total_memory) × factor
+
+base_score: 根据进程 UID、oom_score_adj 等调整
+rss: 进程实际占用的物理页数量
+total_memory: 系统总内存
+factor: 子进程继承因子
+```
+
+**关键影响因素：**
+
+| 因素 | 影响方向 | 典型场景 |
+|------|---------|---------|
+| `oom_score_adj` | 范围 -1000~+1000，值越小越安全 | K8s kubelet 会给容器设负值 |
+| RSS 占比 | 越大分数越高 | Go 服务堆增长快时易被杀 |
+| 子进程数 | 越多越可能被保护 | init 进程通常不被杀 |
+| cgroup 层级 | 外层 cgroup 得分聚合内层 | 容器的限制会影响整体评分 |
+
+**Go 服务的 OOM 防护策略：**
+
+```yaml
+# K8s Pod 配置：用 memory pressure 避免 OOM
+resources:
+  limits:
+    memory: "2Gi"      # 硬上限
+    cpu: "2"
+requests:
+  memory: "1Gi"        # Guaranteed QoS
+  cpu: "1"
+env:
+  - name: GOMEMLIMIT   # Go 内置软上限，先于 OOM 触发 GC
+    value: "1.8GiB"    # 略低于容器 limit，留余量给 Page Cache
+  - name: GOGC         # 激进 GC
+    value: "75"
+```
+
+```bash
+# 实时查看进程的 OOM 评分
+watch -n1 'echo PID=$(pidof your-app) && cat /proc/$PID/oom_score /proc/$PID/oom_score_adj'
+```
+
+### 6.3 kswapd：被遗忘的内存回收线程
+
+```
+物理内存使用率 > watermark_high:
+  → 后台线程 kswapd 唤醒
+  → kswapd 回收活跃页面，尝试换出 Swap
+  → 如果 swap 关闭或已满，kswapd 忙循环（%wa 升高）
+  → 用户态进程被迫做 direct reclaim（阻塞！）
+
+direct reclaim 触发条件：
+  申请内存时发现空闲页 < watermark_low
+  → 当前进程自己来回收页面（阻塞等待！）
+  → 这是 pprof 中出现 fsync/fsnotify 等 syscall 耗时的根源之一
+```
+
+**监控建议：**
+```bash
+# 观察 kswapd 是否繁忙（%si 高且伴随 kswapd 占用 CPU）
+ps aux | grep kswapd
+# 预期：kswapd0 的 %CPU 应该接近 0
+# 如果不为 0 → 内存压力大，GC 可能来不及回收
+```
+
+---
+
 ## 延伸阅读
 
 - [Linux 内存管理文档](https://www.kernel.org/doc/html/latest/vm/)

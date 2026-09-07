@@ -394,6 +394,117 @@ Go 的 goroutine 模型天然便宜，一个 goroutine 阻塞在一个 epoll 事
 
 ---
 
+## 7. TCP 高并发调优：SYN Cookie、SO_REUSEPORT、Backlog（2026 高频）
+
+### 7.1 SYN Flood 防护：为什么你需要理解 SYN Cookie
+
+```bash
+# SYN flood 攻击原理：
+# 攻击者发送大量 SYN 包但不完成三次握手
+# → 服务端半连接队列满 → 正常用户连接失败
+
+# 查看半连接状态
+ss -s
+# synrecv = 半连接队列中的数量
+
+# 防护机制：syncookies
+# /proc/sys/net/ipv4/tcp_syncookies = 1
+
+# 工作原理：
+# 当半连接队列满时，服务器在 SYN+ACK 的 seq 号中编码了客户端信息
+# 客户端回送 ACK 时，服务器从 seq 中解码信息重建半连接
+# → 不需要存储半连接状态，天然抗 DDoS
+```
+
+**Go 服务中的配置建议：**
+```bash
+# /etc/sysctl.conf（生产环境常用参数）
+net.ipv4.tcp_syncookies = 1              # 开启 SYN Cookie
+net.ipv4.tcp_max_syn_backlog = 8192      # 半连接队列上限
+net.core.somaxconn = 65535               # accept()  backlog
+net.ipv4.tcp_fin_timeout = 15            # FIN-WAIT-2 超时（默认 60s→15s）
+net.ipv4.tcp_keepalive_time = 600        # KeepAlive 探测间隔
+net.ipv4.tcp_tw_reuse = 1                # 允许重用时序 WAIT 的 socket（客户端场景）
+```
+
+### 7.2 SO_REUSEPORT — 多进程共享端口的秘密武器
+
+```
+传统模式：只有一个 worker 调用 accept()
+    ┌──────────────┐
+    │  listen fd   │ ← 单线程 epoll_accept
+    └──────┬───────┘
+           │ accept()
+           ▼
+     ┌──────────┐
+     │ Worker 1 │ ← 处理所有连接（瓶颈！）
+     └──────────┘
+
+SO_REUSEPORT 模式：多个 worker 各自 bind + listen 同一端口
+    ┌──────────────┐
+    │  worker A    │ ← epoll_accept + accept()
+    │  同一端口    │
+    ├──────────────┤
+    │  worker B    │ ← epoll_accept + accept()
+    │  同一端口    │
+    ├──────────────┤
+    │  worker C    │ ← epoll_accept + accept()
+    └──────────────┘
+
+内核自动分发新连接：每个 worker 独立接收 CONNECT
+```**优势：**
+- **无锁并行 accept**：每个 worker 有自己的 listen fd，accept 不竞争
+- **优雅重启零停机**：新旧进程同时监听同一端口，内核按概率分发新连接
+- **Linux 4.6+**：支持 `SO_REUSEPORT` 加上 `SO_ATTACH_BPF` 实现更精细的连接路由
+
+**Go 中的使用方式：**
+```go
+// Go net.Listen 不支持直接设置 SO_REUSEPORT
+// 但可以通过 raw syscall 或使用 gvisor/gostdpkg 库实现
+// 常见于 Nginx 的多 worker 架构、gRPC LB 等场景
+
+import (
+    "syscall"
+    "golang.org/x/sys/unix"
+)
+
+func enableReusePort(addr string) (*net.TCPListener, error) {
+    l, err := net.Listen("tcp", addr)
+    if err != nil {
+        return nil, err
+    }
+    // 启用 SO_REUSEPORT（多进程模式下的 key feature）
+    fd := l.(*net.TCPListener).SyscallConn()
+    fd.Control(func(fd uintptr) {
+        syscall.SetsockoptInt(int(fd), unix.SOL_SOCKET, unix.SO_REUSEPORT, 1)
+    })
+    return l, nil
+}
+```
+
+### 7.3 Backlog 深度解析：somaxconn vs Listen 参数
+
+```go
+// http.Server.ListenAndServe 内部流程
+ln, err := net.Listen("tcp", ":8080")
+server.Serve(ln)
+
+// 底层：syscall.Listen(fd, int(somaxconn))
+// somaxconn 来自 sysctl.net.core.somaxconn（默认 ~128）
+
+// ⚠️ 如果同时设置了 Listen backlog 参数：
+// syscall.Listen(fd, max(somaxconn, backlog))
+// Linux 4.1+ 的行为是取两者的较大值
+```
+
+| 参数 | 含义 | 典型值 |
+|------|------|--------|
+| `somaxconn` | 全局 listen backlog 上限 | 65535 |
+| `tcp_max_syn_backlog` | 半连接队列大小 | 8192 |
+| `Listen(fd, backlog)` | 单个 listener 的 backlog | 自动选择 max(somaxconn, backlog) |
+
+---
+
 ## 延伸阅读
 
 - [The Secret of epoll Performance](https://idea.popcount.org/2017-02-20-epoll-the-api-is-os-agnostic-but-the-implementation-is-not/)
