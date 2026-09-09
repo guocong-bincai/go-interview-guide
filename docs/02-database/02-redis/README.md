@@ -1,6 +1,6 @@
 # 02 Redis 模块
 
-> 📌 共 10 道高频面试题 ｜ ✅ 已按面试频率排序（★★★★★ → ★☆☆☆）
+> 📌 共 12 道高频面试题 ｜ ✅ 已按面试频率排序（★★★★★ → ★☆☆☆）
 
 ---
 
@@ -18,6 +18,8 @@
 | 08 | `19-04-cluster.md` | `★★★☆☆` | [Redis 高可用方案：Sentinel 与 Cluster 集群](./19-04-cluster.md)
 | 09 | `20-06-hot-key.md` | `★★★☆☆` | [Redis 热 Key 与大 Key：识别、定位与解决方案](./20-06-hot-key.md)
 | 10 | `21-07-pipeline-lua.md` | `★★★☆☆` | [Redis Pipeline 与 Lua 脚本](./21-07-pipeline-lua.md)
+| 11 | `32-07-cache-db-consistency.md` | `★★★★☆` | [缓存与数据库双写一致性：Cache Aside / Delayed Dual Delete / Canal + Binlog](./32-07-cache-db-consistency.md) · 关键词：Cache Aside、Write Through、延迟双删、Canal、Binlog 订阅、最终一致性
+| 12 | `33-08-data-structure-selection.md` | `★★★★☆` | [Redis 数据结构选型指南：String vs Hash vs List vs Set vs ZSet](./33-08-data-structure-selection.md) · 关键词：内存优化、ziplist、quicklist、业务场景映射、序列化开销
 
 ---
 _🔄 最后更新：2026-08-12 03:30_
