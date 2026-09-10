@@ -11,6 +11,10 @@
 - [✅] [强一致 / 最终一致 / 线性一致性、实际场景选型](01-theory/07-04-consistency.md)
 - [✅] [一致性哈希（Consistent Hashing）：hash 环、虚拟节点与 Go 实现](01-theory/08-07-consistent-hashing.md)
 - [✅] [Gossip 协议：原理、Anti-Entropy、故障检测与 Go 实战](01-theory/09-08-gossip-protocol.md)
+- [✅] [消息队列端到端交付语义：At-Most-Once / At-Least-Once / Exactly-Once](01-theory/11-01-message-delivery-semantics.md)
+- [✅] [重试策略深度剖析：指数退避 + Jitter + 预算控制](01-theory/11-02-backoff-jitter-retry.md)
+- [✅] [API Gateway 架构设计：路由、鉴权、限流、插件化与选型](01-theory/11-03-api-gateway-design.md)
+- [✅] [CQRS vs Event Sourcing：区别、优势与 Go 实战](01-theory/11-04-cqrs-vs-event-sourcing.md)
 
 ### 02-transactions · 分布式事务
 - [✅] [2PC/3PC 原理、问题与局限](02-transactions/08-01-2pc-3pc.md)
