@@ -7,8 +7,8 @@
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
-[![题目数量](https://img.shields.io/badge/题目-427-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v5.19-blue?style=flat-square)](./docs)
+[![题目数量](https://img.shields.io/badge/题目-433-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v5.20-blue?style=flat-square)](./docs)
 
 [📚 模块导航](#-模块导航) · [🗺️ 学习路线](#️-学习路线) · [📝 更新记录](#-更新记录) · [🤝 贡献指南](#-贡献指南)
 
@@ -18,14 +18,14 @@
 
 ## 📚 模块导航
 
-> 共 **427** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
+> 共 **433** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
 
 | 序号 | 模块 | 题数 | 频率 | 优先级 | 覆盖内容 |
 |:----:|------|:----:|:----:|:------:|----------|
 | 01 | [**Go 语言深度**](docs/01-golang/README.md) | **88** | ★★★★★ | P0 | GMP/GC/内存分配/channel/sync/interface/泛型/逃逸分析/pprof/false sharing/block profile/race detector
 | 02 | [**数据库**](docs/02-database/README.md) | **36** | ★★★★★ | P0 | MySQL 索引/MVCC/锁/双写一致性/Bloom Filter 防穿透/读写分离延迟/乐观悲观锁选型/Redis 数据结构选型 |
 | 03 | [**分布式系统**](docs/03-distributed/README.md) | **58** | ★★★★☆ | P1 | CAP/BASE/Raft/2PC/TCC/Saga/Kafka/gRPC/限流熔断/Gossip/ConsistentHash/负载均衡/SentinelCluster/MQ交付语义/指数退避/API Gateway/CQRS
-| 04 | [**微服务工程**](docs/04-microservices/README.md) | **25** | ★★★★☆ | P1 | gRPC/Protobuf/网关/限流/可观测性/K8s/CI-CD/无损发布/服务降级/BFF/负载均衡选型
+| 04 | [**微服务工程**](docs/04-microservices/README.md) | **31** | ★★★★☆ | P1 | gRPC/Protobuf/网关/限流/服务注册发现/配置中心/服务网格/链路追踪采样/可观测性/K8s/CI-CD/无损发布/服务降级/BFF/框架选型
 | 05 | [**系统设计**](docs/05-system-design/README.md) | **28** | ★★★★★ | P0 | 秒杀/短链/IM/Feed流/支付/缓存一致性/CDN/API网关/WebSocket/深度分页
 | 06 | [**网络协议**](docs/06-network/README.md) | **14** | ★★★★☆ | P1 | TCP 三次握手/HTTP1.1-2-3/HTTPS/gRPC/WebSocket/安全 |
 | 07 | [**高频算法**](docs/07-algorithms/README.md) | **90** | ★★★★☆ | P2 | 滑动窗口/二分/回溯/DP/链表/树/单调栈/堆/TopK |
@@ -65,6 +65,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
+| 2026-09-12 | v5.20 | 微服务工程模块新增 6 题：服务注册与发现（客户端 vs 服务端发现、CP vs AP 选型、etcd 租约 + KeepAlive + Watch 完整 Go 实现、注册中心故障排查）、分布式配置中心（推 vs 拉 vs 长轮询、Go 长轮询客户端 + atomic 热更新 + 本地快照兜底、灰度发布与回滚、五大常见坑）、服务网格 Service Mesh（数据面 vs 控制面、Envoy/xDS、Mesh vs SDK 选型矩阵、Sidecar 启动竞态与 Ambient 模式）、Go 微服务框架选型（go-zero vs Kratos vs Kitex 六维对比、选型四准则、洋葱模型中间件链顺序）、分布式链路追踪与采样（W3C traceparent / B3、OpenTelemetry Go 实现、头部采样 vs 尾部采样组合策略、goroutine/MQ 断链五大坑），共新增 6 题 |
 | 2026-09-10 | v5.18 | 数据库模块新增 6 题：MySQL AUTO_INCREMENT 高并发锁竞争与 innodb_autoinc_lock_mode 优化方案、布隆过滤器防缓存穿透原理与 Go 实现、读写分离延迟补偿策略（Session Stickiness + 强制主库读取 + binlog 延迟监控）、乐观锁 CAS vs 悲观锁 FOR UPDATE Go 实战选型决策树、缓存与数据库双写一致性深度解析（Cache Aside / Delayed Dual Delete / Canal + Binlog）、Redis 数据结构选型指南（String vs Hash vs List vs Set vs ZSet） |
 | 2026-09-11 | v5.19 | 分布式系统模块新增 4 篇：端到端消息交付语义（at-most-once/at-least-once/exactly-once 三大语义详解 + Kafka/ RocketMQ/RabbitMQ 实现对比 + 幂等性 Go 代码实战）、重试策略深度剖析（指数退避原理/Full Jitter 防惊群效应/Go backoff 包用法/预算控制设计）、API Gateway 架构设计（五大职责边界 + Chi 手写完整实现 + 动态路由 + Sidecar vs Library 选型矩阵）、CQRS vs Event Sourcing（正交概念辨析/事件重放原理/快照优化/Golang 生态实践 + 何时不用），共新增 4 篇
 | 2026-09-08 | v5.17 | Linux / 操作系统模块新增 6 题：Swap 空间与 OOM Killer 评分机制（go memlimit/GOMEMLIMIT 配合策略 + kswapd/direct reclaim）、core dump 排障实战（coredumpctl/core_pattern/gdb+go 符号表解析/信号处理器配置）、TCP 高并发调优（SYN Cookie/SO_REUSEPORT 多进程端口共享/Backlog somaxconn 关系）/proc & /sys 文件系统深度（status/smaps/cpuset cgroup/THP 状态监控），共新增 6 题

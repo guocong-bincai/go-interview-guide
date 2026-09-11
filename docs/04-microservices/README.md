@@ -6,6 +6,7 @@
 
 ### 01-rpc · RPC 与服务治理
 - [✅] [gRPC 原理、Protobuf 编码、流式 RPC](01-rpc/04-01-grpc.md)
+- [✅] [服务注册与发现：心跳续约、客户端 vs 服务端发现、CP vs AP、etcd 实现](01-rpc/02-07-service-discovery.md)
 - [✅] [服务治理：超时、重试、负载均衡策略](01-rpc/05-03-service-governance.md)
 - [✅] [熔断与限流：三态熔断 + 令牌桶/漏桶/滑动窗口](01-rpc/01-02-circuit-breaker.md)
 - [✅] [服务降级与舱壁隔离：降级开关、线程池 vs 信号量隔离](01-rpc/06-05-degradation-isolation.md)
@@ -23,6 +24,7 @@
 - [✅] [Prometheus + Grafana 监控实战：PromQL、Histogram、告警、踩坑](03-observability/11-04-prometheus-grafana-practice.md)
 - [✅] [结构化日志、ELK 方案、日志采样](03-observability/14-02-logging.md)
 - [✅] [告警规则设计、告警疲劳治理](03-observability/10-03-alerting.md)
+- [✅] [分布式链路追踪与采样策略：W3C traceparent、头部 vs 尾部采样、ParentBased](03-observability/16-06-trace-sampling.md)
 - [✅] [可观测性三支柱整合：OpenTelemetry、TraceID 贯穿、eBPF 零侵入](03-observability/15-05-otel-three-pillars.md)
 
 ### 04-deployment · 部署与发布
@@ -35,3 +37,6 @@
 
 ### 05-architecture · 架构设计
 - [✅] [微服务拆分原则与粒度：DDD 限界上下文、康威定律、绞杀者模式](05-architecture/01-01-microservice-split.md)
+- [✅] [分布式配置中心：推 vs 拉、长轮询、灰度发布、本地容灾快照](05-architecture/02-02-config-center.md)
+- [✅] [服务网格 Service Mesh：Sidecar、数据面 vs 控制面、Envoy/xDS、Ambient](05-architecture/03-03-service-mesh.md)
+- [✅] [Go 微服务框架选型：go-zero vs Kratos vs Kitex、中间件链设计](05-architecture/04-04-microservice-framework.md)
