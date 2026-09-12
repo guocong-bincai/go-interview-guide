@@ -22,6 +22,14 @@
 - [✅] [搜索系统：分词、倒排索引、搜索建议](07-search/15-07-search.md)
 - [✅] [支付系统：幂等、对账、资金安全](08-payment/16-08-payment.md)
 
+### 12-scenarios · 业务系统专题（高频设计题）
+- [✅] [订单系统设计：状态机 CAS、超时关单、订单号生成、分库分表](20-order-system/20-01-order-system.md)
+- [✅] [库存系统设计：防超卖、Redis Lua 预扣、热点分段、库存回补与对账](21-inventory/21-01-inventory.md)
+- [✅] [点赞系统设计：计数分片、Bitmap 去重、MQ 异步落库、对账](22-like-system/22-01-like-system.md)
+- [✅] [消息推送系统设计：长连接路由表、离线补推、多厂商通道、降噪频控](23-message-push/23-01-message-push.md)
+- [✅] [弹幕系统设计：分房间广播、内存环形缓冲、过期丢弃、分级降级](24-danmaku/24-01-danmaku.md)
+- [✅] [优惠券系统设计：并发领取三重防线、防重防刷、超时回滚、核销幂等](25-coupon/25-01-coupon.md)
+
 ### 03-cache · 缓存架构
 - [✅] [缓存与数据库一致性策略 + 多级缓存架构（Cache-Aside/Write-Through/延迟双删）](01-cache-consistency/01-01-cache-consistency.md)
 
