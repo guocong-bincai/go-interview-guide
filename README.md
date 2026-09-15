@@ -7,8 +7,8 @@
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
-[![题目数量](https://img.shields.io/badge/题目-439-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v5.21-blue?style=flat-square)](./docs)
+[![题目数量](https://img.shields.io/badge/题目-450-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v5.22-blue?style=flat-square)](./docs)
 
 [📚 模块导航](#-模块导航) · [🗺️ 学习路线](#️-学习路线) · [📝 更新记录](#-更新记录) · [🤝 贡献指南](#-贡献指南)
 
@@ -18,7 +18,7 @@
 
 ## 📚 模块导航
 
-> 共 **439** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
+> 共 **450** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
 
 | 序号 | 模块 | 题数 | 频率 | 优先级 | 覆盖内容 |
 |:----:|------|:----:|:----:|:------:|----------|
@@ -27,7 +27,7 @@
 | 03 | [**分布式系统**](docs/03-distributed/README.md) | **58** | ★★★★☆ | P1 | CAP/BASE/Raft/2PC/TCC/Saga/Kafka/gRPC/限流熔断/Gossip/ConsistentHash/负载均衡/SentinelCluster/MQ交付语义/指数退避/API Gateway/CQRS
 | 04 | [**微服务工程**](docs/04-microservices/README.md) | **31** | ★★★★☆ | P1 | gRPC/Protobuf/网关/限流/服务注册发现/配置中心/服务网格/链路追踪采样/可观测性/K8s/CI-CD/无损发布/服务降级/BFF/框架选型
 | 05 | [**系统设计**](docs/05-system-design/README.md) | **34** | ★★★★★ | P0 | 秒杀/短链/IM/Feed流/支付/订单/库存/点赞/消息推送/弹幕/优惠券/缓存一致性/CDN/API网关/WebSocket/深度分页
-| 06 | [**网络协议**](docs/06-network/README.md) | **14** | ★★★★☆ | P1 | TCP 三次握手/HTTP1.1-2-3/HTTPS/gRPC/WebSocket/安全 |
+| 06 | [**网络协议**](docs/06-network/README.md) | **25** | ★★★★☆ | P1 | TCP 三次握手/队列与 SYN Flood/Nagle 与 TCP_NODELAY/HTTP1.1-2-3/HTTP 缓存/CORS/HTTPS/gRPC/WebSocket/502-504-499 排查/L4-L7 负载均衡/Range 断点续传/网络排查工具/安全 |
 | 07 | [**高频算法**](docs/07-algorithms/README.md) | **90** | ★★★★☆ | P2 | 滑动窗口/二分/回溯/DP/链表/树/单调栈/堆/TopK |
 | 08 | [**工程素养**](docs/08-engineering/README.md) | **35** | ★★★★★ | P1 | 技术选型/架构演进/OOM排查/CIDC流水线/可观测性/测试覆盖率/DB迁移/Docker优化/金丝雀发布/依赖管理 |
 | 09 | [**面试策略**](docs/09-interview-strategy/README.md) | **14** | ★★★☆☆ | P1 | STAR法则/行为面试/简历写法/自我介绍/系统设计面试/Live Coding/薪资谈判/晋升答辩/全流程节奏控制/技术深挖应对/HR面全攻略/反问环节攻略 |
@@ -65,6 +65,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
+| 2026-09-16 | v5.22 | 网络协议模块新增 8 篇：HTTP 缓存机制（强缓存 vs 协商缓存、Cache-Control/no-cache 与 no-store 辨析、ETag vs Last-Modified、Vary 头防缓存串味、hash 文件名 + index.html no-cache 失效方案、Go 协商缓存中间件）、CORS 跨域（同源三要素、简单请求 vs 预检、带 Cookie 时不能用 `*`、Expose-Headers、Vary: Origin 踩坑、CORS 中间件必须早于鉴权、Nginx 统一处理）、Nagle 算法与延迟确认（40ms 毛刺完整时序还原、Go 默认 NoDelay=true、net.Buffers 合并写、tcpdump+strace 排查法）、TCP 半连接/全连接队列与 SYN Flood（两队列三参数、somaxconn 才是天花板上限、Go 内部 backlog=somaxconn、队列溢出的两种表现、SYN Cookie 原理与代价、nf_conntrack 表满）、HTTP 502/504/499 排查（三层状态码归因、超时逐层递减预算、WriteTimeout 含 handler 时间的坑、Nginx error log 高频短语对照、499 与幂等、K8s preStop 优雅下线）、四层/七层负载均衡（LVS NAT/DR/TUN 三模式、DR 的 lo 配 VIP + 抑制 ARP、一致性哈希与虚拟节点、健康检查误判、keepalive 三配置缺一不可、X-Forwarded-For 可伪造）、HTTP Range 与断点续传（206/416/If-Range、http.ServeContent、分片上传三阶段、流式合并防 OOM、秒传与归属复制安全、Nginx slice 模块）、网络排查工具箱（ss/nstat/mtr/tcpdump/iftop 完整用法与阈值、CLOSE_WAIT 是应用 bug、curl -w 耗时分解定位网络还是应用），共新增 8 篇；并修正模块 06 题数统计错误（根 README 14 → 25，此前与模块 README 的 17 不一致） |
 | 2026-09-13 | v5.21 | 系统设计模块新增 6 篇业务系统设计题：订单系统（状态机 + 版本号 CAS、RocketMQ 延时消息/时间轮/Redis ZSet 四种超时关单方案对比 + 扫表兜底、订单号日期+分片+序列与基因法、user_id 分库分表）、库存系统（条件更新/乐观锁/悲观锁三种 DB 扣减、Redis Lua 原子预扣、热点库存 Key 分段 10 片、幂等回补、库存流水对账）、点赞系统（Set vs Bitmap vs HyperLogLog 去重选型、计数 16 分片 + Pipeline 聚合读、INSERT IGNORE 幂等落库、DB 对账校准）、消息推送系统（Redis 路由表 TTL+心跳续期防幽灵路由、Redis Stream 离线游标拉取、APNs/FCM/厂商通道统一调度与降级、去重/聚合/频控/静默时段 + P0-P3 优先级分级）、弹幕系统（业务取舍：允许丢弃/弱一致/强时效、内存环形缓冲 + 每秒批量落库、按 roomID 一致性哈希、offset 索引历史回放、分级降级）、优惠券系统（券模板/实例模型、Redis Lua + DB 条件更新 + 唯一索引三重防线、设备指纹防刷、核销状态机 CAS、超时回滚取舍、对账 SQL），共新增 6 篇
 | 2026-09-12 | v5.20 | 微服务工程模块新增 6 题：服务注册与发现（客户端 vs 服务端发现、CP vs AP 选型、etcd 租约 + KeepAlive + Watch 完整 Go 实现、注册中心故障排查）、分布式配置中心（推 vs 拉 vs 长轮询、Go 长轮询客户端 + atomic 热更新 + 本地快照兜底、灰度发布与回滚、五大常见坑）、服务网格 Service Mesh（数据面 vs 控制面、Envoy/xDS、Mesh vs SDK 选型矩阵、Sidecar 启动竞态与 Ambient 模式）、Go 微服务框架选型（go-zero vs Kratos vs Kitex 六维对比、选型四准则、洋葱模型中间件链顺序）、分布式链路追踪与采样（W3C traceparent / B3、OpenTelemetry Go 实现、头部采样 vs 尾部采样组合策略、goroutine/MQ 断链五大坑），共新增 6 题 |
 | 2026-09-10 | v5.18 | 数据库模块新增 6 题：MySQL AUTO_INCREMENT 高并发锁竞争与 innodb_autoinc_lock_mode 优化方案、布隆过滤器防缓存穿透原理与 Go 实现、读写分离延迟补偿策略（Session Stickiness + 强制主库读取 + binlog 延迟监控）、乐观锁 CAS vs 悲观锁 FOR UPDATE Go 实战选型决策树、缓存与数据库双写一致性深度解析（Cache Aside / Delayed Dual Delete / Canal + Binlog）、Redis 数据结构选型指南（String vs Hash vs List vs Set vs ZSet） |
