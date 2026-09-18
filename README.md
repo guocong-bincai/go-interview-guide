@@ -32,7 +32,7 @@
 | 08 | [**工程素养**](docs/08-engineering/README.md) | **35** | ★★★★★ | P1 | 技术选型/架构演进/OOM排查/CIDC流水线/可观测性/测试覆盖率/DB迁移/Docker优化/金丝雀发布/依赖管理 |
 | 09 | [**面试策略**](docs/09-interview-strategy/README.md) | **14** | ★★★☆☆ | P1 | STAR法则/行为面试/简历写法/自我介绍/系统设计面试/Live Coding/薪资谈判/晋升答辩/全流程节奏控制/技术深挖应对/HR面全攻略/反问环节攻略 |
 | 10 | [**项目实战问题**](docs/10-real-problems/README.md) | **8** | ★★★★★ | P0 | 业务方案/性能问题/数据一致性/可用性/并发/资源泄漏与安全问题 |
-| 11 | [**Go 标准库生产实践**](docs/11-go-std-practice/README.md) | **17** | ★★★★★ | P1 | reflect反射/core | regexp编译缓存/http中间件链/filepath路径安全/sync.Map适用场景 + sync单飞/nil-closed channel/defer+named return/context/errors/is/As/http.Client |
+| 11 | [**Go 标准库生产实践**](docs/11-go-std-practice/README.md) | **17** | ★★★★★ | P1 | reflect反射/core/regexp编译缓存/http中间件链/filepath路径安全/sync.Map适用场景 + sync单飞/nil-closed channel/defer+named return/context/errors/is/As/http.Client |
 | 12 | [**Linux / 操作系统**](docs/12-linux-os/README.md) | **14** | ★★★★☆ | P1 | 文件系统/进程线程/虚拟内存/零拷贝/cgroup/IPC/Swap/OOM Killer评分/core dump/TCP调优/proc/sysfs |
 
 ---
