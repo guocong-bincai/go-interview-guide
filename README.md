@@ -7,8 +7,8 @@
 [![Stars](https://img.shields.io/github/stars/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=yellow)](https://github.com/guocong-bincai/go-interview-guide/stargazers)
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
-[![题目数量](https://img.shields.io/badge/题目-459-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v5.23-blue?style=flat-square)](./docs)
+[![题目数量](https://img.shields.io/badge/题目-474-orange?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v5.24-blue?style=flat-square)](./docs)
 
 [📚 模块导航](#-模块导航) · [🗺️ 学习路线](#️-学习路线) · [📝 更新记录](#-更新记录) · [🤝 贡献指南](#-贡献指南)
 
@@ -18,7 +18,7 @@
 
 ## 📚 模块导航
 
-> 共 **459** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
+> 共 **474** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
 
 | 序号 | 模块 | 题数 | 频率 | 优先级 | 覆盖内容 |
 |:----:|------|:----:|:----:|:------:|----------|
@@ -29,10 +29,10 @@
 | 05 | [**系统设计**](docs/05-system-design/README.md) | **34** | ★★★★★ | P0 | 秒杀/短链/IM/Feed流/支付/订单/库存/点赞/消息推送/弹幕/优惠券/缓存一致性/CDN/API网关/WebSocket/深度分页
 | 06 | [**网络协议**](docs/06-network/README.md) | **25** | ★★★★☆ | P1 | TCP 三次握手/队列与 SYN Flood/Nagle 与 TCP_NODELAY/HTTP1.1-2-3/HTTP 缓存/CORS/HTTPS/gRPC/WebSocket/502-504-499 排查/L4-L7 负载均衡/Range 断点续传/网络排查工具/安全 |
 | 07 | [**高频算法**](docs/07-algorithms/README.md) | **99** | ★★★★☆ | P2 | 滑动窗口/二分/回溯/DP/链表/树/单调栈/堆/TopK/LFU/Trie/最短路/海量数据/排序链表/快速选择/树序列化/逆序对/KMP |
-| 08 | [**工程素养**](docs/08-engineering/README.md) | **35** | ★★★★★ | P1 | 技术选型/架构演进/OOM排查/CIDC流水线/可观测性/测试覆盖率/DB迁移/Docker优化/金丝雀发布/依赖管理 |
+| 08 | [**工程素养**](docs/08-engineering/README.md) | **41** | ★★★★★ | P1 | 技术选型/架构演进/OOM排查/CIDC流水线/可观测性/测试覆盖率/DB迁移/Docker优化/金丝雀发布/依赖管理/告警治理/供应链安全/PGO/可复现构建/Flaky Test/持续性能分析 |
 | 09 | [**面试策略**](docs/09-interview-strategy/README.md) | **14** | ★★★☆☆ | P1 | STAR法则/行为面试/简历写法/自我介绍/系统设计面试/Live Coding/薪资谈判/晋升答辩/全流程节奏控制/技术深挖应对/HR面全攻略/反问环节攻略 |
 | 10 | [**项目实战问题**](docs/10-real-problems/README.md) | **8** | ★★★★★ | P0 | 业务方案/性能问题/数据一致性/可用性/并发/资源泄漏与安全问题 |
-| 11 | [**Go 标准库生产实践**](docs/11-go-std-practice/README.md) | **17** | ★★★★★ | P1 | reflect反射/core | regexp编译缓存/http中间件链/filepath路径安全/sync.Map适用场景 + sync单飞/nil-closed channel/defer+named return/context/errors/is/As/http.Client |
+| 11 | [**Go 标准库生产实践**](docs/11-go-std-practice/README.md) | **26** | ★★★★★ | P1 | reflect反射/regexp编译缓存/http中间件链/filepath路径安全/sync.Map + sync单飞/nil-closed channel/defer+named return/context/errors/http.Client + net/url编码陷阱/Request.Body与MaxBytesReader/bufio.Scanner 64KB/os.Root防穿越/OnceFunc家族/netip/crypto-rand/优雅退出/httptest |
 | 12 | [**Linux / 操作系统**](docs/12-linux-os/README.md) | **14** | ★★★★☆ | P1 | 文件系统/进程线程/虚拟内存/零拷贝/cgroup/IPC/Swap/OOM Killer评分/core dump/TCP调优/proc/sysfs |
 
 ---
@@ -65,6 +65,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
+| 2026-09-21 | v5.24 | Go 标准库生产实践模块新增 9 题（聚焦「上线才会炸」的边界条件）：net/url 编码陷阱（QueryEscape 空格转 `+` 而 `+` 不转义导致签名错位、PathEscape 不转义 `/`、跨语言签名必须自实现 RFC3986、url.JoinPath 保留 `/` 的穿越风险、url.URL 结构体拼装优于字符串加法）、http.Request.Body 只能读一次（GetBody 重放与手搓 Request 时 GetBody 为 nil、http.MaxBytesReader + *http.MaxBytesError 防 OOM 而 Content-Length 可伪造、Drain+Close 才归还连接池否则 TIME_WAIT 暴涨、TeeReader 一次读取同时校验与转发）、bufio.Scanner 64KB 陷阱（MaxScanTokenSize、不检查 Err() 会静默截断数据、Buffer/ReadString/ReadSlice 三方案选型、sc.Bytes() 缓冲会被覆盖必须 copy）、os.Root（Go 1.24，fd 级子树隔离根治路径穿越与 TOCTOU、Clean+前缀校验的三个漏洞、服务端生成 UUID 文件名 + 上传目录 nosuid,nodev,noexec）、sync.OnceFunc/OnceValue/OnceValues（Go 1.21，错误也被缓存故不能用于失败重试场景、panic 会被重现、与 SingleFlight 的进程级 vs 并发窗口级辨析）、net/netip（值类型可比较可做 map key、v4-mapped 两种表示导致 IP 白名单绕过、解析零分配快 4~5 倍、SSRF 防护必须含 169.254.169.254 元数据地址与 DNS Rebinding）、crypto/rand vs math/rand（可预测性漏洞、Go 1.20 全局自动随机化与 rand/v2 移除 Seed 改 ChaCha8、Go 1.24 rand.Text()、subtle.ConstantTimeCompare 防时序攻击）、signal.NotifyContext 优雅退出（用已取消 ctx 调 Shutdown 直接失效、摘流量/preStop/terminationGracePeriod 时序、Keep-Alive 空闲连接不由 Shutdown 关闭、后台 goroutine 需 ctx+WaitGroup 收口）、httptest/httputil（NewRecorder 无网络层测不出超时与连接复用、NewServer 测 client 与反向代理、表驱动 + t.Parallel、DumpRequest 会消耗 Body）；并恢复此前未成功推送的工程素养模块 6 篇（告警治理/供应链安全/PGO/可复现构建/Flaky Test/持续性能分析），模块题数 11 模块 17 → 26、08 模块 35 → 41，全库 459 → 474 |
 | 2026-09-17 | v5.23 | 高频算法模块新增 9 题（补齐此前未覆盖的进阶方向）：LFU 缓存（哈希 + 频率分桶双向链表 + minFreq O(1) 实现、为什么 minFreq 无需扫描、LFU 缓存污染与 TinyLFU/Redis allkeys-lfu 衰减方案、LFU vs LRU 选型）、前缀树 Trie（208 实现 + 211 通配符 DFS + 敏感词过滤实战、Trie vs 哈希表、双数组/压缩 Trie 内存优化、AC 自动机）、海量数据 TopK（40 亿整数 Hash 分桶 + 桶内小顶堆、2-bit 位图 1GB 精确计数、桶数估算与数据倾斜处理）、排序链表（148 自底向上归并 O(1) 空间完整实现、链表为何不用快排/堆排、稳定性）、数组中第 K 大（215 随机化快速选择平均 O(n) 推导、三路划分应对大量重复、小顶堆 O(n log K) 选型对比）、Dijkstra 单源最短路（743 邻接表 + 小顶堆优化 O((V+E) log V)、懒删除无需 decrease-key、为何不能有负权边、与 BFS/A* 关系、多源与 Floyd 全源）、二叉树序列化与反序列化（297 前序 + nil 占位为何必要、共享游标还原、strings.Builder 防 O(n²)、二进制/Protobuf 生产选型）、数组中的逆序对（剑指 Offer 51 归并分治统计 mid-i、int64 防溢出、树状数组替代解法）、KMP（28 next 前缀函数定义与摊还 O(n+m) 证明、strings.Index 实际用 Rabin-Karp），共新增 9 题，模块题数 90 → 99，全库 450 → 459 |
 | 2026-09-16 | v5.22 | 网络协议模块新增 8 篇：HTTP 缓存机制（强缓存 vs 协商缓存、Cache-Control/no-cache 与 no-store 辨析、ETag vs Last-Modified、Vary 头防缓存串味、hash 文件名 + index.html no-cache 失效方案、Go 协商缓存中间件）、CORS 跨域（同源三要素、简单请求 vs 预检、带 Cookie 时不能用 `*`、Expose-Headers、Vary: Origin 踩坑、CORS 中间件必须早于鉴权、Nginx 统一处理）、Nagle 算法与延迟确认（40ms 毛刺完整时序还原、Go 默认 NoDelay=true、net.Buffers 合并写、tcpdump+strace 排查法）、TCP 半连接/全连接队列与 SYN Flood（两队列三参数、somaxconn 才是天花板上限、Go 内部 backlog=somaxconn、队列溢出的两种表现、SYN Cookie 原理与代价、nf_conntrack 表满）、HTTP 502/504/499 排查（三层状态码归因、超时逐层递减预算、WriteTimeout 含 handler 时间的坑、Nginx error log 高频短语对照、499 与幂等、K8s preStop 优雅下线）、四层/七层负载均衡（LVS NAT/DR/TUN 三模式、DR 的 lo 配 VIP + 抑制 ARP、一致性哈希与虚拟节点、健康检查误判、keepalive 三配置缺一不可、X-Forwarded-For 可伪造）、HTTP Range 与断点续传（206/416/If-Range、http.ServeContent、分片上传三阶段、流式合并防 OOM、秒传与归属复制安全、Nginx slice 模块）、网络排查工具箱（ss/nstat/mtr/tcpdump/iftop 完整用法与阈值、CLOSE_WAIT 是应用 bug、curl -w 耗时分解定位网络还是应用），共新增 8 篇；并修正模块 06 题数统计错误（根 README 14 → 25，此前与模块 README 的 17 不一致） |
 | 2026-09-13 | v5.21 | 系统设计模块新增 6 篇业务系统设计题：订单系统（状态机 + 版本号 CAS、RocketMQ 延时消息/时间轮/Redis ZSet 四种超时关单方案对比 + 扫表兜底、订单号日期+分片+序列与基因法、user_id 分库分表）、库存系统（条件更新/乐观锁/悲观锁三种 DB 扣减、Redis Lua 原子预扣、热点库存 Key 分段 10 片、幂等回补、库存流水对账）、点赞系统（Set vs Bitmap vs HyperLogLog 去重选型、计数 16 分片 + Pipeline 聚合读、INSERT IGNORE 幂等落库、DB 对账校准）、消息推送系统（Redis 路由表 TTL+心跳续期防幽灵路由、Redis Stream 离线游标拉取、APNs/FCM/厂商通道统一调度与降级、去重/聚合/频控/静默时段 + P0-P3 优先级分级）、弹幕系统（业务取舍：允许丢弃/弱一致/强时效、内存环形缓冲 + 每秒批量落库、按 roomID 一致性哈希、offset 索引历史回放、分级降级）、优惠券系统（券模板/实例模型、Redis Lua + DB 条件更新 + 唯一索引三重防线、设备指纹防刷、核销状态机 CAS、超时回滚取舍、对账 SQL），共新增 6 篇
