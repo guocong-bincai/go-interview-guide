@@ -16,6 +16,7 @@
 | ✅ | `10-09-io-multiplexing.md` | [epoll/kqueue 与 Netpoller 原理、Go 网络 I/O 模型](01-runtime/10-09-io-multiplexing.md) |
 | ✅ | `11-11-goroutine-lifecycle.md` | [goroutine 创建/运行/阻塞/退出全生命周期、泄漏原因、pprof/trace 排查](01-runtime/11-11-goroutine-lifecycle.md) |
 | ✅ | `37-11-gc-tuning.md` | [GOGC/GOMEMLIMIT 调优、Green Tea GC、生产问题排查](01-runtime/37-11-gc-tuning.md) |
+| ✅ | `13-13-runtime-pinner.md` | [runtime.Pinner：cgo 指针规则、Pin/Unpin 生命周期、GC root 语义（新增）](01-runtime/13-13-runtime-pinner.md) |
 | ✅ | `12-12-runtime-free.md` | [runtime.free 内存回收机制、stack free vs heap free](01-runtime/12-12-runtime-free.md) |
 | ✅ | `36-07-flight-recorder.md` | [Go 1.25 trace.FlightRecorder 生产级 trace 采集](01-runtime/36-07-flight-recorder.md) |
 
@@ -69,6 +70,9 @@
 | ✅ | `80-interface-composition-vs-embedding.md` | [Interface 组合 vs 嵌入：Method Set 规则、隐式实现、依赖注入最佳实践](03-language-deep/80-interface-composition-vs-embedding.md) |
 | ✅ | `82-value-vs-pointer-receiver.md` | [值接收者 vs 指针接收者：Method Set 规则、一致性原则、接口满足条件](03-language-deep/82-value-vs-pointer-receiver.md) |
 | ✅ | `83-interface-nil-trap.md` | [Interface Nil 陷阱：typed nil vs untyped nil、interface 内存布局、返回技巧](03-language-deep/83-interface-nil-trap.md) |
+| ✅ | `88-unsafe-slice-string.md` | [unsafe.Slice / unsafe.String：替代 reflect.SliceHeader 的正确零拷贝写法（新增）](03-language-deep/88-unsafe-slice-string.md) |
+| ✅ | `86-unique-interning.md` | [unique 包：字符串驻留、Handle 可比较性、弱引用回收与适用场景（新增）](03-language-deep/86-unique-interning.md) |
+| ✅ | `87-cgo-handle.md` | [cgo.Handle：安全传递 Go 对象给 C 回调、整数句柄 vs 裸指针（新增）](03-language-deep/87-cgo-handle.md) |
 
 ---
 
@@ -82,6 +86,7 @@
 | ✅ | `79-false-sharing.md` | [False Sharing（伪共享）：CPU 缓存行对齐、padding 技巧与多核性能优化](04-performance/79-false-sharing.md) |
 | ✅ | `20-04-tuning-cases.md` | [真实调优案例：JSON 解析、字符串拼接、sync.Pool 实战](04-performance/20-04-tuning-cases.md) |
 | ✅ | `80-blocking-profile-analysis.md` | [Blocking Profile 阻塞分析：定位 goroutine 锁竞争瓶颈、从 profile 到优化决策](04-performance/80-blocking-profile-analysis.md) |
+| ✅ | `81-runtime-metrics.md` | [runtime/metrics：生产指标采集、ReadMemStats 的 STW 陷阱、直方图与 Prometheus（新增）](04-performance/81-runtime-metrics.md) |
 
 ---
 
@@ -97,6 +102,7 @@
 | ✅ | `63-io-reader-writer.md` | [io.Reader/Writer 设计模式、流式处理、bufio、Decorator 模式](03-language-deep/63-io-reader-writer.md) |
 | ✅ | `30-13-time.md` | [time.Timer/Ticker 正确用法、Stop/Reset 陷阱、内存泄漏、时区处理](05-stdlib/30-13-time.md) |
 | ✅ | `60-18-string-byte.md` | [string 底层结构、string↔[]byte 零拷贝、为什么不可变（strings.Builder vs bytes.Buffer）](03-language-deep/60-18-string-byte.md) |
+| ✅ | `81-go1.22-servemux-routing.md` | [Go 1.22 增强 ServeMux：方法匹配、PathValue 路径变量、路由优先级与 405（新增）](05-stdlib/81-go1.22-servemux-routing.md) |
 | ✅ | `79-graceful-shutdown.md` | [Graceful Shutdown：http.Server.Shutdown、信号处理、draining、K8s 配合](05-stdlib/79-graceful-shutdown.md) |
 
 ---
@@ -107,6 +113,8 @@
 |---|---|---|
 | ✅ | `72-01-go-module.md` | [go.mod 核心语义、MVS 版本选择算法、私有模块、go.work](06-toolchain/72-01-go-module.md) |
 | ✅ | `73-02-build-tags.md` | [Build Tags 语法、常用内置 Tag、自定义 Tag 实战](06-toolchain/73-02-build-tags.md) |
+| ✅ | `77-gotoolchain.md` | [GOTOOLCHAIN：工具链自动切换、go/toolchain 指令、CI 可复现构建（新增）](06-toolchain/77-gotoolchain.md) |
+| ✅ | `78-native-fuzzing.md` | [原生 Fuzzing（testing.F）：覆盖率引导、种子语料、crasher 回归闭环（新增）](06-toolchain/78-native-fuzzing.md) |
 
 ---
 
