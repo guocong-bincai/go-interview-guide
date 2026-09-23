@@ -141,8 +141,8 @@ UNLINK key  # 异步删除，释放内存后台进行
 
 ```bash
 # 配置
-hz 10              # 每秒执行 10 次定期扫描
-activ expire 100   # 每次随机检查 100 个带 TTL 的 key
+hz 10                     # 每秒执行 10 次定时任务（含定期删除）
+active-expire-effort 10   # 定期删除投入力度（1~10，默认 10，越大越积极）
 ```
 
 **扫描算法：**
@@ -219,8 +219,7 @@ maxmemory-policy allkeys-random  # 随机淘汰，热点数据可能被清掉
 # 默认 noeviction，但没设 maxmemory 时内存会无限增长
 # 正确做法
 maxmemory 2gb
-maxmemory-policy allkeys-lru
-maxmemory-policy volatile-lru  # 如果有明确 TTL 分层
+maxmemory-policy allkeys-lru   # 有明确 TTL 分层时可改为 volatile-lru
 ```
 
 **坑 3：FLUSHDB 触发淘汰行为**
