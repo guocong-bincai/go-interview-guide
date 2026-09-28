@@ -21,6 +21,7 @@
 
 ### 03-advanced-topics · 进阶高频（2026-09-17 新增）
 - [✅] [LFU 缓存 / 前缀树 Trie / Dijkstra 最短路 / 海量数据 TopK / 排序链表 / 快速选择 / 树序列化 / 逆序对 / KMP](14-advanced-topics/91-01-advanced-topics.md)
+- [✅] [进阶高频（二）：两个正序数组的中位数（二分分割）/ 最小栈与栈队列互转 / 和为 K 的子数组（前缀和+哈希）/ 戳气球（区间 DP）/ O(1) 增删随机集合 / 缺失的第一个正数（原地置换）/ 字符串相乘（大数模拟）/ Rand7 实现 Rand10（拒绝采样）/ 轮转数组（三次反转）](14-advanced-topics/92-02-design-and-interval-dp.md)（2026-09-29 新增）
 
 ### 其他专题索引
 - [图论：DFS/BFS/并查集/拓扑排序](09-graph/81-01-graph.md)
