@@ -31,6 +31,9 @@
 - [✅] [带新人：技术传承、文档文化、知识管理](03-mentoring/22-03-mentoring.md)
 - [✅] [Module Workspace 与依赖管理：Monorepo 大项目最佳实践](03-leadership/25-03-dependency-management.md)
 - [⏳] [工程质量体系落地：质量门禁、lint、测试覆盖率、CI](03-leadership/12-04-engineering-quality.md)
+- [✅] [依赖注入工程化：手工装配 / wire / fx / dig 选型与装配实践](03-leadership/26-02-dependency-injection.md)
+- [✅] [特性开关（Feature Flag）：渐进式发布、开关分类与开关腐化治理](03-leadership/26-03-feature-flag.md)
+- [✅] [Git 分支策略与协作规范：Trunk-Based / rebase vs merge / squash](03-leadership/26-04-git-workflow.md)
 - [⏳] [跨团队协作：目标对齐、资源冲突、复杂项目推进](03-leadership/13-05-cross-team-collaboration.md)
 - [⏳] [招聘与面试：高级工程师如何识别候选人](03-leadership/21-06-hiring-interviewing.md)
 
@@ -45,6 +48,9 @@
 - [✅] [数据库迁移：零停机 Schema 变更五步法](04-performance-governance/25-03-db-migration-strategy.md)
 - [✅] [容器镜像优化：多阶段构建 + scratch + BuildKit 缓存](04-performance-governance/25-04-docker-image-optimization.md)
 - [✅] [金丝雀发布：K8s 灰度部署 + 优雅关闭 + 快速回滚](04-performance-governance/25-05-canary-release.md)
+- [✅] [单元测试 Mock 工程化：gomock / mockgen 与可测性设计](04-performance-governance/26-04-test-mock.md)
+- [✅] [API 版本管理与向后兼容：REST 版本策略与 Protobuf 字段演进](04-performance-governance/26-05-api-versioning.md)
+- [✅] [代码生成工程化：go:generate 体系与生成代码的工程约束](04-performance-governance/26-06-code-generation.md)
 
 ### 06-race-detector · 并发安全与性能诊断
 - [✅] [Race Detector：go test -race 原理与 CI 集成](06-race-detector/24-01-race-detector.md)
