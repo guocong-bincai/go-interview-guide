@@ -8,7 +8,7 @@
 [![Forks](https://img.shields.io/github/forks/guocong-bincai/go-interview-guide?style=flat-square&logo=github&color=blue)](https://github.com/guocong-bincai/go-interview-guide/network/members)
 [![License](https://img.shields.io/github/license/guocong-bincai/go-interview-guide?style=flat-square&color=green)](./LICENSE)
 [![题目数量](https://img.shields.io/badge/题目-520-orange?style=flat-square)](./docs)
-[![版本](https://img.shields.io/badge/版本-v5.30-blue?style=flat-square)](./docs)
+[![版本](https://img.shields.io/badge/版本-v5.31-blue?style=flat-square)](./docs)
 
 [📚 模块导航](#-模块导航) · [🗺️ 学习路线](#️-学习路线) · [📝 更新记录](#-更新记录) · [🤝 贡献指南](#-贡献指南)
 
@@ -18,7 +18,7 @@
 
 ## 📚 模块导航
 
-> 共 **520** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
+> 共 **526** 道高频面试题 ｜ 12 大核心模块 ｜ 按面试优先级排序
 
 | 序号 | 模块 | 题数 | 频率 | 优先级 | 覆盖内容 |
 |:----:|------|:----:|:----:|:------:|----------|
@@ -29,7 +29,7 @@
 | 05 | [**系统设计**](docs/05-system-design/README.md) | **34** | ★★★★★ | P0 | 秒杀/短链/IM/Feed流/支付/订单/库存/点赞/消息推送/弹幕/优惠券/缓存一致性/CDN/API网关/WebSocket/深度分页
 | 06 | [**网络协议**](docs/06-network/README.md) | **25** | ★★★★☆ | P1 | TCP 三次握手/队列与 SYN Flood/Nagle 与 TCP_NODELAY/HTTP1.1-2-3/HTTP 缓存/CORS/HTTPS/gRPC/WebSocket/502-504-499 排查/L4-L7 负载均衡/Range 断点续传/网络排查工具/安全 |
 | 07 | [**高频算法**](docs/07-algorithms/README.md) | **118** | ★★★★☆ | P2 | 滑动窗口/二分/回溯/DP/链表/树/单调栈/堆/TopK/LFU/Trie/最短路/海量数据/排序链表/快速选择/树序列化/逆序对/KMP/中位数二分/设计类数据结构/区间DP/原地算法/Kadane/网格回溯/下一个排列/字符串DP/矩阵旋转 |
-| 08 | [**工程素养**](docs/08-engineering/README.md) | **47** | ★★★★★ | P1 | 技术选型/架构演进/OOM排查/CIDC流水线/可观测性/测试覆盖率/DB迁移/Docker优化/金丝雀发布/依赖管理/告警治理/供应链安全/PGO/可复现构建/Flaky Test/持续性能分析/依赖注入/特性开关/Git协作规范/单元测试Mock/API版本管理/代码生成 |
+| 08 | [**工程素养**](docs/08-engineering/README.md) | **53** | ★★★★★ | P1 | 技术选型/架构演进/OOM排查/CIDC流水线/可观测性/测试覆盖率/DB迁移/Docker优化/金丝雀发布/依赖管理/告警治理/供应链安全/PGO/可复现构建/Flaky Test/持续性能分析/依赖注入/特性开关/Git协作规范/单元测试Mock/API版本管理/代码生成/指标基数治理/结构化日志slog/静态检查golangci-lint/配置与密钥管理/CI构建提速/ADR文档工程化 |
 | 09 | [**面试策略**](docs/09-interview-strategy/README.md) | **14** | ★★★☆☆ | P1 | STAR法则/行为面试/简历写法/自我介绍/系统设计面试/Live Coding/薪资谈判/晋升答辩/全流程节奏控制/技术深挖应对/HR面全攻略/反问环节攻略 |
 | 10 | [**项目实战问题**](docs/10-real-problems/README.md) | **8** | ★★★★★ | P0 | 业务方案/性能问题/数据一致性/可用性/并发/资源泄漏与安全问题 |
 | 11 | [**Go 标准库生产实践**](docs/11-go-std-practice/README.md) | **26** | ★★★★★ | P1 | reflect反射/regexp编译缓存/http中间件链/filepath路径安全/sync.Map + sync单飞/nil-closed channel/defer+named return/context/errors/http.Client + net/url编码陷阱/Request.Body与MaxBytesReader/bufio.Scanner 64KB/os.Root防穿越/OnceFunc家族/netip/crypto-rand/优雅退出/httptest |
@@ -65,6 +65,7 @@
 
 | 日期 | 版本 | 更新内容 |
 |------|------|----------|
+| 2026-10-09 | v5.31 | 工程素养模块新增 6 篇（补齐可观测性/代码质量/配置管理/CI 提速/工程文档方向此前未覆盖的工程化实践）：Prometheus 指标基数爆炸治理（Cardinality 定义 = 指标名 + label 组合的乘积、label 乘法陷阱 100×10×400×5=200 万 series、禁止 user_id/order_id/request_id/原始 URL 进 label 的三条判据、路由模板归一化 vs 原始 path、采集端 `metric_relabel_configs` labeldrop 兜底、`topk(count by (__name__))` 与 `/api/v1/status/tsdb` 排查、native histogram 减少 bucket 基数、高基数分析分流 ClickHouse）、结构化日志工程化 log/slog（Logger/Handler/Record/Attr 四对象模型、请求级 logger 注入 context 用 InfoContext 自动带 trace_id、禁止把带 trace_id 的 logger 存进单例导致串台、自定义 samplingHandler 对 Info 采样而 Warn/Error 全量、ReplaceAttr 脱敏手机号身份证、slog vs Zap/Zerolog 选型、日志字段命名统一）、静态代码检查工程化 golangci-lint（go vet 官方底线 vs 聚合器分工、staticcheck 抓逻辑错误、从最小集合起步、`--new-from-rev` 增量门禁只卡新增问题、`//nolint:linter // 原因` 强制豁免留痕 + nolintlint、errcheck/bodyclose/sqlclosecheck/contextcheck 对应的真实线上事故、gofumpt + pre-commit）、配置与密钥管理工程化（12-Factor 配置外置、三层配置与优先级 env>file>default、启动 fail-fast 校验、`atomic.Pointer` 不可变快照整块替换实现热更新、配置中心挂掉降级本地快照、Secret 五条军规与 gitleaks 扫描、双钥匙滚动轮转不中断）、CI 构建提速（GOCACHE 内容寻址命中原理、缓存失效根因与注入时间戳破坏缓存、按历史耗时均衡分片 + matrix + t.Parallel、只跑受影响包、远程缓存/Bazel 权衡、缓存与可复现构建方向一致）、架构决策记录 ADR（五段结构 Context/Decision/Alternatives/Consequences/Status、一个 ADR 一个决策、只增不改 Superseded 保留历史、文档即代码进仓库随 PR review、ADR vs RFC vs 设计文档 vs Runbook、触发条件与形式主义规避），共新增 6 题，模块题数 47 → 53，全库 520 → 526 |
 | 2026-10-08 | v5.30 | 高频算法模块新增 10 题（补齐此前未覆盖的 Kadane / 网格回溯 / 字符串 DP / 矩阵原地 / 链表模拟方向）：最大子数组和（LC 53，`dp[i]` 定义为「以 i 结尾」的最大和、`dp[i]=max(nums[i], dp[i-1]+nums[i])`、答案取全局 max 而非 dp[n-1]、滚动变量压缩 O(1)、全负数与 122 股票题的关系）、单词搜索（LC 79，四向 DFS 逐字符匹配、用改棋盘字符代替 visited 数组、`found` 汇总返回值保证回溯必然还原、剪枝与岛屿题「标记不还原」的差异）、下一个排列（LC 31，从右往左找第一个升序对 i、右侧降序区间从右找第一个大于 nums[i] 的 j 交换、再把后缀反转为升序、含重复元素必须用 `>=`、已是最大排列时整体反转）、乘积最大子数组（LC 152，同时维护以 i 结尾的最大/最小乘积、负数使最小翻身变最大、转移必须用上一轮快照防覆盖、0 自然分段）、最长有效括号（LC 32，栈存下标 + 栈底 -1 哨兵、多余右括号压回自身当新基准、左右计数法与线性 DP 两种替代解法、与 20 题的差异）、旋转图像（LC 48，顺时针 = 主对角线转置 + 逐行水平翻转、转置只走上三角、逆时针 = 转置 + 上下翻转、四元组轮换对比）、正则表达式匹配与通配符匹配（LC 10/44，字符串 DP `dp[i][j]`、`*` 拆「匹配 0 次 dp[i][j-2]」与「匹配多次 dp[i-1][j]」两条转移、空串初始化 `a*b*`、44 题 `*` 与 `?` 的分支处理）、最小路径和（LC 64，`dp[i][j]=min(上,左)+grid[i][j]`、第一行/列单独初始化、原地累加 O(1) 空间、与不同路径 62 共用骨架）、两数相加（LC 2，虚拟头节点尾插、循环条件含 `carry != 0` 处理最高位进位、短链补 0、正序版 445 用栈处理）、随机链表的深拷贝（LC 138，哈希表建原→新映射再连 Next/Random、Go map 零值 nil 免特判、节点交织法 O(1) 空间三步），共新增 10 题，模块题数 108 → 118，全库 510 → 520 |
 | 2026-09-30 | v5.29 | 工程素养模块新增 6 篇（补齐此前全库未覆盖的工程化方向）：依赖注入工程化（`google/wire` 编译期代码生成 vs `uber-go/fx`/`dig` 运行时容器、`fx.Lifecycle` 逆序启停、循环依赖靠抽接口而非绕环、构造函数注入优于全局单例、测试替换 Provider）、特性开关 Feature Flag（Release/Experiment/Ops/Permission 四类与生命周期、`atomic.Pointer` 热更新快照 + `hash(flagKey+userID)` 稳定分桶、部署灰度与开关双层放量、开关腐化治理 TTL + CI 扫描、fail-closed 与降级 fail-open 方向取舍）、Git 分支策略与协作规范（Trunk-Based vs GitHub Flow vs GitFlow 与集成频率权衡、rebase 只用于未推送分支否则改哈希引发 force push 事故、squash merge 保证一键 revert、Conventional Commits、冲突治理与分支保护）、单元测试 Mock 工程化（Dummy/Stub/Fake/Spy/Mock 五类替身与 Fake 优先原则、`gomock`/`mockgen` + Go 1.24 `go tool`、`httptest.Server` 优于 mock client、注入 Clock 消灭 Sleep、`testcontainers` 兜持久层、过度 mock 导致测试脆）、API 版本管理与向后兼容（加字段/加接口安全，删改字段与复用 Protobuf 编号是 Breaking、URL 版本 + DTO 层差异化、protobuf `reserved` 永不复用编号、`buf breaking`/`oasdiff` CI 强制、RFC 8594 Deprecation/Sunset + 410 Gone 废弃流程）、代码生成工程化（`go:generate` 语义边界、stringer/mockgen/buf/embed 五大场景、生成物提交 + `linguist-generated` 折叠、CI `go generate && git diff --exit-code` 一致性校验、生成物禁手改与不测生成物、泛型与生成的边界），共新增 6 题，模块题数 41 → 47，全库 504 → 510 |
 | 2026-09-29 | v5.28 | 高频算法模块新增 9 题（补齐此前未覆盖的二分分割 / 设计类 / 区间 DP / 原地算法方向）：寻找两个正序数组的中位数（LC 4，二分「分割线」而非归并、保证短数组使 j 不越界、totalLeft=(m+n+1)/2 左偏统一奇偶、±∞ 边界兜底、O(log min(m,n))）、最小栈与栈队列互转（LC 155/232/225，辅助栈与主栈等长记录每个时刻的最小值、必须用 <= 才能正确处理重复最小值、双栈 in/out 摊还 O(1)、单队列旋转实现栈 push O(n)）、和为 K 的子数组（LC 560，prefix[j]-prefix[i]=k 转哈希查找、预置 {0:1} 统计从下标 0 起的子数组、含负数故滑动窗口单调性失效）、戳气球区间 DP（LC 312，正向「先戳哪个」子问题耦合不可分、改枚举「最后一个戳破」的气球 k 使左右两半独立、首尾补哨兵 1、按区间长度从小到大枚举、O(n³)）、O(1) 时间插入删除获取随机元素（LC 380/381，数组给随机 + 哈希给查找、删除用末尾元素覆盖被删位置避免 O(n) 搬移、381 哈希存下标集合支持重复）、缺失的第一个正数（LC 41，答案必在 [1,n+1]、原地置换到下标 v-1、判断目标位置已正确以摊还 O(1) 防死循环、Go 多重赋值 RHS 先求值故交换安全）、字符串相乘（LC 43，竖式模拟落位 i+j 与 i+j+1、进位累加高位无需单独 carry、strings.Builder 防 O(n²)、考虑大数超 64 位场景）、用 Rand7 实现 Rand10（LC 470，拒绝采样拼 1..49 取前 40 模 10、成功率 40/49 期望 1.225 轮、拒采剩余值复用可提升利用率）、轮转数组三次反转（LC 189，整体反转 + 前 k + 后 n-k、k%=n 防越界、Go 切片共享底层数组故原地），共新增 9 题，模块题数 99 → 108，全库 495 → 504 |

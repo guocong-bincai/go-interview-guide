@@ -36,6 +36,12 @@
 - [✅] [Git 分支策略与协作规范：Trunk-Based / rebase vs merge / squash](03-leadership/26-04-git-workflow.md)
 - [⏳] [跨团队协作：目标对齐、资源冲突、复杂项目推进](03-leadership/13-05-cross-team-collaboration.md)
 - [⏳] [招聘与面试：高级工程师如何识别候选人](03-leadership/21-06-hiring-interviewing.md)
+- [✅] [可观测性成本治理：Prometheus 指标基数爆炸（Cardinality）](03-leadership/27-01-cardinality-governance.md)
+- [✅] [结构化日志工程化：log/slog 生产落地](03-leadership/27-02-structured-logging-slog.md)
+- [✅] [静态代码检查工程化：golangci-lint 落地与误报治理](03-leadership/27-03-static-analysis-linter.md)
+- [✅] [配置与密钥管理工程化：12-Factor Config + Secret 轮转](03-leadership/27-04-config-secret-management.md)
+- [✅] [CI 构建提速工程化：缓存、并行分片与远程构建](03-leadership/27-05-ci-build-acceleration.md)
+- [✅] [架构决策记录（ADR）与文档工程化](03-leadership/27-06-adr-documentation.md)
 
 ### 04-performance-governance · 性能治理与交付
 - [✅] [PGO 剖面引导优化：default.pgo + 内联/去虚拟化 + 持续 PGO 闭环](04-performance-governance/26-01-pgo.md)
